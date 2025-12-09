@@ -11,42 +11,33 @@ import {IWrapper} from "contracts/interfaces/IWrapper.sol";
 import {BaseCoinWrapper} from "contracts/wrappers/BaseCoinWrapper.sol";
 
 contract Deploy is Script {
-    IERC20 private constant _NATIVE = IERC20(0x0000000000000000000000000000000000000000);
     IERC20 private constant _NONE = IERC20(0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF);
+    IERC20 private constant _NATIVE = IERC20(0x0000000000000000000000000000000000000000);
 
-    function run() external {
+    function run()
+        external
+        returns (BaseCoinWrapper baseCoinWrapper, MultiWrapper multiWrapper, OffchainOracle oracle)
+    {
         address owner = vm.envAddress("OWNER");
         address weth = vm.envAddress("WETH");
         bytes32 salt = vm.envOr("SALT", bytes32(0));
 
         IERC20[] memory connectors = _appendConnectors(vm.envAddress("CONNECTORS", ","), IERC20(weth));
 
-        // ------- Deployment -------
-
         vm.startBroadcast();
 
         // Deploy base WETH wrapper and seed MultiWrapper with it
-        BaseCoinWrapper baseWrapper = new BaseCoinWrapper{salt: salt}(_NATIVE, IERC20(weth));
+        baseCoinWrapper = new BaseCoinWrapper{salt: salt}(_NATIVE, IERC20(weth));
         IWrapper[] memory initialWrappers = new IWrapper[](1);
-        initialWrappers[0] = baseWrapper;
-        MultiWrapper multiWrapper = new MultiWrapper{salt: salt}(initialWrappers, owner);
+        initialWrappers[0] = baseCoinWrapper;
+        multiWrapper = new MultiWrapper{salt: salt}(initialWrappers, owner);
 
         // Deploy offchain oracle (empty oracles; add later with dedicated scripts)
         IOracle[] memory emptyOracles = new IOracle[](0);
         OffchainOracle.OracleType[] memory emptyTypes = new OffchainOracle.OracleType[](0);
-        OffchainOracle offchainOracle = new OffchainOracle{salt: salt}(
-            multiWrapper, emptyOracles, emptyTypes, connectors, IERC20(weth), owner
-        );
+        oracle = new OffchainOracle{salt: salt}(multiWrapper, emptyOracles, emptyTypes, connectors, IERC20(weth), owner);
 
         vm.stopBroadcast();
-
-        // ------- Logs -------
-        console.log("Owner:", owner);
-        console.log("WETH:", weth);
-        console.log("BaseCoinWrapper:", address(baseWrapper));
-        console.log("MultiWrapper:", address(multiWrapper));
-        console.log("OffchainOracle:", address(offchainOracle));
-        console.log("Connectors count:", connectors.length);
     }
 
     // ------- Internals -------
