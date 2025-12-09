@@ -9,7 +9,7 @@ import {BaseCoinWrapper} from "contracts/wrappers/BaseCoinWrapper.sol";
 
 /// @notice Deploys a BaseCoinWrapper via CREATE2 and adds it to an existing MultiWrapper.
 contract DeployBaseCoinWrapper is Script {
-    function run() external {
+    function run() external returns (BaseCoinWrapper wrapper) {
         OffchainOracle offchainOracle = OffchainOracle(vm.envAddress("ORACLE"));
         bytes32 salt = vm.envOr("SALT", bytes32(0));
         MultiWrapper multiWrapper = offchainOracle.multiWrapper();
@@ -17,14 +17,8 @@ contract DeployBaseCoinWrapper is Script {
         address wbase = vm.envAddress("WBASE");
 
         vm.startBroadcast();
-        BaseCoinWrapper wrapper = new BaseCoinWrapper{salt: salt}(IERC20(base), IERC20(wbase));
+        wrapper = new BaseCoinWrapper{salt: salt}(IERC20(base), IERC20(wbase));
         multiWrapper.addWrapper(wrapper);
         vm.stopBroadcast();
-
-        console.log("OffchainOracle:", address(offchainOracle));
-        console.log("MultiWrapper:", address(multiWrapper));
-        console.log("BaseCoinWrapper deployed at:", address(wrapper));
-        console.log("Base token:", base);
-        console.log("Wrapped base token:", wbase);
     }
 }

@@ -7,20 +7,15 @@ import {UniswapOracle} from "contracts/oracles/UniswapOracle.sol";
 import {IUniswapFactory} from "contracts/interfaces/IUniswapFactory.sol";
 
 contract DeployUniswapOracle is Script {
-    function run() external {
+    function run() external returns (UniswapOracle oracle) {
         OffchainOracle oc = OffchainOracle(vm.envAddress("ORACLE"));
         bytes32 salt = vm.envOr("SALT", bytes32(0));
         address factory = vm.envAddress("FACTORY");
         uint256 oracleType = vm.envOr("TYPE", uint256(1)); // Router oracle defaults to ETH
 
         vm.startBroadcast();
-        UniswapOracle oracle = new UniswapOracle{salt: salt}(IUniswapFactory(factory));
+        oracle = new UniswapOracle{salt: salt}(IUniswapFactory(factory));
         oc.addOracle(oracle, OffchainOracle.OracleType(oracleType));
         vm.stopBroadcast();
-
-        console.log("OffchainOracle:", address(oc));
-        console.log("Uniswap factory:", factory);
-        console.log("Oracle type:", oracleType);
-        console.log("UniswapOracle deployed at:", address(oracle));
     }
 }

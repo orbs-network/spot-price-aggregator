@@ -10,7 +10,7 @@ import {ChaiWrapper} from "contracts/wrappers/ChaiWrapper.sol";
 
 /// @notice Deploys a ChaiWrapper via CREATE2 and adds it to an existing MultiWrapper.
 contract DeployChaiWrapper is Script {
-    function run() external {
+    function run() external returns (ChaiWrapper wrapper) {
         OffchainOracle offchainOracle = OffchainOracle(vm.envAddress("ORACLE"));
         bytes32 salt = vm.envOr("SALT", bytes32(0));
         MultiWrapper multiWrapper = offchainOracle.multiWrapper();
@@ -19,15 +19,8 @@ contract DeployChaiWrapper is Script {
         address pot = vm.envAddress("CHAI_POT");
 
         vm.startBroadcast();
-        ChaiWrapper wrapper = new ChaiWrapper{salt: salt}(IERC20(base), IERC20(token), IChaiPot(pot));
+        wrapper = new ChaiWrapper{salt: salt}(IERC20(base), IERC20(token), IChaiPot(pot));
         multiWrapper.addWrapper(wrapper);
         vm.stopBroadcast();
-
-        console.log("OffchainOracle:", address(offchainOracle));
-        console.log("MultiWrapper:", address(multiWrapper));
-        console.log("CHAI base token:", base);
-        console.log("CHAI token:", token);
-        console.log("CHAI pot:", pot);
-        console.log("ChaiWrapper deployed at:", address(wrapper));
     }
 }

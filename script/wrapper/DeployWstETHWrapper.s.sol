@@ -9,7 +9,7 @@ import {WstETHWrapper} from "contracts/wrappers/WstETHWrapper.sol";
 
 /// @notice Deploys a WstETHWrapper via CREATE2 and adds it to an existing MultiWrapper.
 contract DeployWstETHWrapper is Script {
-    function run() external {
+    function run() external returns (WstETHWrapper wrapper) {
         OffchainOracle offchainOracle = OffchainOracle(vm.envAddress("ORACLE"));
         bytes32 salt = vm.envOr("SALT", bytes32(0));
         MultiWrapper multiWrapper = offchainOracle.multiWrapper();
@@ -17,14 +17,8 @@ contract DeployWstETHWrapper is Script {
         address wbase = vm.envAddress("WBASE"); // wstETH
 
         vm.startBroadcast();
-        WstETHWrapper wrapper = new WstETHWrapper{salt: salt}(IERC20(base), IERC20(wbase));
+        wrapper = new WstETHWrapper{salt: salt}(IERC20(base), IERC20(wbase));
         multiWrapper.addWrapper(wrapper);
         vm.stopBroadcast();
-
-        console.log("OffchainOracle:", address(offchainOracle));
-        console.log("MultiWrapper:", address(multiWrapper));
-        console.log("Base token:", base);
-        console.log("wstETH token:", wbase);
-        console.log("WstETHWrapper deployed at:", address(wrapper));
     }
 }

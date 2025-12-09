@@ -7,7 +7,7 @@ import {UniswapV4LikeOracle} from "contracts/oracles/UniswapV4LikeOracle.sol";
 import {IUniswapV4StateView} from "contracts/interfaces/IUniswapV4StateView.sol";
 
 contract DeployUniswapV4LikeOracle is Script {
-    function run() external {
+    function run() external returns (UniswapV4LikeOracle oracle) {
         OffchainOracle oc = OffchainOracle(vm.envAddress("ORACLE"));
         bytes32 salt = vm.envOr("SALT", bytes32(0));
         address stateView = vm.envAddress("STATEVIEW");
@@ -18,16 +18,9 @@ contract DeployUniswapV4LikeOracle is Script {
         uint256 oracleType = vm.envOr("TYPE", uint256(0)); // AMM defaults to WETH
 
         vm.startBroadcast();
-        UniswapV4LikeOracle oracle = new UniswapV4LikeOracle{salt: salt}(IUniswapV4StateView(stateView), fees, spacings);
+        oracle = new UniswapV4LikeOracle{salt: salt}(IUniswapV4StateView(stateView), fees, spacings);
         oc.addOracle(oracle, OffchainOracle.OracleType(oracleType));
         vm.stopBroadcast();
-
-        console.log("OffchainOracle:", address(oc));
-        console.log("Uniswap V4 stateView:", stateView);
-        console.log("Fees count:", fees.length);
-        console.log("Tick spacings count:", spacings.length);
-        console.log("Oracle type:", oracleType);
-        console.log("UniswapV4LikeOracle deployed at:", address(oracle));
     }
 
     function _toUint24(uint256[] memory src) private pure returns (uint24[] memory dst) {

@@ -6,7 +6,7 @@ import {OffchainOracle} from "contracts/OffchainOracle.sol";
 import {UniswapV3LikeOracle} from "contracts/oracles/UniswapV3LikeOracle.sol";
 
 contract DeployUniswapV3LikeOracle is Script {
-    function run() external {
+    function run() external returns (UniswapV3LikeOracle oracle) {
         OffchainOracle oc = OffchainOracle(vm.envAddress("ORACLE"));
         bytes32 salt = vm.envOr("SALT", bytes32(0));
         address factory = vm.envAddress("FACTORY");
@@ -16,17 +16,9 @@ contract DeployUniswapV3LikeOracle is Script {
         uint256 oracleType = vm.envOr("TYPE", uint256(0)); // AMM defaults to WETH
 
         vm.startBroadcast();
-        UniswapV3LikeOracle oracle = new UniswapV3LikeOracle{salt: salt}(factory, initcodeHash, fees);
+        oracle = new UniswapV3LikeOracle{salt: salt}(factory, initcodeHash, fees);
         oc.addOracle(oracle, OffchainOracle.OracleType(oracleType));
         vm.stopBroadcast();
-
-        console.log("OffchainOracle:", address(oc));
-        console.log("Uniswap V3-like factory:", factory);
-        console.log("Initcode hash:");
-        console.logBytes32(initcodeHash);
-        console.log("Fees count:", fees.length);
-        console.log("Oracle type:", oracleType);
-        console.log("UniswapV3LikeOracle deployed at:", address(oracle));
     }
 
     function _toUint24(uint256[] memory src) private pure returns (uint24[] memory dst) {

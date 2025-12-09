@@ -7,20 +7,15 @@ import {SynthetixOracle} from "contracts/oracles/SynthetixOracle.sol";
 import {ISynthetixProxy} from "contracts/interfaces/ISynthetixProxy.sol";
 
 contract DeploySynthetixOracle is Script {
-    function run() external {
+    function run() external returns (SynthetixOracle oracle) {
         OffchainOracle oc = OffchainOracle(vm.envAddress("ORACLE"));
         bytes32 salt = vm.envOr("SALT", bytes32(0));
         address proxy = vm.envAddress("PROXY");
         uint256 oracleType = vm.envOr("TYPE", uint256(1)); // Synthetix uses native oracle style
 
         vm.startBroadcast();
-        SynthetixOracle oracle = new SynthetixOracle{salt: salt}(ISynthetixProxy(proxy));
+        oracle = new SynthetixOracle{salt: salt}(ISynthetixProxy(proxy));
         oc.addOracle(oracle, OffchainOracle.OracleType(oracleType));
         vm.stopBroadcast();
-
-        console.log("OffchainOracle:", address(oc));
-        console.log("Synthetix proxy:", proxy);
-        console.log("Oracle type:", oracleType);
-        console.log("SynthetixOracle deployed at:", address(oracle));
     }
 }

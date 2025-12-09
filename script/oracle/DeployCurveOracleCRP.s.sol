@@ -7,7 +7,7 @@ import {CurveOracleCRP} from "contracts/oracles/CurveOracleCRP.sol";
 import {ICurveProvider} from "contracts/interfaces/ICurveProvider.sol";
 
 contract DeployCurveOracleCRP is Script {
-    function run() external {
+    function run() external returns (CurveOracleCRP oracle) {
         OffchainOracle oc = OffchainOracle(vm.envAddress("ORACLE"));
         bytes32 salt = vm.envOr("SALT", bytes32(0));
         address provider = vm.envAddress("PROVIDER");
@@ -15,14 +15,8 @@ contract DeployCurveOracleCRP is Script {
         uint256 oracleType = vm.envOr("TYPE", uint256(0)); // Curve treated as WETH by default
 
         vm.startBroadcast();
-        CurveOracleCRP oracle = new CurveOracleCRP{salt: salt}(ICurveProvider(provider), maxPools);
+        oracle = new CurveOracleCRP{salt: salt}(ICurveProvider(provider), maxPools);
         oc.addOracle(oracle, OffchainOracle.OracleType(oracleType));
         vm.stopBroadcast();
-
-        console.log("OffchainOracle:", address(oc));
-        console.log("Curve provider:", provider);
-        console.log("Max pools inspected:", maxPools);
-        console.log("Oracle type:", oracleType);
-        console.log("CurveOracleCRP deployed at:", address(oracle));
     }
 }

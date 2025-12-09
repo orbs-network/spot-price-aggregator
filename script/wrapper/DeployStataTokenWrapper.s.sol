@@ -10,7 +10,7 @@ import {StataTokenWrapper} from "contracts/wrappers/StataTokenWrapper.sol";
 
 /// @notice Deploys a StataTokenWrapper and adds it to MultiWrapper; markets passed via env.
 contract DeployStataTokenWrapper is Script {
-    function run() external {
+    function run() external returns (StataTokenWrapper wrapper) {
         OffchainOracle offchainOracle = OffchainOracle(vm.envAddress("ORACLE"));
         bytes32 salt = vm.envOr("SALT", bytes32(0));
         MultiWrapper multiWrapper = offchainOracle.multiWrapper();
@@ -18,16 +18,10 @@ contract DeployStataTokenWrapper is Script {
         address[] memory markets = vm.envAddress("MARKETS", ",");
 
         vm.startBroadcast();
-        StataTokenWrapper wrapper = new StataTokenWrapper{salt: salt}(IStaticATokenFactory(factory));
+        wrapper = new StataTokenWrapper{salt: salt}(IStaticATokenFactory(factory));
         wrapper.addMarkets(_toIERC20(markets));
         multiWrapper.addWrapper(wrapper);
         vm.stopBroadcast();
-
-        console.log("OffchainOracle:", address(offchainOracle));
-        console.log("MultiWrapper:", address(multiWrapper));
-        console.log("StataTokenWrapper deployed at:", address(wrapper));
-        console.log("Static AToken factory:", factory);
-        console.log("Markets count:", markets.length);
     }
 
     function _toIERC20(address[] memory addrs) private pure returns (IERC20[] memory tokens) {

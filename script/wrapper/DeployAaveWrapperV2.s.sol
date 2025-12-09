@@ -10,7 +10,7 @@ import {AaveWrapperV2} from "contracts/wrappers/AaveWrapperV2.sol";
 
 /// @notice Deploys an AaveWrapperV2 and adds it to MultiWrapper; markets passed via env.
 contract DeployAaveWrapperV2 is Script {
-    function run() external {
+    function run() external returns (AaveWrapperV2 wrapper) {
         OffchainOracle offchainOracle = OffchainOracle(vm.envAddress("ORACLE"));
         MultiWrapper multiWrapper = offchainOracle.multiWrapper();
         bytes32 salt = vm.envOr("SALT", bytes32(0));
@@ -18,16 +18,10 @@ contract DeployAaveWrapperV2 is Script {
         address[] memory markets = vm.envAddress("MARKETS", ",");
 
         vm.startBroadcast();
-        AaveWrapperV2 wrapper = new AaveWrapperV2{salt: salt}(ILendingPoolV2(pool));
+        wrapper = new AaveWrapperV2{salt: salt}(ILendingPoolV2(pool));
         wrapper.addMarkets(_toIERC20(markets));
         multiWrapper.addWrapper(wrapper);
         vm.stopBroadcast();
-
-        console.log("OffchainOracle:", address(offchainOracle));
-        console.log("MultiWrapper:", address(multiWrapper));
-        console.log("Aave V2 pool:", pool);
-        console.log("Markets count:", markets.length);
-        console.log("AaveWrapperV2 deployed at:", address(wrapper));
     }
 
     function _toIERC20(address[] memory addrs) private pure returns (IERC20[] memory tokens) {
