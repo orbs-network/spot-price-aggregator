@@ -89,10 +89,9 @@ run_section() {
 
   while read -r entry; do
     [[ -z "$entry" ]] && continue
-    local name script entry_salt env_json
+    local name script env_json
     name=$(echo "$entry" | jq -r '.name')
     script=$(resolve_script_name "$section" "$name")
-    entry_salt=$(echo "$entry" | jq -r '.salt // empty')
     env_json=$(echo "$entry" | jq -c '.env // {}')
 
     local -a extra_env=()
@@ -100,8 +99,7 @@ run_section() {
       extra_env+=("$kv")
     done < <(env_lines_from_json "$env_json")
 
-    local salt_to_use=${entry_salt:-${SALT:-0x0}}
-    local -a exported_env=("ORACLE=$ORACLE" "SALT=$salt_to_use")
+    local -a exported_env=("ORACLE=$ORACLE")
     exported_env+=("${extra_env[@]}")
 
     echo "Running $section -> $name ($script)"
