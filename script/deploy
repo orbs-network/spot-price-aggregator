@@ -103,7 +103,10 @@ run_section() {
     exported_env+=("${extra_env[@]}")
 
     echo "Running $section -> $name ($script)"
-    env "${exported_env[@]}" forge script "$script" "${forge_args[@]}"
+    if ! env "${exported_env[@]}" forge script "$script" "${forge_args[@]}"; then
+      echo "Error running $section/$name ($script); skipping to next." >&2
+      continue
+    fi
   done <<<"$entries"
 }
 
