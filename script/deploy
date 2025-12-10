@@ -15,10 +15,16 @@ CHAIN_CFG=$(jq -e ".\"$CHAIN_ID\"" "$CONFIG_FILE") || { echo "No config found fo
 CONNECTORS=$(echo "$CHAIN_CFG" | jq -r '.connectors // [] | join(",")')
 ORACLE=$(echo "$CHAIN_CFG" | jq -r '.oracle // ""')
 
+# Detect broadcast flag in arguments
+SHOULD_BROADCAST=0
+for arg in "$@"; do
+  [[ "$arg" == "--broadcast" ]] && SHOULD_BROADCAST=1
+done
+
 persist_oracle_address() {
   local tmp
   tmp=$(mktemp)
-  jq ".\"$CHAIN_ID\".oracle = \"$ORACLE\"" "$CONFIG_FILE" > "$tmp"
+  jq --indent 4 ".\"$CHAIN_ID\".oracle = \"$ORACLE\"" "$CONFIG_FILE" > "$tmp"
   mv "$tmp" "$CONFIG_FILE"
   echo "Updated oracle in config for chain $CHAIN_ID"
 }
@@ -46,22 +52,30 @@ deploy_core_stack() {
   [[ -n "$ORACLE" ]] && { echo "Core deploy skipped (ORACLE already provided: $ORACLE)"; return; }
 
   echo "Deploying BaseCoinWrapper + MultiWrapper + OffchainOracle (chain $CHAIN_ID)"
-  local output
+  local output json_output
   output=$(env CONNECTORS="$CONNECTORS" \
     forge script Deploy --json "$@") || {
     echo "Core deployment failed" >&2
     exit 1
   }
 
-  ORACLE=$(echo "$output" | jq -er '.returns.oracle.value') || { echo "Unable to parse OffchainOracle address" >&2; exit 1 }
-  MULTIWRAPPER=$(echo "$output" | jq -er '.returns.multiWrapper.value') || { echo "Unable to parse MultiWrapper address" >&2; exit 1 }
-  BASE_WRAPPER=$(echo "$output" | jq -er '.returns.baseCoinWrapper.value' || { echo "Unable to parse BaseCoinWrapper address" >&2; exit 1 }
+  # forge may emit warnings and secondary JSON lines; pick the last object that contains `returns`
+  json_output=$(jq -sR 'split("\n")
+    | map(try fromjson catch empty)
+    | map(select(type=="object" and has("returns")))
+    | last' <<<"$output")
+
+  [[ -n "$json_output" && "$json_output" != "null" ]] || { echo "Unable to parse forge JSON output" >&2; exit 1; }
+
+  ORACLE=$(jq -er '.returns.oracle.value // .returns[2].value // .returns.oracle // .returns[2]' <<<"$json_output") || { echo "Unable to parse OffchainOracle address" >&2; exit 1; }
+  MULTIWRAPPER=$(jq -er '.returns.multiWrapper.value // .returns[1].value // .returns.multiWrapper // .returns[1]' <<<"$json_output") || { echo "Unable to parse MultiWrapper address" >&2; exit 1; }
+  BASE_WRAPPER=$(jq -er '.returns.baseCoinWrapper.value // .returns[0].value // .returns.baseCoinWrapper // .returns[0]' <<<"$json_output") || { echo "Unable to parse BaseCoinWrapper address" >&2; exit 1; }
 
   echo "OffchainOracle deployed at $ORACLE"
   echo "MultiWrapper deployed at $MULTIWRAPPER"
   echo "BaseCoinWrapper deployed at $BASE_WRAPPER"
 
-  persist_oracle_address
+  [[ "$SHOULD_BROADCAST" -eq 1 ]] && persist_oracle_address
 }
 
 run_section() {

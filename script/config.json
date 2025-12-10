@@ -19,7 +19,7 @@
                     "CBASE": "0xA26b9BFe606d29F16B5Aecf30F9233934452c4E2",
                     "MARKETS": "0xA26b9BFe606d29F16B5Aecf30F9233934452c4E2,0xC3c9e322F4aAe352ace79D0E62ADe3563fB86e87,0xc68351B9B3638A6f4A3Ae100Bd251e227BbD7479,0x92e51466482146E71b692ced2265284968E8B3d6,0xda642A7821E91eD285262fead162E5fd17200429"
                 }
-            },
+            }
         ],
         "oracles": [
             {
