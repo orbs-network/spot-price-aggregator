@@ -6,7 +6,7 @@ pragma solidity 0.8.23;
 // solhint-disable var-name-mixedcase
 
 interface ICurveProvider {
-    function get_address (uint256 _id) external view returns (address);
+    function get_address(uint256 _id) external view returns (address);
 }
 
 interface ICurveRateProvider {
@@ -21,5 +21,8 @@ interface ICurveRateProvider {
         uint8 pool_type; // 0 for stableswap, 1 for cryptoswap, 2 for LLAMMA.
     }
 
-    function get_quotes (address source_token, address destination_token, uint256 amount_in) external view returns (ICurveRateProvider.Quote[] memory quote);
+    function get_quotes(address source_token, address destination_token, uint256 amount_in)
+        external
+        view
+        returns (ICurveRateProvider.Quote[] memory quote);
 }

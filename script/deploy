@@ -1,0 +1,118 @@
+#!/usr/bin/env zsh
+
+set -euo pipefail
+
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
+CONFIG_FILE="$SCRIPT_DIR/config.json"
+
+: "${OWNER:?Set OWNER (address) globally in env}"
+: "${WETH:?Set WETH (address) globally in env}"
+
+CHAIN_ID=${CHAIN_ID:?CHAIN_ID must be set}
+
+CHAIN_CFG=$(jq -e ".\"$CHAIN_ID\"" "$CONFIG_FILE") || { echo "No config found for chain id $CHAIN_ID in $CONFIG_FILE" >&2; exit 1 }
+
+CONNECTORS=$(echo "$CHAIN_CFG" | jq -r '.connectors // [] | join(",")')
+ORACLE=$(echo "$CHAIN_CFG" | jq -r '.oracle // ""')
+
+# Detect broadcast flag in arguments
+SHOULD_BROADCAST=0
+for arg in "$@"; do
+  [[ "$arg" == "--broadcast" ]] && SHOULD_BROADCAST=1
+done
+
+persist_oracle_address() {
+  local tmp
+  tmp=$(mktemp)
+  jq --indent 4 ".\"$CHAIN_ID\".oracle = \"$ORACLE\"" "$CONFIG_FILE" > "$tmp"
+  mv "$tmp" "$CONFIG_FILE"
+  echo "Updated oracle in config for chain $CHAIN_ID"
+}
+
+resolve_script_name() {
+  local section="$1" name="$2" dir file
+  dir=$([[ "$section" == "wrappers" ]] && echo "wrapper" || echo "oracle")
+  file="script/${dir}/Deploy${name}.s.sol"
+  [[ -f "$file" ]] || { echo "Expected script file not found: $file" >&2; exit 1; }
+  echo "Deploy${name}"
+}
+
+env_lines_from_json() {
+  local json="$1"
+  jq -r 'to_entries[] | "\(.key|ascii_upcase)=\(
+    if .value|type=="array" then
+      (.value | map(tostring) | join(","))
+    else
+      (.value | tostring)
+    end
+  )"' <<<"$json"
+}
+
+deploy_core_stack() {
+  [[ -n "$ORACLE" ]] && { echo "Core deploy skipped (ORACLE already provided: $ORACLE)"; return; }
+
+  echo "Deploying BaseCoinWrapper + MultiWrapper + OffchainOracle (chain $CHAIN_ID)"
+  local output json_output
+  output=$(env CONNECTORS="$CONNECTORS" \
+    forge script Deploy --json "$@") || {
+    echo "Core deployment failed" >&2
+    exit 1
+  }
+
+  # forge may emit warnings and secondary JSON lines; pick the last object that contains `returns`
+  json_output=$(jq -sR 'split("\n")
+    | map(try fromjson catch empty)
+    | map(select(type=="object" and has("returns")))
+    | last' <<<"$output")
+
+  [[ -n "$json_output" && "$json_output" != "null" ]] || { echo "Unable to parse forge JSON output" >&2; exit 1; }
+
+  ORACLE=$(jq -er '.returns.oracle.value // .returns[2].value // .returns.oracle // .returns[2]' <<<"$json_output") || { echo "Unable to parse OffchainOracle address" >&2; exit 1; }
+  MULTIWRAPPER=$(jq -er '.returns.multiWrapper.value // .returns[1].value // .returns.multiWrapper // .returns[1]' <<<"$json_output") || { echo "Unable to parse MultiWrapper address" >&2; exit 1; }
+  BASE_WRAPPER=$(jq -er '.returns.baseCoinWrapper.value // .returns[0].value // .returns.baseCoinWrapper // .returns[0]' <<<"$json_output") || { echo "Unable to parse BaseCoinWrapper address" >&2; exit 1; }
+
+  echo "OffchainOracle deployed at $ORACLE"
+  echo "MultiWrapper deployed at $MULTIWRAPPER"
+  echo "BaseCoinWrapper deployed at $BASE_WRAPPER"
+
+  [[ "$SHOULD_BROADCAST" -eq 1 ]] && persist_oracle_address
+}
+
+run_section() {
+  local section="$1" # "wrappers" or "oracles"
+  shift
+  local forge_args=("$@")
+  local entries
+  entries=$(echo "$CHAIN_CFG" | jq -c ".${section}[]?") || entries=""
+
+  [[ -z "$entries" ]] && { echo "No ${section} configured for chain $CHAIN_ID"; return; }
+
+  while read -r entry; do
+    [[ -z "$entry" ]] && continue
+    local name script env_json
+    name=$(echo "$entry" | jq -r '.name')
+    script=$(resolve_script_name "$section" "$name")
+    env_json=$(echo "$entry" | jq -c '.env // {}')
+
+    local -a extra_env=()
+    while read -r kv; do
+      extra_env+=("$kv")
+    done < <(env_lines_from_json "$env_json")
+
+    local -a exported_env=("ORACLE=$ORACLE")
+    exported_env+=("${extra_env[@]}")
+
+    echo "Running $section -> $name ($script)"
+    if ! env "${exported_env[@]}" forge script "$script" "${forge_args[@]}"; then
+      echo "Error running $section/$name ($script); skipping to next." >&2
+      continue
+    fi
+  done <<<"$entries"
+}
+
+deploy_core_stack "$@"
+
+run_section "wrappers" "$@"
+run_section "oracles" "$@"
+
+echo "Done for chain $CHAIN_ID"

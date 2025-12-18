@@ -1,3 +1,6 @@
+out/
+lib/
+broadcast/
 node_modules
 coverage
 hardhat-dependency-compiler

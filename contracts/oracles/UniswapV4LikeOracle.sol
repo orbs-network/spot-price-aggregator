@@ -20,22 +20,18 @@ contract UniswapV4LikeOracle is IOracle {
     uint24[] public fees;
     int24[] public spacings;
 
-    constructor(
-        IUniswapV4StateView _stateView,
-        uint24[] memory _fees,
-        int24[] memory _spacings
-    ) {
+    constructor(IUniswapV4StateView _stateView, uint24[] memory _fees, int24[] memory _spacings) {
         STATE_VIEW = _stateView;
         fees = _fees;
         spacings = _spacings;
     }
 
-    function getRate(
-        IERC20 srcToken,
-        IERC20 dstToken,
-        IERC20 connector,
-        uint256 thresholdFilter
-    ) external view override returns (uint256 rate, uint256 weight) {
+    function getRate(IERC20 srcToken, IERC20 dstToken, IERC20 connector, uint256 thresholdFilter)
+        external
+        view
+        override
+        returns (uint256 rate, uint256 weight)
+    {
         if (connector != _NONE) revert ConnectorShouldBeNone();
 
         OraclePrices.Data memory ratesAndWeights = OraclePrices.init(fees.length * spacings.length);
@@ -50,22 +46,23 @@ contract UniswapV4LikeOracle is IOracle {
         return ratesAndWeights.getRateAndWeight(thresholdFilter);
     }
 
-    function _getRateDirect(
-        IERC20 srcToken,
-        IERC20 dstToken,
-        uint24 fee,
-        int24 tickSpacing
-    ) internal view returns (uint256 rate, uint256 liquidity) {
+    function _getRateDirect(IERC20 srcToken, IERC20 dstToken, uint24 fee, int24 tickSpacing)
+        internal
+        view
+        returns (uint256 rate, uint256 liquidity)
+    {
         (IERC20 token0, IERC20 token1, bool zeroForOne) =
             address(srcToken) < address(dstToken) ? (srcToken, dstToken, true) : (dstToken, srcToken, false);
 
-        bytes32 id = _toId(PoolKey({
-            currency0: address(token0),
-            currency1: address(token1),
-            fee: fee,
-            tickSpacing: tickSpacing,
-            hooks: address(0)
-        }));
+        bytes32 id = _toId(
+            PoolKey({
+                currency0: address(token0),
+                currency1: address(token1),
+                fee: fee,
+                tickSpacing: tickSpacing,
+                hooks: address(0)
+            })
+        );
 
         liquidity = uint256(STATE_VIEW.getLiquidity(id));
         if (liquidity == 0) return (0, 0);
@@ -93,9 +90,7 @@ contract UniswapV4LikeOracle is IOracle {
         }
 
         if (zeroForOne) {
-            rate = uint256(sqrtPriceX96)
-                .mulDiv(uint256(sqrtPriceX96), 1 << 96)
-                .mulDiv(1e18, 1 << 96);
+            rate = uint256(sqrtPriceX96).mulDiv(uint256(sqrtPriceX96), 1 << 96).mulDiv(1e18, 1 << 96);
         } else {
             rate = ((1e18) << 192) / sqrtPriceX96 / sqrtPriceX96;
         }
@@ -103,7 +98,8 @@ contract UniswapV4LikeOracle is IOracle {
 
     /// @notice Returns value equal to keccak256(abi.encode(poolKey))
     function _toId(PoolKey memory poolKey) internal pure returns (bytes32 poolId) {
-        assembly ("memory-safe") { // solhint-disable-line no-inline-assembly
+        assembly ("memory-safe") {
+            // solhint-disable-line no-inline-assembly
             // 0xa0 represents the total size of the poolKey struct (5 slots of 32 bytes)
             poolId := keccak256(poolKey, 0xa0)
         }

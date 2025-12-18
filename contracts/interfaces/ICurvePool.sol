@@ -10,13 +10,13 @@ interface ICurvePool {
 }
 
 interface IStableSwapMeta {
-    function get_dy_underlying(int128,int128,uint256) external view returns (uint256);
+    function get_dy_underlying(int128, int128, uint256) external view returns (uint256);
 }
 
 interface IStableSwap {
-    function get_dy(int128,int128,uint256) external view returns (uint256);
+    function get_dy(int128, int128, uint256) external view returns (uint256);
 }
 
 interface ICryptoSwap {
-    function get_dy(uint256,uint256,uint256) external view returns (uint256);
+    function get_dy(uint256, uint256, uint256) external view returns (uint256);
 }

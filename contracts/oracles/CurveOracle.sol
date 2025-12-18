@@ -30,22 +30,30 @@ contract CurveOracle is IOracle {
         // 0 for stableswap, 1 for cryptoswap, 2 for LLAMMA.
 
         // check if cryptoswap
-        (bool success, bytes memory data) = pool.staticcall(abi.encodeWithSelector(ICurvePool.allowed_extra_profit.selector));
-        if (success && data.length >= 32) { // vyper could return redundant bytes
+        (bool success, bytes memory data) =
+            pool.staticcall(abi.encodeWithSelector(ICurvePool.allowed_extra_profit.selector));
+        if (success && data.length >= 32) {
+            // vyper could return redundant bytes
             return 1;
         }
 
         // check if llamma
         (success, data) = pool.staticcall(abi.encodeWithSelector(ICurvePool.get_rate_mul.selector));
-        if (success && data.length >= 32) { // vyper could return redundant bytes
+        if (success && data.length >= 32) {
+            // vyper could return redundant bytes
             return 2;
         }
 
         return 0;
     }
 
-    function getRate(IERC20 srcToken, IERC20 dstToken, IERC20 connector, uint256 thresholdFilter) external view override returns (uint256 rate, uint256 weight) {
-        if(connector != _NONE) revert ConnectorShouldBeNone();
+    function getRate(IERC20 srcToken, IERC20 dstToken, IERC20 connector, uint256 thresholdFilter)
+        external
+        view
+        override
+        returns (uint256 rate, uint256 weight)
+    {
+        if (connector != _NONE) revert ConnectorShouldBeNone();
 
         address[] memory pools = CURVE_METAREGISTRY.find_pools_for_coins(address(srcToken), address(dstToken));
         if (pools.length == 0) {
@@ -54,9 +62,9 @@ contract CurveOracle is IOracle {
 
         uint256 amountIn;
         if (srcToken == _ETH) {
-            amountIn = 10**18;
+            amountIn = 10 ** 18;
         } else {
-            amountIn = 10**IERC20Metadata(address(srcToken)).decimals();
+            amountIn = 10 ** IERC20Metadata(address(srcToken)).decimals();
         }
 
         OraclePrices.Data memory ratesAndWeights = OraclePrices.init(pools.length);
@@ -84,8 +92,10 @@ contract CurveOracle is IOracle {
             } else {
                 selector = ICryptoSwap.get_dy.selector;
             }
-            (bool success, bytes memory data) = pools[k].staticcall(abi.encodeWithSelector(selector, uint128(i), uint128(j), amountIn));
-            if (success && data.length >= 32) { // vyper could return redundant bytes
+            (bool success, bytes memory data) =
+                pools[k].staticcall(abi.encodeWithSelector(selector, uint128(i), uint128(j), amountIn));
+            if (success && data.length >= 32) {
+                // vyper could return redundant bytes
                 uint256 amountOut = abi.decode(data, (uint256));
                 if (amountOut > 0) {
                     rate = amountOut * 1e18 / amountIn;

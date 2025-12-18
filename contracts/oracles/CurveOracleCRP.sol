@@ -24,15 +24,21 @@ contract CurveOracleCRP is IOracle {
         MAX_POOLS = maxPools;
     }
 
-    function getRate(IERC20 srcToken, IERC20 dstToken, IERC20 connector, uint256 thresholdFilter) external view override returns (uint256 rate, uint256 weight) {
-        if(connector != _NONE) revert ConnectorShouldBeNone();
+    function getRate(IERC20 srcToken, IERC20 dstToken, IERC20 connector, uint256 thresholdFilter)
+        external
+        view
+        override
+        returns (uint256 rate, uint256 weight)
+    {
+        if (connector != _NONE) revert ConnectorShouldBeNone();
         uint256 amountIn;
         if (srcToken == _ETH) {
-            amountIn = 10**18;
+            amountIn = 10 ** 18;
         } else {
-            amountIn = 10**IERC20Metadata(IERC20Metadata(address(srcToken))).decimals();
+            amountIn = 10 ** IERC20Metadata(IERC20Metadata(address(srcToken))).decimals();
         }
-        ICurveRateProvider.Quote[] memory quotes = CURVE_RATE_PROVIDER.get_quotes(address(srcToken), address(dstToken), amountIn);
+        ICurveRateProvider.Quote[] memory quotes =
+            CURVE_RATE_PROVIDER.get_quotes(address(srcToken), address(dstToken), amountIn);
 
         OraclePrices.Data memory ratesAndWeights = OraclePrices.init(quotes.length);
         for (uint256 i = 0; i < quotes.length && ratesAndWeights.size < MAX_POOLS; i++) {
