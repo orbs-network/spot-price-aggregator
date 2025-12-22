@@ -3,7 +3,7 @@
 set -euo pipefail
 
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
-CONFIG_FILE="$SCRIPT_DIR/config.json"
+CONFIG_FILE="$SCRIPT_DIR/input/config.json"
 
 : "${OWNER:?Set OWNER (address) globally in env}"
 : "${WETH:?Set WETH (address) globally in env}"

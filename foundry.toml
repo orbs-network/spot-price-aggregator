@@ -1,6 +1,6 @@
 [profile.default]
 via_ir = true
-fs_permissions = [{ access = "read", path = "./script" }]
+fs_permissions = [{ access = "read", path = "./script/input" }]
 remappings = [
     "@openzeppelin/=lib/openzeppelin-contracts/",
     "forge-std/=lib/forge-std/src/"

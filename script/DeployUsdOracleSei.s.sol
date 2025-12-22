@@ -7,7 +7,7 @@ import {UsdOracleSei} from "contracts/view/UsdOracleSei.sol";
 
 contract DeployUsdOracleSei is Script {
     function run() external returns (UsdOracleSei oracleSei) {
-        string memory json = vm.readFile("script/config.json");
+        string memory json = vm.readFile("script/input/config.json");
         string memory chainKey = string.concat(".", vm.toString(block.chainid));
 
         address oracle = vm.parseJsonAddress(json, string.concat(chainKey, ".oracle"));
