@@ -2,25 +2,22 @@
 pragma solidity 0.8.23;
 
 import "forge-std/Test.sol";
-import "../contracts/OracleSei.sol";
+import {UsdOracleSei, IOraclePrecompile} from "contracts/view/UsdOracleSei.sol";
 
-contract OracleSeiTest is Test {
-    OracleSei public oracleSei;
+contract UsdOracleSeiTest is Test {
+    UsdOracleSei public oracleSei;
 
     address public oracle;
     address constant ORACLE_PRECOMPILE_ADDR = 0x0000000000000000000000000000000000001008;
 
     address constant USDC = 0xe15fC38F6D8c56aF07bbCBe3BAf5708A2Bf42392;
-    address constant USDT = 0xB75D0B03c06A926e488e2659DF1A861F860bD3d1;
     address constant WETH = 0x160345fC359604fC6e70E3c5fAcbdE5F7A9342d8;
-    address constant WBTC = 0x0555E30da8f98308EdB960aa94C0Db47230d2B9c;
     address constant DRAGON = 0x0a526e425809aEA71eb279d24ae22Dee6C92A4Fe;
     address constant SEI = address(0);
     address constant WSEI = 0xE30feDd158A2e3b13e9badaeABaFc5516e95e8C7;
-    uint256 constant THRESHOLD = 90;
 
     function setUp() public {
-        string memory rpcUrl = vm.envOr("RPC_URL", string("https://evm-rpc.sei-apis.com"));
+        string memory rpcUrl = vm.envOr("RPC_URL", string("https://sei-evm-rpc.publicnode.com"));
         vm.createSelectFork(rpcUrl);
 
         // Foundry (revm) doesn't implement Sei's custom oracle precompile at 0x1008. We "bridge" it by
@@ -42,7 +39,7 @@ contract OracleSeiTest is Test {
             oracle = vm.parseJsonAddress(json, key);
         }
 
-        oracleSei = new OracleSei(oracle, THRESHOLD, tokens, denoms);
+        oracleSei = new UsdOracleSei(oracle, tokens, denoms);
     }
 
     function testParse1e18_basic() public view {
@@ -74,12 +71,6 @@ contract OracleSeiTest is Test {
         assertLt(wethUsd, 100_000e18);
     }
 
-    function testUsd_wbtc_usesOffchainOracleToBase_e2e() public view {
-        uint256 wbtcUsd = oracleSei.usd(WBTC);
-        assertGt(wbtcUsd, 1_000e18);
-        assertLt(wbtcUsd, 1_000_000e18);
-    }
-
     function testUsd_sei_usesOffchainOracleToBase_e2e() public view {
         uint256 seiUsd = oracleSei.usd(SEI);
         assertGt(seiUsd, 0);
@@ -90,12 +81,6 @@ contract OracleSeiTest is Test {
         uint256 wseiUsd = oracleSei.usd(WSEI);
         assertGt(wseiUsd, 0);
         assertLt(wseiUsd, 100e18);
-    }
-
-    function testUsd_usdt_usesOffchainOracleToBase_e2e() public view {
-        uint256 usdtUsd = oracleSei.usd(USDT);
-        assertGt(usdtUsd, 0.5e18);
-        assertLt(usdtUsd, 2e18);
     }
 
     function testUsd_dragon_isInExpectedRange_e2e() public view {

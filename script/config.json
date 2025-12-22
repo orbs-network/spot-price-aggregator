@@ -1,7 +1,47 @@
 {
+    "143": {
+        "oracle": "",
+        "aggregator": "",
+        "deploy": {
+            "tokens": [
+                "0x0000000000000000000000000000000000000000",
+                "0x3bd359C1119dA7Da1D913D1C4D2B7c461115433A",
+                "0xEE8c0E9f1BFFb4Eb878d8f15f368A02a35481242",
+                "0xe7cd86e13AC4309349F30B3435a9d337750fC82D",
+                "0x754704Bc059F8C67012fEd69BC8A327a5aafb603",
+                "0x0555E30da8f98308EdB960aa94C0Db47230d2B9c"
+            ],
+            "feeds": [
+                "0x3894085Ef7Ff0f0aeDf52E2A2704928d1Ec074F1",
+                "0x3894085Ef7Ff0f0aeDf52E2A2704928d1Ec074F1",
+                "0x1B1414782B859871781bA3E4B0979b9ca57A0A04",
+                "0x1a1Be4c184923a6BFF8c27cfDf6ac8bDE4DE00FC",
+                "0xf5F15f188AbCB0d165D1Edb7f37F7d6fA2fCebec",
+                "0x2D1Df1bD061AAc38C22407AD69d69bCC3C62edBD"
+            ]
+        }
+    },
     "1329": {
-        "oracleSei": "0xcEE00f3A37AB7bb7011515bbe7bB0Fa92a9FBA00",
-        "oracle": "0xE399ec2D1bB9057ee5C5a172AE7c2Ddb0750C431",
+        "oracle": "",
+        "aggregator": "0xE399ec2D1bB9057ee5C5a172AE7c2Ddb0750C431",
+        "deploy": {
+            "tokens": [
+                "0xe15fC38F6D8c56aF07bbCBe3BAf5708A2Bf42392",
+                "0xB75D0B03c06A926e488e2659DF1A861F860bD3d1",
+                "0x160345fC359604fC6e70E3c5fAcbdE5F7A9342d8",
+                "0x0555E30da8f98308EdB960aa94C0Db47230d2B9c",
+                "0x0000000000000000000000000000000000000000",
+                "0xE30feDd158A2e3b13e9badaeABaFc5516e95e8C7"
+            ],
+            "denoms": [
+                "uusdc",
+                "uusdt",
+                "ueth",
+                "ubtc",
+                "usei",
+                "usei"
+            ]
+        },
         "connectors": [
             "0xe15fC38F6D8c56aF07bbCBe3BAf5708A2Bf42392",
             "0x3894085Ef7Ff0f0aeDf52E2A2704928d1Ec074F1"
