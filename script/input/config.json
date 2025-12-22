@@ -22,7 +22,7 @@
         }
     },
     "1329": {
-        "oracle": "",
+        "oracle": "0xcEE00f3A37AB7bb7011515bbe7bB0Fa92a9FBA00",
         "aggregator": "0xE399ec2D1bB9057ee5C5a172AE7c2Ddb0750C431",
         "deploy": {
             "tokens": [
