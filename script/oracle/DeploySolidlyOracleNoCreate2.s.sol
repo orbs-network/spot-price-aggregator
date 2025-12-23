@@ -7,9 +7,14 @@ import {SolidlyOracleNoCreate2} from "contracts/oracles/SolidlyOracleNoCreate2.s
 
 contract DeploySolidlyOracleNoCreate2 is Script {
     function run() external returns (SolidlyOracleNoCreate2 oracle) {
-        OffchainOracle oc = OffchainOracle(vm.envAddress("ORACLE"));
         bytes32 salt = vm.envOr("SALT", bytes32(0));
-        address factory = vm.envAddress("FACTORY");
+        string memory json = vm.readFile("script/input/config.json");
+        string memory chainKey = string.concat(".", vm.toString(block.chainid));
+        uint256 index = vm.envUint("INDEX");
+        address aggregator = vm.parseJsonAddress(json, string.concat(chainKey, ".aggregator"));
+        OffchainOracle oc = OffchainOracle(aggregator);
+        address factory =
+            vm.parseJsonAddress(json, string.concat(chainKey, ".oracles[", vm.toString(index), "].env.factory"));
         uint256 oracleType = vm.envOr("TYPE", uint256(0)); // AMM defaults to WETH
 
         vm.startBroadcast();

@@ -2,7 +2,7 @@
 pragma solidity 0.8.23;
 
 import "forge-std/Test.sol";
-import {UsdOracleSei, IOraclePrecompile} from "contracts/view/UsdOracleSei.sol";
+import {UsdOracleSei, ISeiPrecompile} from "contracts/view/UsdOracleSei.sol";
 
 contract UsdOracleSeiTest is Test {
     UsdOracleSei public oracleSei;
@@ -18,8 +18,8 @@ contract UsdOracleSeiTest is Test {
     function setUp() public {
         string memory json = vm.readFile("script/input/config.json");
         string memory chainKey = ".1329";
-        address[] memory deployTokens = vm.parseJsonAddressArray(json, string.concat(chainKey, ".deploy.tokens"));
-        string[] memory deployDenoms = vm.parseJsonStringArray(json, string.concat(chainKey, ".deploy.denoms"));
+        address[] memory deployTokens = vm.parseJsonAddressArray(json, string.concat(chainKey, ".env.tokens"));
+        string[] memory deployDenoms = vm.parseJsonStringArray(json, string.concat(chainKey, ".env.denoms"));
         aggregator = vm.parseJsonAddress(json, string.concat(chainKey, ".aggregator"));
 
         string memory rpcUrl = "https://sei-evm-rpc.publicnode.com";
@@ -43,10 +43,10 @@ contract UsdOracleSeiTest is Test {
 
         oracleSei = new UsdOracleSei(aggregator, tokens, denoms);
 
-        address oraclePrecompile = address(oracleSei.ORACLE_PRECOMPILE());
-        bytes memory callData = abi.encodeWithSelector(IOraclePrecompile.getExchangeRates.selector);
-        bytes memory rawRates = _fetchRates(oraclePrecompile, callData);
-        vm.mockCall(oraclePrecompile, callData, rawRates);
+        address seiPrecompile = address(oracleSei.SEI_PRECOMPILE());
+        bytes memory callData = abi.encodeWithSelector(ISeiPrecompile.getExchangeRates.selector);
+        bytes memory rawRates = _fetchRates(seiPrecompile, callData);
+        vm.mockCall(seiPrecompile, callData, rawRates);
     }
 
     function testUsd_usdc() public view {

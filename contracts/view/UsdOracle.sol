@@ -20,17 +20,17 @@ contract UsdOracle {
 
     address public immutable aggregator;
     address public immutable base;
-    uint256 public immutable feedTtl;
+    uint256 public immutable ttl;
 
     mapping(address => address) public usdFeed;
 
     /// @param _aggregator Offchain oracle used for token -> base conversion.
-    /// @param _feedTtl Max age for feed answers before they are treated as stale.
+    /// @param _ttl Max age for feed answers before they are treated as stale.
     /// @param tokens Token list; tokens[0] is the base token.
     /// @param feeds Chainlink feed addresses, aligned 1:1 with tokens.
-    constructor(address _aggregator, uint256 _feedTtl, address[] memory tokens, address[] memory feeds) {
+    constructor(address _aggregator, uint256 _ttl, address[] memory tokens, address[] memory feeds) {
         aggregator = _aggregator;
-        feedTtl = _feedTtl;
+        ttl = _ttl;
 
         if (tokens.length == 0 || tokens.length != feeds.length) revert ArraysLengthMismatch();
         base = tokens[0];
@@ -56,7 +56,7 @@ contract UsdOracle {
 
         (, int256 answer,, uint256 updatedAt,) = IChainlinkAggregatorV3(feed).latestRoundData();
         if (answer <= 0) revert InvalidFeedAnswer();
-        if (block.timestamp >= updatedAt + feedTtl) revert StaleFeedAnswer();
+        if (block.timestamp >= updatedAt + ttl) revert StaleFeedAnswer();
 
         uint256 price = answer.toUint256();
         uint8 d = IChainlinkAggregatorV3(feed).decimals();

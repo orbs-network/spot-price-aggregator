@@ -7,10 +7,16 @@ import {UniswapV2LikeOracle} from "contracts/oracles/UniswapV2LikeOracle.sol";
 
 contract DeployUniswapV2LikeOracle is Script {
     function run() external returns (UniswapV2LikeOracle oracle) {
-        OffchainOracle oc = OffchainOracle(vm.envAddress("ORACLE"));
         bytes32 salt = vm.envOr("SALT", bytes32(0));
-        address factory = vm.envAddress("FACTORY");
-        bytes32 initcodeHash = vm.envBytes32("INITCODEHASH");
+        string memory json = vm.readFile("script/input/config.json");
+        string memory chainKey = string.concat(".", vm.toString(block.chainid));
+        uint256 index = vm.envUint("INDEX");
+        address aggregator = vm.parseJsonAddress(json, string.concat(chainKey, ".aggregator"));
+        OffchainOracle oc = OffchainOracle(aggregator);
+        address factory =
+            vm.parseJsonAddress(json, string.concat(chainKey, ".oracles[", vm.toString(index), "].env.factory"));
+        bytes32 initcodeHash =
+            vm.parseJsonBytes32(json, string.concat(chainKey, ".oracles[", vm.toString(index), "].env.initcodehash"));
         uint256 oracleType = vm.envOr("TYPE", uint256(0)); // AMM defaults to WETH
 
         vm.startBroadcast();

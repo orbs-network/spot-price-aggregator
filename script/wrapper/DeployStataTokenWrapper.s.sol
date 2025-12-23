@@ -11,11 +11,17 @@ import {StataTokenWrapper} from "contracts/wrappers/StataTokenWrapper.sol";
 /// @notice Deploys a StataTokenWrapper and adds it to MultiWrapper; markets passed via env.
 contract DeployStataTokenWrapper is Script {
     function run() external returns (StataTokenWrapper wrapper) {
-        OffchainOracle offchainOracle = OffchainOracle(vm.envAddress("ORACLE"));
         bytes32 salt = vm.envOr("SALT", bytes32(0));
+        string memory json = vm.readFile("script/input/config.json");
+        string memory chainKey = string.concat(".", vm.toString(block.chainid));
+        uint256 index = vm.envUint("INDEX");
+        address aggregator = vm.parseJsonAddress(json, string.concat(chainKey, ".aggregator"));
+        OffchainOracle offchainOracle = OffchainOracle(aggregator);
         MultiWrapper multiWrapper = offchainOracle.multiWrapper();
-        address factory = vm.envAddress("FACTORY");
-        address[] memory markets = vm.envAddress("MARKETS", ",");
+        address factory =
+            vm.parseJsonAddress(json, string.concat(chainKey, ".wrappers[", vm.toString(index), "].env.factory"));
+        address[] memory markets =
+            vm.parseJsonAddressArray(json, string.concat(chainKey, ".wrappers[", vm.toString(index), "].env.markets"));
 
         vm.startBroadcast();
         wrapper = new StataTokenWrapper{salt: salt}(IStaticATokenFactory(factory));

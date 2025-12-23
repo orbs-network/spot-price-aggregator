@@ -8,11 +8,18 @@ import {IUniswapV4StateView} from "contracts/interfaces/IUniswapV4StateView.sol"
 
 contract DeployUniswapV4LikeOracle is Script {
     function run() external returns (UniswapV4LikeOracle oracle) {
-        OffchainOracle oc = OffchainOracle(vm.envAddress("ORACLE"));
         bytes32 salt = vm.envOr("SALT", bytes32(0));
-        address stateView = vm.envAddress("STATEVIEW");
-        uint256[] memory feesRaw = vm.envUint("FEES", ","); // uint24[]
-        uint256[] memory spacingsRaw = vm.envUint("SPACINGS", ","); // int24[]
+        string memory json = vm.readFile("script/input/config.json");
+        string memory chainKey = string.concat(".", vm.toString(block.chainid));
+        uint256 index = vm.envUint("INDEX");
+        address aggregator = vm.parseJsonAddress(json, string.concat(chainKey, ".aggregator"));
+        OffchainOracle oc = OffchainOracle(aggregator);
+        address stateView =
+            vm.parseJsonAddress(json, string.concat(chainKey, ".oracles[", vm.toString(index), "].env.stateview"));
+        uint256[] memory feesRaw =
+            vm.parseJsonUintArray(json, string.concat(chainKey, ".oracles[", vm.toString(index), "].env.fees")); // uint24[]
+        uint256[] memory spacingsRaw =
+            vm.parseJsonUintArray(json, string.concat(chainKey, ".oracles[", vm.toString(index), "].env.spacings")); // int24[]
         uint24[] memory fees = _toUint24(feesRaw);
         int24[] memory spacings = _toInt24(spacingsRaw);
         uint256 oracleType = vm.envOr("TYPE", uint256(0)); // AMM defaults to WETH

@@ -6,19 +6,18 @@ import "forge-std/Script.sol";
 import {UsdOracleSei} from "contracts/view/UsdOracleSei.sol";
 
 contract DeployUsdOracleSei is Script {
-    function run() external returns (UsdOracleSei oracleSei) {
+    function run() external returns (UsdOracleSei oracle) {
+        bytes32 salt = vm.envOr("SALT", bytes32(0));
+
         string memory json = vm.readFile("script/input/config.json");
         string memory chainKey = string.concat(".", vm.toString(block.chainid));
-
-        address oracle = vm.parseJsonAddress(json, string.concat(chainKey, ".oracle"));
-        bytes32 salt = vm.envOr("SALT", bytes32(0x374eb1cf3455289c1707dd0eabb21e6b757f37a905b2437f3b549bbbbe16c433));
-
-        address[] memory tokens = vm.parseJsonAddressArray(json, string.concat(chainKey, ".usdOracleSei.tokens"));
-        string[] memory denoms = vm.parseJsonStringArray(json, string.concat(chainKey, ".usdOracleSei.denoms"));
+        address aggregator = vm.parseJsonAddress(json, string.concat(chainKey, ".aggregator"));
+        address[] memory tokens = vm.parseJsonAddressArray(json, string.concat(chainKey, ".env.tokens"));
+        string[] memory denoms = vm.parseJsonStringArray(json, string.concat(chainKey, ".env.denoms"));
 
         vm.startBroadcast();
-        console.logBytes32(hashInitCode(type(UsdOracleSei).creationCode, abi.encode(oracle, tokens, denoms)));
-        oracleSei = new UsdOracleSei{salt: salt}(oracle, tokens, denoms);
+        console.logBytes32(hashInitCode(type(UsdOracleSei).creationCode, abi.encode(aggregator, tokens, denoms)));
+        oracle = new UsdOracleSei{salt: salt}(aggregator, tokens, denoms);
         vm.stopBroadcast();
     }
 }

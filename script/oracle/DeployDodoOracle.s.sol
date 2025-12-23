@@ -8,9 +8,13 @@ import {IDodoZoo} from "contracts/interfaces/IDodoFactories.sol";
 
 contract DeployDodoOracle is Script {
     function run() external returns (DodoOracle oracle) {
-        OffchainOracle oc = OffchainOracle(vm.envAddress("ORACLE"));
         bytes32 salt = vm.envOr("SALT", bytes32(0));
-        address zoo = vm.envAddress("ZOO");
+        string memory json = vm.readFile("script/input/config.json");
+        string memory chainKey = string.concat(".", vm.toString(block.chainid));
+        uint256 index = vm.envUint("INDEX");
+        address aggregator = vm.parseJsonAddress(json, string.concat(chainKey, ".aggregator"));
+        OffchainOracle oc = OffchainOracle(aggregator);
+        address zoo = vm.parseJsonAddress(json, string.concat(chainKey, ".oracles[", vm.toString(index), "].env.zoo"));
         uint256 oracleType = vm.envOr("TYPE", uint256(0)); // AMM defaults to WETH
 
         vm.startBroadcast();

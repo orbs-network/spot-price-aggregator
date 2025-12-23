@@ -11,13 +11,20 @@ import {ICToken} from "contracts/interfaces/ICToken.sol";
 
 contract DeployCompoundLikeWrapperSei is Script {
     function run() external returns (CompoundLikeWrapperSei wrapper) {
-        OffchainOracle offchainOracle = OffchainOracle(vm.envAddress("ORACLE"));
         bytes32 salt = vm.envOr("SALT", bytes32(0));
+        string memory json = vm.readFile("script/input/config.json");
+        string memory chainKey = string.concat(".", vm.toString(block.chainid));
+        uint256 index = vm.envUint("INDEX");
+        address aggregator = vm.parseJsonAddress(json, string.concat(chainKey, ".aggregator"));
+        OffchainOracle offchainOracle = OffchainOracle(aggregator);
         MultiWrapper multiWrapper = offchainOracle.multiWrapper();
 
-        address comptroller = vm.envAddress("COMPTROLLER");
-        address cBase = vm.envAddress("CBASE");
-        address[] memory markets = vm.envAddress("MARKETS", ",");
+        address comptroller =
+            vm.parseJsonAddress(json, string.concat(chainKey, ".wrappers[", vm.toString(index), "].env.comptroller"));
+        address cBase =
+            vm.parseJsonAddress(json, string.concat(chainKey, ".wrappers[", vm.toString(index), "].env.cbase"));
+        address[] memory markets =
+            vm.parseJsonAddressArray(json, string.concat(chainKey, ".wrappers[", vm.toString(index), "].env.markets"));
 
         vm.startBroadcast();
         wrapper = new CompoundLikeWrapperSei{salt: salt}(ISeiComptroller(comptroller), IERC20(cBase));

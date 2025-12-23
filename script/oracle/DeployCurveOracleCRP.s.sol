@@ -8,10 +8,16 @@ import {ICurveProvider} from "contracts/interfaces/ICurveProvider.sol";
 
 contract DeployCurveOracleCRP is Script {
     function run() external returns (CurveOracleCRP oracle) {
-        OffchainOracle oc = OffchainOracle(vm.envAddress("ORACLE"));
         bytes32 salt = vm.envOr("SALT", bytes32(0));
-        address provider = vm.envAddress("PROVIDER");
-        uint256 maxPools = vm.envUint("MAXPOOLS");
+        string memory json = vm.readFile("script/input/config.json");
+        string memory chainKey = string.concat(".", vm.toString(block.chainid));
+        uint256 index = vm.envUint("INDEX");
+        address aggregator = vm.parseJsonAddress(json, string.concat(chainKey, ".aggregator"));
+        OffchainOracle oc = OffchainOracle(aggregator);
+        address provider =
+            vm.parseJsonAddress(json, string.concat(chainKey, ".oracles[", vm.toString(index), "].env.provider"));
+        uint256 maxPools =
+            vm.parseJsonUint(json, string.concat(chainKey, ".oracles[", vm.toString(index), "].env.maxpools"));
         uint256 oracleType = vm.envOr("TYPE", uint256(0)); // Curve treated as WETH by default
 
         vm.startBroadcast();

@@ -5,8 +5,8 @@ pragma solidity 0.8.23;
 import {AggregatorLib} from "./AggregatorLib.sol";
 import {ParseLib} from "./ParseLib.sol";
 
-/// @notice View-only USD oracle (1e18) for Sei using the oracle precompile or offchain conversion to a base token.
-/// @dev Pricing flow: (1) Sei oracle precompile when denom is configured; otherwise (2) token -> base via
+/// @notice View-only USD oracle (1e18) for Sei using the Sei precompile or offchain conversion to a base token.
+/// @dev Pricing flow: (1) Sei precompile when denom is configured; otherwise (2) token -> base via
 /// @dev OffchainOracle; then (3) base -> USD via the precompile.
 /// @dev Intended for off-chain reads; not suitable for on-chain pricing.
 contract UsdOracleSei {
@@ -18,7 +18,7 @@ contract UsdOracleSei {
     address public immutable aggregator;
     address public immutable base;
 
-    IOraclePrecompile public constant ORACLE_PRECOMPILE = IOraclePrecompile(0x0000000000000000000000000000000000001008);
+    ISeiPrecompile public constant SEI_PRECOMPILE = ISeiPrecompile(0x0000000000000000000000000000000000001008);
 
     mapping(address => bytes32) public denomHash;
 
@@ -43,14 +43,14 @@ contract UsdOracleSei {
         return aggregator.usdFromBase(token, base, usdFromPrecompile(base));
     }
 
-    /// @notice Returns USD price from the Sei oracle precompile, scaled to 1e18.
+    /// @notice Returns USD price from the Sei precompile, scaled to 1e18.
     /// @param token Token with a configured denom.
     /// @return USD price scaled to 1e18.
     function usdFromPrecompile(address token) public view returns (uint256) {
         bytes32 target = denomHash[token];
         if (target == bytes32(0)) revert MissingPrecompile(token);
 
-        IOraclePrecompile.DenomOracleExchangeRatePair[] memory rates = ORACLE_PRECOMPILE.getExchangeRates();
+        ISeiPrecompile.DenomOracleExchangeRatePair[] memory rates = SEI_PRECOMPILE.getExchangeRates();
         for (uint256 i; i < rates.length; i++) {
             if (keccak256(bytes(rates[i].denom)) == target) {
                 return ParseLib.parse1e18(rates[i].oracleExchangeRateVal.exchangeRate);
@@ -60,8 +60,8 @@ contract UsdOracleSei {
     }
 }
 
-/// @notice Minimal Sei oracle precompile interface needed by this oracle.
-interface IOraclePrecompile {
+/// @notice Minimal Sei precompile interface needed by this oracle.
+interface ISeiPrecompile {
     struct OracleExchangeRate {
         string exchangeRate;
         string lastUpdate;
