@@ -11,7 +11,6 @@ import {ChaiWrapper} from "contracts/wrappers/ChaiWrapper.sol";
 /// @notice Deploys a ChaiWrapper via CREATE2 and adds it to an existing MultiWrapper.
 contract DeployChaiWrapper is Script {
     function run() external returns (ChaiWrapper wrapper) {
-        bytes32 salt = vm.envOr("SALT", bytes32(0));
         string memory json = vm.readFile("script/input/config.json");
         string memory chainKey = string.concat(".", vm.toString(block.chainid));
         uint256 index = vm.envUint("INDEX");
@@ -26,7 +25,7 @@ contract DeployChaiWrapper is Script {
             vm.parseJsonAddress(json, string.concat(chainKey, ".wrappers[", vm.toString(index), "].env.chai_pot"));
 
         vm.startBroadcast();
-        wrapper = new ChaiWrapper{salt: salt}(IERC20(base), IERC20(token), IChaiPot(pot));
+        wrapper = new ChaiWrapper(IERC20(base), IERC20(token), IChaiPot(pot));
         multiWrapper.addWrapper(wrapper);
         vm.stopBroadcast();
     }

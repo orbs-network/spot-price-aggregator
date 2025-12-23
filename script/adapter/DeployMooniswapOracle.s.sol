@@ -3,11 +3,11 @@ pragma solidity 0.8.23;
 
 import "forge-std/Script.sol";
 import {OffchainOracle} from "contracts/OffchainOracle.sol";
-import {AlgebraOracle} from "contracts/oracles/AlgebraOracle.sol";
+import {MooniswapOracle} from "contracts/oracles/MooniswapOracle.sol";
+import {IMooniswapFactory} from "contracts/interfaces/IMooniswapFactory.sol";
 
-contract DeployAlgebraOracle is Script {
-    function run() external returns (AlgebraOracle oracle) {
-        bytes32 salt = vm.envOr("SALT", bytes32(0));
+contract DeployMooniswapOracle is Script {
+    function run() external returns (MooniswapOracle oracle) {
         string memory json = vm.readFile("script/input/config.json");
         string memory chainKey = string.concat(".", vm.toString(block.chainid));
         uint256 index = vm.envUint("INDEX");
@@ -15,12 +15,10 @@ contract DeployAlgebraOracle is Script {
         OffchainOracle oc = OffchainOracle(aggregator);
         address factory =
             vm.parseJsonAddress(json, string.concat(chainKey, ".adapters[", vm.toString(index), "].env.factory"));
-        bytes32 initcodeHash =
-            vm.parseJsonBytes32(json, string.concat(chainKey, ".adapters[", vm.toString(index), "].env.initcodehash"));
-        uint256 oracleType = vm.envOr("TYPE", uint256(0)); // AMM defaults to WETH
+        uint256 oracleType = vm.envOr("TYPE", uint256(2)); // Mooniswap defaults to WETH_ETH
 
         vm.startBroadcast();
-        oracle = new AlgebraOracle{salt: salt}(factory, initcodeHash);
+        oracle = new MooniswapOracle(IMooniswapFactory(factory));
         oc.addOracle(oracle, OffchainOracle.OracleType(oracleType));
         vm.stopBroadcast();
     }

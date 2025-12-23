@@ -11,7 +11,6 @@ import {StataTokenWrapper} from "contracts/wrappers/StataTokenWrapper.sol";
 /// @notice Deploys a StataTokenWrapper and adds it to MultiWrapper; markets passed via env.
 contract DeployStataTokenWrapper is Script {
     function run() external returns (StataTokenWrapper wrapper) {
-        bytes32 salt = vm.envOr("SALT", bytes32(0));
         string memory json = vm.readFile("script/input/config.json");
         string memory chainKey = string.concat(".", vm.toString(block.chainid));
         uint256 index = vm.envUint("INDEX");
@@ -24,7 +23,7 @@ contract DeployStataTokenWrapper is Script {
             vm.parseJsonAddressArray(json, string.concat(chainKey, ".wrappers[", vm.toString(index), "].env.markets"));
 
         vm.startBroadcast();
-        wrapper = new StataTokenWrapper{salt: salt}(IStaticATokenFactory(factory));
+        wrapper = new StataTokenWrapper(IStaticATokenFactory(factory));
         wrapper.addMarkets(_toIERC20(markets));
         multiWrapper.addWrapper(wrapper);
         vm.stopBroadcast();

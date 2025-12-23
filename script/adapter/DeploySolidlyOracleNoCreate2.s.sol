@@ -3,23 +3,21 @@ pragma solidity 0.8.23;
 
 import "forge-std/Script.sol";
 import {OffchainOracle} from "contracts/OffchainOracle.sol";
-import {ChainlinkOracle} from "contracts/oracles/ChainlinkOracle.sol";
-import {IChainlink} from "contracts/interfaces/IChainlink.sol";
+import {SolidlyOracleNoCreate2} from "contracts/oracles/SolidlyOracleNoCreate2.sol";
 
-contract DeployChainlinkOracle is Script {
-    function run() external returns (ChainlinkOracle oracle) {
-        bytes32 salt = vm.envOr("SALT", bytes32(0));
+contract DeploySolidlyOracleNoCreate2 is Script {
+    function run() external returns (SolidlyOracleNoCreate2 oracle) {
         string memory json = vm.readFile("script/input/config.json");
         string memory chainKey = string.concat(".", vm.toString(block.chainid));
         uint256 index = vm.envUint("INDEX");
         address aggregator = vm.parseJsonAddress(json, string.concat(chainKey, ".aggregator"));
         OffchainOracle oc = OffchainOracle(aggregator);
-        address chainlink =
-            vm.parseJsonAddress(json, string.concat(chainKey, ".adapters[", vm.toString(index), "].env.chainlink"));
-        uint256 oracleType = vm.envOr("TYPE", uint256(1)); // Chainlink defaults to ETH
+        address factory =
+            vm.parseJsonAddress(json, string.concat(chainKey, ".adapters[", vm.toString(index), "].env.factory"));
+        uint256 oracleType = vm.envOr("TYPE", uint256(0)); // AMM defaults to WETH
 
         vm.startBroadcast();
-        oracle = new ChainlinkOracle{salt: salt}(IChainlink(chainlink));
+        oracle = new SolidlyOracleNoCreate2(factory);
         oc.addOracle(oracle, OffchainOracle.OracleType(oracleType));
         vm.stopBroadcast();
     }

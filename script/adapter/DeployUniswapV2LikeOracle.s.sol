@@ -3,22 +3,23 @@ pragma solidity 0.8.23;
 
 import "forge-std/Script.sol";
 import {OffchainOracle} from "contracts/OffchainOracle.sol";
-import {DodoOracle} from "contracts/oracles/DodoOracle.sol";
-import {IDodoZoo} from "contracts/interfaces/IDodoFactories.sol";
+import {UniswapV2LikeOracle} from "contracts/oracles/UniswapV2LikeOracle.sol";
 
-contract DeployDodoOracle is Script {
-    function run() external returns (DodoOracle oracle) {
-        bytes32 salt = vm.envOr("SALT", bytes32(0));
+contract DeployUniswapV2LikeOracle is Script {
+    function run() external returns (UniswapV2LikeOracle oracle) {
         string memory json = vm.readFile("script/input/config.json");
         string memory chainKey = string.concat(".", vm.toString(block.chainid));
         uint256 index = vm.envUint("INDEX");
         address aggregator = vm.parseJsonAddress(json, string.concat(chainKey, ".aggregator"));
         OffchainOracle oc = OffchainOracle(aggregator);
-        address zoo = vm.parseJsonAddress(json, string.concat(chainKey, ".adapters[", vm.toString(index), "].env.zoo"));
+        address factory =
+            vm.parseJsonAddress(json, string.concat(chainKey, ".adapters[", vm.toString(index), "].env.factory"));
+        bytes32 initcodeHash =
+            vm.parseJsonBytes32(json, string.concat(chainKey, ".adapters[", vm.toString(index), "].env.initcodehash"));
         uint256 oracleType = vm.envOr("TYPE", uint256(0)); // AMM defaults to WETH
 
         vm.startBroadcast();
-        oracle = new DodoOracle{salt: salt}(IDodoZoo(zoo));
+        oracle = new UniswapV2LikeOracle(factory, initcodeHash);
         oc.addOracle(oracle, OffchainOracle.OracleType(oracleType));
         vm.stopBroadcast();
     }

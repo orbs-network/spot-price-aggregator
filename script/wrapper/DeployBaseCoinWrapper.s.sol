@@ -10,7 +10,6 @@ import {BaseCoinWrapper} from "contracts/wrappers/BaseCoinWrapper.sol";
 /// @notice Deploys a BaseCoinWrapper via CREATE2 and adds it to an existing MultiWrapper.
 contract DeployBaseCoinWrapper is Script {
     function run() external returns (BaseCoinWrapper wrapper) {
-        bytes32 salt = vm.envOr("SALT", bytes32(0));
         string memory json = vm.readFile("script/input/config.json");
         string memory chainKey = string.concat(".", vm.toString(block.chainid));
         uint256 index = vm.envUint("INDEX");
@@ -23,7 +22,7 @@ contract DeployBaseCoinWrapper is Script {
             vm.parseJsonAddress(json, string.concat(chainKey, ".wrappers[", vm.toString(index), "].env.wbase"));
 
         vm.startBroadcast();
-        wrapper = new BaseCoinWrapper{salt: salt}(IERC20(base), IERC20(wbase));
+        wrapper = new BaseCoinWrapper(IERC20(base), IERC20(wbase));
         multiWrapper.addWrapper(wrapper);
         vm.stopBroadcast();
     }

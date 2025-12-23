@@ -1,6 +1,7 @@
 {
     "143": {
         "oracle": "",
+        "salt": "",
         "env": {
             "ttl": 3600,
             "tokens": [
@@ -21,6 +22,7 @@
             ]
         },
         "aggregator": "",
+        "aggregatorSalt": "",
         "connectors": [
             "0x754704Bc059F8C67012fEd69BC8A327a5aafb603",
             "0xe7cd86e13AC4309349F30B3435a9d337750fC82D",

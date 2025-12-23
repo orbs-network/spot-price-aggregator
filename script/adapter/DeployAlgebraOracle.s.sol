@@ -3,11 +3,10 @@ pragma solidity 0.8.23;
 
 import "forge-std/Script.sol";
 import {OffchainOracle} from "contracts/OffchainOracle.sol";
-import {UniswapV2LikeOracle} from "contracts/oracles/UniswapV2LikeOracle.sol";
+import {AlgebraOracle} from "contracts/oracles/AlgebraOracle.sol";
 
-contract DeployUniswapV2LikeOracle is Script {
-    function run() external returns (UniswapV2LikeOracle oracle) {
-        bytes32 salt = vm.envOr("SALT", bytes32(0));
+contract DeployAlgebraOracle is Script {
+    function run() external returns (AlgebraOracle oracle) {
         string memory json = vm.readFile("script/input/config.json");
         string memory chainKey = string.concat(".", vm.toString(block.chainid));
         uint256 index = vm.envUint("INDEX");
@@ -20,7 +19,7 @@ contract DeployUniswapV2LikeOracle is Script {
         uint256 oracleType = vm.envOr("TYPE", uint256(0)); // AMM defaults to WETH
 
         vm.startBroadcast();
-        oracle = new UniswapV2LikeOracle{salt: salt}(factory, initcodeHash);
+        oracle = new AlgebraOracle(factory, initcodeHash);
         oc.addOracle(oracle, OffchainOracle.OracleType(oracleType));
         vm.stopBroadcast();
     }

@@ -39,7 +39,7 @@ persist_oracle_address() {
 
 resolve_script_name() {
   local section="$1" name="$2" dir file
-  dir=$([[ "$section" == "wrappers" ]] && echo "wrapper" || echo "oracle")
+  dir=$([[ "$section" == "wrappers" ]] && echo "wrapper" || echo "adapter")
   file="script/${dir}/Deploy${name}.s.sol"
   [[ -f "$file" ]] || { echo "Expected script file not found: $file" >&2; exit 1; }
   echo "Deploy${name}"

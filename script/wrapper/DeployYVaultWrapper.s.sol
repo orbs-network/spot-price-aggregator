@@ -9,7 +9,6 @@ import {YVaultWrapper} from "contracts/wrappers/YVaultWrapper.sol";
 /// @notice Deploys a YVaultWrapper and adds it to MultiWrapper.
 contract DeployYVaultWrapper is Script {
     function run() external returns (YVaultWrapper wrapper) {
-        bytes32 salt = vm.envOr("SALT", bytes32(0));
         string memory json = vm.readFile("script/input/config.json");
         string memory chainKey = string.concat(".", vm.toString(block.chainid));
         uint256 index = vm.envUint("INDEX");
@@ -18,7 +17,7 @@ contract DeployYVaultWrapper is Script {
         MultiWrapper multiWrapper = offchainOracle.multiWrapper();
 
         vm.startBroadcast();
-        wrapper = new YVaultWrapper{salt: salt}();
+        wrapper = new YVaultWrapper();
         multiWrapper.addWrapper(wrapper);
         vm.stopBroadcast();
     }

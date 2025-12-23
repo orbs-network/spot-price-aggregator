@@ -10,7 +10,6 @@ import {Erc4626Wrapper} from "contracts/wrappers/Erc4626Wrapper.sol";
 contract DeployErc4626Wrapper is Script {
     function run() external returns (Erc4626Wrapper wrapper) {
         MultiWrapper multiWrapper = offchainOracle.multiWrapper();
-        bytes32 salt = vm.envOr("SALT", bytes32(0));
         string memory json = vm.readFile("script/input/config.json");
         string memory chainKey = string.concat(".", vm.toString(block.chainid));
         uint256 index = vm.envUint("INDEX");
@@ -21,7 +20,7 @@ contract DeployErc4626Wrapper is Script {
         address owner = vm.envAddress("OWNER");
 
         vm.startBroadcast();
-        wrapper = new Erc4626Wrapper{salt: salt}(owner);
+        wrapper = new Erc4626Wrapper(owner);
         wrapper.addMarkets(markets);
         multiWrapper.addWrapper(wrapper);
         vm.stopBroadcast();

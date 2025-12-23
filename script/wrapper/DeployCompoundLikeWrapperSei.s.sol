@@ -11,7 +11,6 @@ import {ICToken} from "contracts/interfaces/ICToken.sol";
 
 contract DeployCompoundLikeWrapperSei is Script {
     function run() external returns (CompoundLikeWrapperSei wrapper) {
-        bytes32 salt = vm.envOr("SALT", bytes32(0));
         string memory json = vm.readFile("script/input/config.json");
         string memory chainKey = string.concat(".", vm.toString(block.chainid));
         uint256 index = vm.envUint("INDEX");
@@ -27,7 +26,7 @@ contract DeployCompoundLikeWrapperSei is Script {
             vm.parseJsonAddressArray(json, string.concat(chainKey, ".wrappers[", vm.toString(index), "].env.markets"));
 
         vm.startBroadcast();
-        wrapper = new CompoundLikeWrapperSei{salt: salt}(ISeiComptroller(comptroller), IERC20(cBase));
+        wrapper = new CompoundLikeWrapperSei(ISeiComptroller(comptroller), IERC20(cBase));
         wrapper.addMarkets(_toICToken(markets));
         multiWrapper.addWrapper(wrapper);
         vm.stopBroadcast();

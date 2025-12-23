@@ -8,7 +8,6 @@ import {IUniswapV4StateView} from "contracts/interfaces/IUniswapV4StateView.sol"
 
 contract DeployUniswapV4LikeOracle is Script {
     function run() external returns (UniswapV4LikeOracle oracle) {
-        bytes32 salt = vm.envOr("SALT", bytes32(0));
         string memory json = vm.readFile("script/input/config.json");
         string memory chainKey = string.concat(".", vm.toString(block.chainid));
         uint256 index = vm.envUint("INDEX");
@@ -25,7 +24,7 @@ contract DeployUniswapV4LikeOracle is Script {
         uint256 oracleType = vm.envOr("TYPE", uint256(0)); // AMM defaults to WETH
 
         vm.startBroadcast();
-        oracle = new UniswapV4LikeOracle{salt: salt}(IUniswapV4StateView(stateView), fees, spacings);
+        oracle = new UniswapV4LikeOracle(IUniswapV4StateView(stateView), fees, spacings);
         oc.addOracle(oracle, OffchainOracle.OracleType(oracleType));
         vm.stopBroadcast();
     }

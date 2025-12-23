@@ -10,7 +10,6 @@ import {AaveWrapperV1} from "contracts/wrappers/AaveWrapperV1.sol";
 /// @notice Deploys an AaveWrapperV1 and adds it to MultiWrapper; markets passed via env.
 contract DeployAaveWrapperV1 is Script {
     function run() external returns (AaveWrapperV1 wrapper) {
-        bytes32 salt = vm.envOr("SALT", bytes32(0));
         string memory json = vm.readFile("script/input/config.json");
         string memory chainKey = string.concat(".", vm.toString(block.chainid));
         uint256 index = vm.envUint("INDEX");
@@ -21,7 +20,7 @@ contract DeployAaveWrapperV1 is Script {
             vm.parseJsonAddressArray(json, string.concat(chainKey, ".wrappers[", vm.toString(index), "].env.markets"));
 
         vm.startBroadcast();
-        wrapper = new AaveWrapperV1{salt: salt}();
+        wrapper = new AaveWrapperV1();
         wrapper.addMarkets(_toIERC20(markets));
         multiWrapper.addWrapper(wrapper);
         vm.stopBroadcast();

@@ -12,7 +12,6 @@ import {AaveWrapperV2} from "contracts/wrappers/AaveWrapperV2.sol";
 contract DeployAaveWrapperV2 is Script {
     function run() external returns (AaveWrapperV2 wrapper) {
         MultiWrapper multiWrapper = offchainOracle.multiWrapper();
-        bytes32 salt = vm.envOr("SALT", bytes32(0));
         string memory json = vm.readFile("script/input/config.json");
         string memory chainKey = string.concat(".", vm.toString(block.chainid));
         uint256 index = vm.envUint("INDEX");
@@ -24,7 +23,7 @@ contract DeployAaveWrapperV2 is Script {
             vm.parseJsonAddressArray(json, string.concat(chainKey, ".wrappers[", vm.toString(index), "].env.markets"));
 
         vm.startBroadcast();
-        wrapper = new AaveWrapperV2{salt: salt}(ILendingPoolV2(pool));
+        wrapper = new AaveWrapperV2(ILendingPoolV2(pool));
         wrapper.addMarkets(_toIERC20(markets));
         multiWrapper.addWrapper(wrapper);
         vm.stopBroadcast();

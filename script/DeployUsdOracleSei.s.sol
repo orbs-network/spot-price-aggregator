@@ -7,10 +7,9 @@ import {UsdOracleSei} from "contracts/view/UsdOracleSei.sol";
 
 contract DeployUsdOracleSei is Script {
     function run() external returns (UsdOracleSei oracle) {
-        bytes32 salt = vm.envOr("SALT", bytes32(0));
-
         string memory json = vm.readFile("script/input/config.json");
         string memory chainKey = string.concat(".", vm.toString(block.chainid));
+        bytes32 salt = vm.parseBytes32(json, string.concat(chainKey, ".salt"));
         address aggregator = vm.parseJsonAddress(json, string.concat(chainKey, ".aggregator"));
         address[] memory tokens = vm.parseJsonAddressArray(json, string.concat(chainKey, ".env.tokens"));
         string[] memory denoms = vm.parseJsonStringArray(json, string.concat(chainKey, ".env.denoms"));

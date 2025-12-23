@@ -15,12 +15,13 @@ contract DeployAggregator is Script {
     IERC20 private constant _NATIVE = IERC20(0x0000000000000000000000000000000000000000);
 
     function run() external returns (OffchainOracle aggregator) {
-        bytes32 salt = vm.envOr("SALT", bytes32(0));
         address owner = vm.envAddress("OWNER");
         IERC20 weth = IERC20(vm.envAddress("WETH"));
 
         string memory json = vm.readFile("script/input/config.json");
         string memory chainKey = string.concat(".", vm.toString(block.chainid));
+
+        bytes32 salt = vm.parseBytes32(json, string.concat(chainKey, ".aggregatorSalt"));
 
         IERC20[] memory connectors =
             _appendConnectors(vm.parseJsonAddressArray(json, string.concat(chainKey, ".connectors")), weth);
@@ -28,10 +29,10 @@ contract DeployAggregator is Script {
         vm.startBroadcast();
 
         // Deploy base WETH wrapper and seed MultiWrapper with it
-        BaseCoinWrapper baseCoinWrapper = new BaseCoinWrapper{salt: salt}(_NATIVE, weth);
+        BaseCoinWrapper baseCoinWrapper = new BaseCoinWrapper(_NATIVE, weth);
         IWrapper[] memory initialWrappers = new IWrapper[](1);
         initialWrappers[0] = baseCoinWrapper;
-        MultiWrapper multiWrapper = new MultiWrapper{salt: salt}(initialWrappers, owner);
+        MultiWrapper multiWrapper = new MultiWrapper(initialWrappers, owner);
 
         // Deploy offchain oracle (empty oracles; add later with dedicated scripts)
         IOracle[] memory emptyOracles = new IOracle[](0);
