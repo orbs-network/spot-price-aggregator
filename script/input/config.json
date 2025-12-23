@@ -1,7 +1,7 @@
 {
     "143": {
-        "oracle": "",
-        "salt": "",
+        "oracle": "0xCEE0a2cbEe8fb8e7EE5287bE97dCce0e27CCD000",
+        "salt": "0x1e531bcc3ac7ea4d352ea3e4523fbf4a50295eaa32b1e108d0743d761014f821",
         "env": {
             "ttl": 3600,
             "tokens": [
@@ -21,8 +21,8 @@
                 "0x2D1Df1bD061AAc38C22407AD69d69bCC3C62edBD"
             ]
         },
-        "aggregator": "",
-        "aggregatorSalt": "",
+        "aggregator": "0x111616cF20ACcF1e95A2BD1F0c3115A52fd18111",
+        "aggregatorSalt": "0x7317a6060face3f4e3de510f9e4b3c9dd3410016dd881f98fcdf5c91612a9d30",
         "connectors": [
             "0x754704Bc059F8C67012fEd69BC8A327a5aafb603",
             "0xe7cd86e13AC4309349F30B3435a9d337750fC82D",
