@@ -46,7 +46,7 @@ resolve_script_name() {
 }
 
 deploy_core_stack() {
-  echo "Deploying BaseCoinWrapper + MultiWrapper + OffchainOracle (chain $CHAIN_ID)"
+  echo "Deploying Aggregator: BaseCoinWrapper + MultiWrapper + OffchainOracle (chain $CHAIN_ID)"
   local output json_output
   output=$(forge script DeployAggregator --json "$@") || {
     echo "Core deployment failed" >&2
