@@ -27,7 +27,7 @@
             "0x0555E30da8f98308EdB960aa94C0Db47230d2B9c",
             "0xEE8c0E9f1BFFb4Eb878d8f15f368A02a35481242"
         ],
-        "oracles": [
+        "adapters": [
             {
                 "label": "Uniswap",
                 "name": "UniswapV2LikeOracle",
@@ -133,7 +133,7 @@
                 }
             }
         ],
-        "oracles": [
+        "adapters": [
             {
                 "label": "Dragonswap",
                 "name": "UniswapV2LikeOracle",

@@ -15,7 +15,7 @@ contract DeployMooniswapOracle is Script {
         address aggregator = vm.parseJsonAddress(json, string.concat(chainKey, ".aggregator"));
         OffchainOracle oc = OffchainOracle(aggregator);
         address factory =
-            vm.parseJsonAddress(json, string.concat(chainKey, ".oracles[", vm.toString(index), "].env.factory"));
+            vm.parseJsonAddress(json, string.concat(chainKey, ".adapters[", vm.toString(index), "].env.factory"));
         uint256 oracleType = vm.envOr("TYPE", uint256(2)); // Mooniswap defaults to WETH_ETH
 
         vm.startBroadcast();

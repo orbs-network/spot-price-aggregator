@@ -14,7 +14,7 @@ contract DeployDodoOracle is Script {
         uint256 index = vm.envUint("INDEX");
         address aggregator = vm.parseJsonAddress(json, string.concat(chainKey, ".aggregator"));
         OffchainOracle oc = OffchainOracle(aggregator);
-        address zoo = vm.parseJsonAddress(json, string.concat(chainKey, ".oracles[", vm.toString(index), "].env.zoo"));
+        address zoo = vm.parseJsonAddress(json, string.concat(chainKey, ".adapters[", vm.toString(index), "].env.zoo"));
         uint256 oracleType = vm.envOr("TYPE", uint256(0)); // AMM defaults to WETH
 
         vm.startBroadcast();

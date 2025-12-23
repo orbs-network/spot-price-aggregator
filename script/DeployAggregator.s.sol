@@ -21,9 +21,6 @@ contract DeployAggregator is Script {
 
         string memory json = vm.readFile("script/input/config.json");
         string memory chainKey = string.concat(".", vm.toString(block.chainid));
-        aggregator = OffchainOracle(vm.parseJsonAddress(json, string.concat(chainKey, ".aggregator")));
-
-        if (address(aggregator) != address(0)) return;
 
         IERC20[] memory connectors =
             _appendConnectors(vm.parseJsonAddressArray(json, string.concat(chainKey, ".connectors")), weth);
@@ -52,7 +49,7 @@ contract DeployAggregator is Script {
     }
 
     // ------- Internals -------
-    function _appendConnectors(address[] memory envConnectors, address wNative)
+    function _appendConnectors(address[] memory envConnectors, IERC20 wNative)
         private
         pure
         returns (IERC20[] memory connectors)

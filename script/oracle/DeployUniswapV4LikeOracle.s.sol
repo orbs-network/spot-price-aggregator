@@ -15,11 +15,11 @@ contract DeployUniswapV4LikeOracle is Script {
         address aggregator = vm.parseJsonAddress(json, string.concat(chainKey, ".aggregator"));
         OffchainOracle oc = OffchainOracle(aggregator);
         address stateView =
-            vm.parseJsonAddress(json, string.concat(chainKey, ".oracles[", vm.toString(index), "].env.stateview"));
+            vm.parseJsonAddress(json, string.concat(chainKey, ".adapters[", vm.toString(index), "].env.stateview"));
         uint256[] memory feesRaw =
-            vm.parseJsonUintArray(json, string.concat(chainKey, ".oracles[", vm.toString(index), "].env.fees")); // uint24[]
+            vm.parseJsonUintArray(json, string.concat(chainKey, ".adapters[", vm.toString(index), "].env.fees")); // uint24[]
         uint256[] memory spacingsRaw =
-            vm.parseJsonUintArray(json, string.concat(chainKey, ".oracles[", vm.toString(index), "].env.spacings")); // int24[]
+            vm.parseJsonUintArray(json, string.concat(chainKey, ".adapters[", vm.toString(index), "].env.spacings")); // int24[]
         uint24[] memory fees = _toUint24(feesRaw);
         int24[] memory spacings = _toInt24(spacingsRaw);
         uint256 oracleType = vm.envOr("TYPE", uint256(0)); // AMM defaults to WETH

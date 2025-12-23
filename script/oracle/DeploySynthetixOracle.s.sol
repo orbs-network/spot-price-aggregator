@@ -15,7 +15,7 @@ contract DeploySynthetixOracle is Script {
         address aggregator = vm.parseJsonAddress(json, string.concat(chainKey, ".aggregator"));
         OffchainOracle oc = OffchainOracle(aggregator);
         address proxy =
-            vm.parseJsonAddress(json, string.concat(chainKey, ".oracles[", vm.toString(index), "].env.proxy"));
+            vm.parseJsonAddress(json, string.concat(chainKey, ".adapters[", vm.toString(index), "].env.proxy"));
         uint256 oracleType = vm.envOr("TYPE", uint256(1)); // Synthetix uses native oracle style
 
         vm.startBroadcast();

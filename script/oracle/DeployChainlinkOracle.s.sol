@@ -15,7 +15,7 @@ contract DeployChainlinkOracle is Script {
         address aggregator = vm.parseJsonAddress(json, string.concat(chainKey, ".aggregator"));
         OffchainOracle oc = OffchainOracle(aggregator);
         address chainlink =
-            vm.parseJsonAddress(json, string.concat(chainKey, ".oracles[", vm.toString(index), "].env.chainlink"));
+            vm.parseJsonAddress(json, string.concat(chainKey, ".adapters[", vm.toString(index), "].env.chainlink"));
         uint256 oracleType = vm.envOr("TYPE", uint256(1)); // Chainlink defaults to ETH
 
         vm.startBroadcast();

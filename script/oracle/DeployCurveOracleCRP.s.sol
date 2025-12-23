@@ -15,9 +15,9 @@ contract DeployCurveOracleCRP is Script {
         address aggregator = vm.parseJsonAddress(json, string.concat(chainKey, ".aggregator"));
         OffchainOracle oc = OffchainOracle(aggregator);
         address provider =
-            vm.parseJsonAddress(json, string.concat(chainKey, ".oracles[", vm.toString(index), "].env.provider"));
+            vm.parseJsonAddress(json, string.concat(chainKey, ".adapters[", vm.toString(index), "].env.provider"));
         uint256 maxPools =
-            vm.parseJsonUint(json, string.concat(chainKey, ".oracles[", vm.toString(index), "].env.maxpools"));
+            vm.parseJsonUint(json, string.concat(chainKey, ".adapters[", vm.toString(index), "].env.maxpools"));
         uint256 oracleType = vm.envOr("TYPE", uint256(0)); // Curve treated as WETH by default
 
         vm.startBroadcast();

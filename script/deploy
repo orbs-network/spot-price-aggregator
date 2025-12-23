@@ -11,6 +11,7 @@ CONFIG_FILE="$SCRIPT_DIR/input/config.json"
 CHAIN_ID=${CHAIN_ID:?CHAIN_ID must be set}
 
 CHAIN_CFG=$(jq -e ".\"$CHAIN_ID\"" "$CONFIG_FILE") || { echo "No config found for chain id $CHAIN_ID in $CONFIG_FILE" >&2; exit 1 }
+HAS_AGG=$(jq -r ".\"$CHAIN_ID\".aggregator // empty" "$CONFIG_FILE")
 
 AGGREGATOR=""
 
@@ -99,7 +100,7 @@ deploy_usd_oracle() {
 }
 
 run_section() {
-  local section="$1" # "wrappers" or "oracles"
+  local section="$1" # "wrappers" or "adapters"
   shift
   local forge_args=("$@")
   local entries_len
@@ -120,10 +121,10 @@ run_section() {
   done
 }
 
-deploy_core_stack "$@"
+[[ -n "$HAS_AGG" ]] || deploy_core_stack "$@"
 
-run_section "wrappers" "$@"
-run_section "oracles" "$@"
+[[ -n "$HAS_AGG" ]] || run_section "wrappers" "$@"
+[[ -n "$HAS_AGG" ]] || run_section "adapters" "$@"
 
 deploy_usd_oracle "$@"
 
