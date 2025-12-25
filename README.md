@@ -4,6 +4,10 @@ This is a fork of the upstream 1inch Spot Price Aggregator. The original README 
 
 - [`README.upstream.md`](./README.upstream.md)
 
+### Configuration
+
+- [`config.json`](./script/input/config.json)
+
 ## `/contracts/view` overview
 
 The `/contracts/view` entrypoints provide view-only USD pricing helpers meant for off-chain reads. They follow a simple flow:
