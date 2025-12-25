@@ -2,7 +2,7 @@
 
 This is a fork of the upstream 1inch Spot Price Aggregator. The original README is preserved at:
 
-- `README.upstream.md`
+- [`0x3894085Ef7Ff0f0aeDf52E2A2704928d1Ec074F1README.upstream.md`](./README.md)
 
 ## `/contracts/view` overview
 
