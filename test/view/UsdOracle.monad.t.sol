@@ -7,6 +7,8 @@ import {UsdOracle} from "contracts/view/UsdOracle.sol";
 contract UsdOracleMonadTest is Test {
     UsdOracle public oracle;
 
+    address private constant WBASE = 0x3bd359C1119dA7Da1D913D1C4D2B7c461115433A;
+
     address public usdc;
     address public usdt;
     address public weth;
@@ -21,13 +23,22 @@ contract UsdOracleMonadTest is Test {
         uint256 ttl = vm.parseJsonUint(json, string.concat(chainKey, ".env.ttl"));
         address[] memory tokens = vm.parseJsonAddressArray(json, string.concat(chainKey, ".env.tokens"));
         address[] memory feeds = vm.parseJsonAddressArray(json, string.concat(chainKey, ".env.feeds"));
+        require(tokens.length >= 4, "tokens length < 4");
+        require(feeds.length == tokens.length + 2, "feeds length must be tokens+2");
 
-        oracle = new UsdOracle(aggregator, ttl, tokens, feeds);
+        address[] memory deployTokens = new address[](tokens.length + 2);
+        deployTokens[0] = address(0);
+        deployTokens[1] = WBASE;
+        for (uint256 i = 0; i < tokens.length; i++) {
+            deployTokens[i + 2] = tokens[i];
+        }
 
-        weth = tokens[2];
-        usdt = tokens[3];
-        usdc = tokens[4];
-        wbtc = tokens[5];
+        oracle = new UsdOracle(aggregator, ttl, deployTokens, feeds);
+
+        weth = tokens[0];
+        usdt = tokens[1];
+        usdc = tokens[2];
+        wbtc = tokens[3];
     }
 
     function testUsd_usdc() public view {

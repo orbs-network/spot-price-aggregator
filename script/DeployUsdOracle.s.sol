@@ -9,24 +9,29 @@ contract DeployUsdOracle is Script {
     function run() external returns (UsdOracle oracle) {
         string memory json = vm.readFile("script/input/config.json");
         string memory chainKey = string.concat(".", vm.toString(block.chainid));
-        bytes32 salt = _parseJsonBytes32OrZero(json, string.concat(chainKey, ".salt"));
+        bytes32 salt = vm.parseJsonBytes32(json, string.concat(chainKey, ".salt"));
         address aggregator = vm.parseJsonAddress(json, string.concat(chainKey, ".aggregator"));
         uint256 ttl = vm.parseJsonUint(json, string.concat(chainKey, ".env.ttl"));
         address[] memory tokens = vm.parseJsonAddressArray(json, string.concat(chainKey, ".env.tokens"));
         address[] memory feeds = vm.parseJsonAddressArray(json, string.concat(chainKey, ".env.feeds"));
+        require(feeds.length == tokens.length + 2, "feeds length must be tokens+2");
+        address[] memory tokensWithBase = _prependNativeAndWrapped(tokens);
 
         vm.startBroadcast();
-        console.logBytes32(hashInitCode(type(UsdOracle).creationCode, abi.encode(aggregator, ttl, tokens, feeds)));
-        oracle = new UsdOracle{salt: salt}(aggregator, ttl, tokens, feeds);
+        console.logBytes32(
+            hashInitCode(type(UsdOracle).creationCode, abi.encode(aggregator, ttl, tokensWithBase, feeds))
+        );
+        oracle = new UsdOracle{salt: salt}(aggregator, ttl, tokensWithBase, feeds);
         vm.stopBroadcast();
     }
 
-    function _parseJsonBytes32OrZero(string memory json, string memory key) private view returns (bytes32 value) {
-        if (!vm.keyExistsJson(json, key)) return bytes32(0);
-        try vm.parseJsonBytes32(json, key) returns (bytes32 parsed) {
-            return parsed;
-        } catch {
-            return bytes32(0);
+    function _prependNativeAndWrapped(address[] memory tokens) private view returns (address[] memory tokensWithBase) {
+        address weth = vm.envAddress("WETH");
+        tokensWithBase = new address[](tokens.length + 2);
+        tokensWithBase[0] = address(0);
+        tokensWithBase[1] = weth;
+        for (uint256 i = 0; i < tokens.length; i++) {
+            tokensWithBase[i + 2] = tokens[i];
         }
     }
 }

@@ -7,6 +7,8 @@ import {UsdOracleSei, ISeiPrecompile} from "contracts/view/UsdOracleSei.sol";
 contract UsdOracleSeiTest is Test {
     UsdOracleSei public oracleSei;
 
+    address private constant WBASE = 0xE30feDd158A2e3b13e9badaeABaFc5516e95e8C7;
+
     address public aggregator;
     address public usdc;
     address public usdt;
@@ -21,27 +23,37 @@ contract UsdOracleSeiTest is Test {
         address[] memory deployTokens = vm.parseJsonAddressArray(json, string.concat(chainKey, ".env.tokens"));
         string[] memory deployDenoms = vm.parseJsonStringArray(json, string.concat(chainKey, ".env.denoms"));
         aggregator = vm.parseJsonAddress(json, string.concat(chainKey, ".aggregator"));
+        require(deployTokens.length >= 4, "tokens length < 4");
+        require(deployDenoms.length == deployTokens.length + 2, "denoms length must be tokens+2");
+
+        address[] memory tokens = new address[](deployTokens.length + 2);
+        string[] memory denoms = deployDenoms;
+        tokens[0] = address(0);
+        tokens[1] = WBASE;
+        for (uint256 i = 0; i < deployTokens.length; i++) {
+            tokens[i + 2] = deployTokens[i];
+        }
 
         string memory rpcUrl = "https://sei-evm-rpc.publicnode.com";
 
-        usdc = deployTokens[0];
-        usdt = deployTokens[1];
-        weth = deployTokens[2];
-        wbtc = deployTokens[3];
-        sei = deployTokens[4];
-        wsei = deployTokens[5];
+        sei = tokens[0];
+        wsei = tokens[1];
+        usdc = tokens[2];
+        usdt = tokens[3];
+        weth = tokens[4];
+        wbtc = tokens[5];
 
         vm.createSelectFork(rpcUrl);
 
         // Foundry (revm) doesn't implement Sei's custom oracle precompile at 0x1008. We fetch the real
         // precompile output via `vm.rpc(eth_call)` and mock the call locally for determinism.
         // Only map the base token (USDC) to force `usd(token)` to go through the offchain oracle path for other tokens.
-        address[] memory tokens = new address[](1);
-        string[] memory denoms = new string[](1);
-        tokens[0] = usdc;
-        denoms[0] = deployDenoms[0];
+        address[] memory baseTokens = new address[](1);
+        string[] memory baseDenoms = new string[](1);
+        baseTokens[0] = usdc;
+        baseDenoms[0] = denoms[2];
 
-        oracleSei = new UsdOracleSei(aggregator, tokens, denoms);
+        oracleSei = new UsdOracleSei(aggregator, baseTokens, baseDenoms);
 
         address seiPrecompile = address(oracleSei.SEI_PRECOMPILE());
         bytes memory callData = abi.encodeWithSelector(ISeiPrecompile.getExchangeRates.selector);
