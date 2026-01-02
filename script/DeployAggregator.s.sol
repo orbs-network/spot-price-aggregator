@@ -21,7 +21,7 @@ contract DeployAggregator is Script {
         string memory json = vm.readFile("script/input/config.json");
         string memory chainKey = string.concat(".", vm.toString(block.chainid));
 
-        bytes32 salt = _parseJsonBytes32OrZero(json, string.concat(chainKey, ".aggregatorSalt"));
+        bytes32 salt = vm.parseJsonBytes32(json, string.concat(chainKey, ".aggregatorSalt"));
 
         IERC20[] memory connectors =
             _appendConnectors(vm.parseJsonAddressArray(json, string.concat(chainKey, ".connectors")), weth);
@@ -61,15 +61,6 @@ contract DeployAggregator is Script {
         connectors[2] = wNative;
         for (uint256 i = 0; i < envConnectors.length; i++) {
             connectors[i + 3] = IERC20(envConnectors[i]);
-        }
-    }
-
-    function _parseJsonBytes32OrZero(string memory json, string memory key) private view returns (bytes32 value) {
-        if (!vm.keyExistsJson(json, key)) return bytes32(0);
-        try vm.parseJsonBytes32(json, key) returns (bytes32 parsed) {
-            return parsed;
-        } catch {
-            return bytes32(0);
         }
     }
 }

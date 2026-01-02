@@ -69,6 +69,7 @@
     "1329": {
         "oracle": "0xcEE00f3A37AB7bb7011515bbe7bB0Fa92a9FBA00",
         "salt": "0",
+        "aggregatorSalt": "0x0000000000000000000000000000000000000000000000000000000000000000",
         "env": {
             "tokens": [
                 "0xe15fC38F6D8c56aF07bbCBe3BAf5708A2Bf42392",
@@ -197,8 +198,8 @@
                 "0x976B3D034E162d8bD72D6b9C989d545b839003b0"
             ]
         },
-        "aggregator": "0x00000000000D6FFc74A8feb35aF5827bf57f6786",
-        "aggregatorSalt": "0",
+        "aggregator": "",
+        "aggregatorSalt": "0x0000000000000000000000000000000000000000000000000000000000000000",
         "connectors": [
             "0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB",
             "0xc7198437980c041c805A1EDcbA50c1Ce5db95118",
@@ -270,6 +271,46 @@
                 "name": "UniswapV4LikeOracle",
                 "env": {
                     "address": "0xFbF54317e4820B461E7fA1B2819B6755e1cc0F62"
+                }
+            },
+            {
+                "label": "BlackholeAMM",
+                "name": "SolidlyOracle",
+                "env": {
+                    "factory": "0xFe926062fB99cA5653080D6c14fe945AD68C265c",
+                    "initcodehash": "0x87b2d661db12ce27ece6305198fcb950a2522c8e43e3b90e93256b71a6db5899"
+                }
+            },
+            {
+                "label": "BlackholeCL1",
+                "name": "AlgebraOracle",
+                "env": {
+                    "factory": "0xDcFccf2e8c4EfBba9127B80eAc76c5A122125d29",
+                    "initcodehash": "0xeaa3eea3233916c82fe1281a51bd9cde844b7c4673c0714ca0028a57f5634752"
+                }
+            },
+            {
+                "label": "BlackholeCL50",
+                "name": "AlgebraOracle",
+                "env": {
+                    "factory": "0x58b05074D52D1a84D8FfDAddA3c1b652e8C56994",
+                    "initcodehash": "0xeaa3eea3233916c82fe1281a51bd9cde844b7c4673c0714ca0028a57f5634752"
+                }
+            },
+            {
+                "label": "BlackholeCL100",
+                "name": "AlgebraOracle",
+                "env": {
+                    "factory": "0xf9221dE143A0E57c324bF2a0f281e605e845D767",
+                    "initcodehash": "0xeaa3eea3233916c82fe1281a51bd9cde844b7c4673c0714ca0028a57f5634752"
+                }
+            },
+            {
+                "label": "BlackholeCL200",
+                "name": "AlgebraOracle",
+                "env": {
+                    "factory": "0x5D433A94A4a2aA8f9AA34D8D15692Dc2E9960584",
+                    "initcodehash": "0xeaa3eea3233916c82fe1281a51bd9cde844b7c4673c0714ca0028a57f5634752"
                 }
             },
             {
