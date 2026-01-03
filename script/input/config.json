@@ -282,41 +282,46 @@
             },
             {
                 "label": "BlackholeCL1",
-                "name": "AlgebraOracle",
+                "name": "AlgebraCustomPoolOracle",
                 "env": {
-                    "factory": "0xDcFccf2e8c4EfBba9127B80eAc76c5A122125d29",
+                    "poolDeployer": "0x9B2441037E286d5Bf9456a3BE7b5273fe28DbA1e",
+                    "customDeployer": "0xDcFccf2e8c4EfBba9127B80eAc76c5A122125d29",
                     "initcodehash": "0xeaa3eea3233916c82fe1281a51bd9cde844b7c4673c0714ca0028a57f5634752"
                 }
             },
             {
-                "label": "BlackholeCLCustom",
-                "name": "AlgebraOracle",
+                "label": "BlackholeCLDefault",
+                "name": "AlgebraCustomPoolOracle",
                 "env": {
-                    "factory": "0x512eb749541B7cf294be882D636218c84a5e9E5F",
+                    "poolDeployer": "0x9B2441037E286d5Bf9456a3BE7b5273fe28DbA1e",
+                    "customDeployer": "0x0000000000000000000000000000000000000000",
                     "initcodehash": "0xeaa3eea3233916c82fe1281a51bd9cde844b7c4673c0714ca0028a57f5634752"
                 }
             },
             {
                 "label": "BlackholeCL50",
-                "name": "AlgebraOracle",
+                "name": "AlgebraCustomPoolOracle",
                 "env": {
-                    "factory": "0x58b05074D52D1a84D8FfDAddA3c1b652e8C56994",
+                    "poolDeployer": "0x9B2441037E286d5Bf9456a3BE7b5273fe28DbA1e",
+                    "customDeployer": "0x58b05074D52D1a84D8FfDAddA3c1b652e8C56994",
                     "initcodehash": "0xeaa3eea3233916c82fe1281a51bd9cde844b7c4673c0714ca0028a57f5634752"
                 }
             },
             {
                 "label": "BlackholeCL100",
-                "name": "AlgebraOracle",
+                "name": "AlgebraCustomPoolOracle",
                 "env": {
-                    "factory": "0xf9221dE143A0E57c324bF2a0f281e605e845D767",
+                    "poolDeployer": "0x9B2441037E286d5Bf9456a3BE7b5273fe28DbA1e",
+                    "customDeployer": "0xf9221dE143A0E57c324bF2a0f281e605e845D767",
                     "initcodehash": "0xeaa3eea3233916c82fe1281a51bd9cde844b7c4673c0714ca0028a57f5634752"
                 }
             },
             {
                 "label": "BlackholeCL200",
-                "name": "AlgebraOracle",
+                "name": "AlgebraCustomPoolOracle",
                 "env": {
-                    "factory": "0x5D433A94A4a2aA8f9AA34D8D15692Dc2E9960584",
+                    "poolDeployer": "0x9B2441037E286d5Bf9456a3BE7b5273fe28DbA1e",
+                    "customDeployer": "0x5D433A94A4a2aA8f9AA34D8D15692Dc2E9960584",
                     "initcodehash": "0xeaa3eea3233916c82fe1281a51bd9cde844b7c4673c0714ca0028a57f5634752"
                 }
             },
