@@ -275,10 +275,9 @@
             },
             {
                 "label": "BlackholeAMM",
-                "name": "SolidlyOracle",
+                "name": "SolidlyOracleNoCreate2",
                 "env": {
-                    "factory": "0xFe926062fB99cA5653080D6c14fe945AD68C265c",
-                    "initcodehash": "0x87b2d661db12ce27ece6305198fcb950a2522c8e43e3b90e93256b71a6db5899"
+                    "factory": "0xFe926062fB99cA5653080D6c14fe945AD68C265c"
                 }
             },
             {
@@ -286,6 +285,14 @@
                 "name": "AlgebraOracle",
                 "env": {
                     "factory": "0xDcFccf2e8c4EfBba9127B80eAc76c5A122125d29",
+                    "initcodehash": "0xeaa3eea3233916c82fe1281a51bd9cde844b7c4673c0714ca0028a57f5634752"
+                }
+            },
+            {
+                "label": "BlackholeCLCustom",
+                "name": "AlgebraOracle",
+                "env": {
+                    "factory": "0x512eb749541B7cf294be882D636218c84a5e9E5F",
                     "initcodehash": "0xeaa3eea3233916c82fe1281a51bd9cde844b7c4673c0714ca0028a57f5634752"
                 }
             },
