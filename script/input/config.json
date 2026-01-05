@@ -1,7 +1,7 @@
 {
     "143": {
-        "oracle": "0xcEe000815fe8460344Da49F14121AC9E2Db1f000",
-        "salt": "0x9dab0edc3f1b82e1d07a0092a0ad3e022dd2ecfe703cff6f9ce6d7ba0a054a37",
+        "oracle": "0xCee0939B0C8B359fb06eAbe004c2784E6C1c2000",
+        "salt": "0xec3b46c7307726f387716fdc8f6b3b333370deb199182fbe2aaf702883314b74",
         "env": {
             "ttl": 86400,
             "tokens": [
