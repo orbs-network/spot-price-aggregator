@@ -67,8 +67,8 @@
         ]
     },
     "1329": {
-        "oracle": "0xcEE00f3A37AB7bb7011515bbe7bB0Fa92a9FBA00",
-        "salt": "0x9dab0edc3f1b82e1d07a0092a0ad3e022dd2ecfe703cff6f9ce6d7ba0a054a37",
+        "oracle": "0xcee0928A8384D5A151AbeB91ccC63170dD475000",
+        "salt": "0x669aecda51f77fece14ad69015b8a3759e8eb62a91da13c6fad9ae583446617d",
         "env": {
             "tokens": [
                 "0xe15fC38F6D8c56aF07bbCBe3BAf5708A2Bf42392",
