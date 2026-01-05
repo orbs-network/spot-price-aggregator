@@ -62,7 +62,7 @@ deploy_core_stack() {
   [[ -n "$json_output" && "$json_output" != "null" ]] || { echo "Unable to parse forge JSON output" >&2; exit 1; }
 
   AGGREGATOR=$(jq -er '.returns.aggregator.value // .returns[0].value // .returns.aggregator // .returns[0]' <<<"$json_output") || { echo "Unable to parse OffchainOracle address" >&2; exit 1; }
-  echo "OffchainOracle set to $AGGREGATOR"
+  echo "aggregator set to $AGGREGATOR"
 
   [[ "$SHOULD_BROADCAST" -eq 1 ]] && persist_aggregator_address
 }

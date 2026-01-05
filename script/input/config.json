@@ -1,7 +1,7 @@
 {
     "143": {
         "oracle": "0xcEe000815fe8460344Da49F14121AC9E2Db1f000",
-        "salt": "0x0736955541b4fa93c8af8290fbb1064b352cb505c13dee7f713cdeb4678b4093",
+        "salt": "0xb32152cbc16135e289a117dc70266f0b957ed23bd4c7b40088cf9ea1feb0d95b",
         "env": {
             "ttl": 3600,
             "tokens": [
@@ -20,7 +20,7 @@
             ]
         },
         "aggregator": "0x111616cF20ACcF1e95A2BD1F0c3115A52fd18111",
-        "aggregatorSalt": "0x7317a6060face3f4e3de510f9e4b3c9dd3410016dd881f98fcdf5c91612a9d30",
+        "aggregatorSalt": "0x1cff50fcf68d350f7e47e34255496e7b19cfcd57704552b984cd991fc5c013e7",
         "connectors": [
             "0x754704Bc059F8C67012fEd69BC8A327a5aafb603",
             "0xe7cd86e13AC4309349F30B3435a9d337750fC82D",
@@ -68,7 +68,7 @@
     },
     "1329": {
         "oracle": "0xcEE00f3A37AB7bb7011515bbe7bB0Fa92a9FBA00",
-        "salt": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "salt": "0xb32152cbc16135e289a117dc70266f0b957ed23bd4c7b40088cf9ea1feb0d95b",
         "env": {
             "tokens": [
                 "0xe15fC38F6D8c56aF07bbCBe3BAf5708A2Bf42392",
@@ -86,7 +86,7 @@
             ]
         },
         "aggregator": "0xE399ec2D1bB9057ee5C5a172AE7c2Ddb0750C431",
-        "aggregatorSalt": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "aggregatorSalt": "0x7317a6060face3f4e3de510f9e4b3c9dd3410016dd881f98fcdf5c91612a9d30",
         "connectors": [
             "0xe15fC38F6D8c56aF07bbCBe3BAf5708A2Bf42392",
             "0x3894085Ef7Ff0f0aeDf52E2A2704928d1Ec074F1"
@@ -173,8 +173,8 @@
         ]
     },
     "43114": {
-        "oracle": "",
-        "salt": "0x0736955541b4fa93c8af8290fbb1064b352cb505c13dee7f713cdeb4678b4093",
+        "oracle": "0xCee00e3D118053C95456FD9Eded45BE873D20000",
+        "salt": "0xb32152cbc16135e289a117dc70266f0b957ed23bd4c7b40088cf9ea1feb0d95b",
         "env": {
             "ttl": 3600,
             "tokens": [
@@ -198,8 +198,8 @@
                 "0x976B3D034E162d8bD72D6b9C989d545b839003b0"
             ]
         },
-        "aggregator": "",
-        "aggregatorSalt": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "aggregator": "0x1111739418aAa695eEEF490Ee4CFb30C31b91111",
+        "aggregatorSalt": "0x1cff50fcf68d350f7e47e34255496e7b19cfcd57704552b984cd991fc5c013e7",
         "connectors": [
             "0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB",
             "0xc7198437980c041c805A1EDcbA50c1Ce5db95118",
