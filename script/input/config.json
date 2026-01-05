@@ -1,9 +1,9 @@
 {
     "143": {
         "oracle": "0xcEe000815fe8460344Da49F14121AC9E2Db1f000",
-        "salt": "0xb32152cbc16135e289a117dc70266f0b957ed23bd4c7b40088cf9ea1feb0d95b",
+        "salt": "0x9dab0edc3f1b82e1d07a0092a0ad3e022dd2ecfe703cff6f9ce6d7ba0a054a37",
         "env": {
-            "ttl": 3600,
+            "ttl": 86400,
             "tokens": [
                 "0xEE8c0E9f1BFFb4Eb878d8f15f368A02a35481242",
                 "0xe7cd86e13AC4309349F30B3435a9d337750fC82D",
@@ -68,7 +68,7 @@
     },
     "1329": {
         "oracle": "0xcEE00f3A37AB7bb7011515bbe7bB0Fa92a9FBA00",
-        "salt": "0xb32152cbc16135e289a117dc70266f0b957ed23bd4c7b40088cf9ea1feb0d95b",
+        "salt": "0x9dab0edc3f1b82e1d07a0092a0ad3e022dd2ecfe703cff6f9ce6d7ba0a054a37",
         "env": {
             "tokens": [
                 "0xe15fC38F6D8c56aF07bbCBe3BAf5708A2Bf42392",
@@ -173,10 +173,10 @@
         ]
     },
     "43114": {
-        "oracle": "0xCee00e3D118053C95456FD9Eded45BE873D20000",
-        "salt": "0xb32152cbc16135e289a117dc70266f0b957ed23bd4c7b40088cf9ea1feb0d95b",
+        "oracle": "0xcee0AA7Ae1C0f52Bca8F658586C146012900C000",
+        "salt": "0x9dab0edc3f1b82e1d07a0092a0ad3e022dd2ecfe703cff6f9ce6d7ba0a054a37",
         "env": {
-            "ttl": 3600,
+            "ttl": 86400,
             "tokens": [
                 "0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664",
                 "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E",
