@@ -274,19 +274,17 @@
                 }
             },
             {
+                "label": "Curve",
+                "name": "CurveOracle",
+                "env": {
+                    "address": "0x4e5Cee3B8Af0CB46EFAA94Cba5E0f25f8770BB19"
+                }
+            },
+            {
                 "label": "BlackholeAMM",
                 "name": "SolidlyOracleNoCreate2",
                 "env": {
                     "factory": "0xFe926062fB99cA5653080D6c14fe945AD68C265c"
-                }
-            },
-            {
-                "label": "BlackholeCL1",
-                "name": "AlgebraCustomPoolOracle",
-                "env": {
-                    "poolDeployer": "0x9B2441037E286d5Bf9456a3BE7b5273fe28DbA1e",
-                    "customDeployer": "0xDcFccf2e8c4EfBba9127B80eAc76c5A122125d29",
-                    "initcodehash": "0xeaa3eea3233916c82fe1281a51bd9cde844b7c4673c0714ca0028a57f5634752"
                 }
             },
             {
@@ -295,6 +293,15 @@
                 "env": {
                     "poolDeployer": "0x9B2441037E286d5Bf9456a3BE7b5273fe28DbA1e",
                     "customDeployer": "0x0000000000000000000000000000000000000000",
+                    "initcodehash": "0xeaa3eea3233916c82fe1281a51bd9cde844b7c4673c0714ca0028a57f5634752"
+                }
+            },
+            {
+                "label": "BlackholeCL1",
+                "name": "AlgebraCustomPoolOracle",
+                "env": {
+                    "poolDeployer": "0x9B2441037E286d5Bf9456a3BE7b5273fe28DbA1e",
+                    "customDeployer": "0xDcFccf2e8c4EfBba9127B80eAc76c5A122125d29",
                     "initcodehash": "0xeaa3eea3233916c82fe1281a51bd9cde844b7c4673c0714ca0028a57f5634752"
                 }
             },
@@ -323,13 +330,6 @@
                     "poolDeployer": "0x9B2441037E286d5Bf9456a3BE7b5273fe28DbA1e",
                     "customDeployer": "0x5D433A94A4a2aA8f9AA34D8D15692Dc2E9960584",
                     "initcodehash": "0xeaa3eea3233916c82fe1281a51bd9cde844b7c4673c0714ca0028a57f5634752"
-                }
-            },
-            {
-                "label": "Curve",
-                "name": "CurveOracle",
-                "env": {
-                    "address": "0x4e5Cee3B8Af0CB46EFAA94Cba5E0f25f8770BB19"
                 }
             }
         ]

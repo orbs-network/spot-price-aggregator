@@ -23,9 +23,9 @@ contract AlgebraCustomPoolOracleAvaxTest is Test {
         vm.createSelectFork(AVAX_RPC);
 
         string memory json = vm.readFile(CONFIG_PATH);
-        poolDeployer = vm.parseJsonAddress(json, string.concat(CHAIN_KEY, ".adapters[7].env.poolDeployer"));
-        cl50Deployer = vm.parseJsonAddress(json, string.concat(CHAIN_KEY, ".adapters[9].env.customDeployer"));
-        initcodeHash = vm.parseJsonBytes32(json, string.concat(CHAIN_KEY, ".adapters[7].env.initcodehash"));
+        poolDeployer = vm.parseJsonAddress(json, string.concat(CHAIN_KEY, ".adapters[10].env.poolDeployer"));
+        cl50Deployer = vm.parseJsonAddress(json, string.concat(CHAIN_KEY, ".adapters[10].env.customDeployer"));
+        initcodeHash = vm.parseJsonBytes32(json, string.concat(CHAIN_KEY, ".adapters[10].env.initcodehash"));
 
         address[] memory connectors = vm.parseJsonAddressArray(json, string.concat(CHAIN_KEY, ".connectors"));
         require(connectors.length >= 5, "connectors length < 5");

@@ -66,24 +66,24 @@ contract OffchainOracleAvaxTest is Test {
         address oracleUniswapV2 = vm.parseJsonAddress(json, string.concat(CHAIN_KEY, ".adapters[3].env.address"));
         address oracleUniswapV3 = vm.parseJsonAddress(json, string.concat(CHAIN_KEY, ".adapters[4].env.address"));
         address oracleUniswapV4 = vm.parseJsonAddress(json, string.concat(CHAIN_KEY, ".adapters[5].env.address"));
-        address oracleCurve = vm.parseJsonAddress(json, string.concat(CHAIN_KEY, ".adapters[12].env.address"));
+        address oracleCurve = vm.parseJsonAddress(json, string.concat(CHAIN_KEY, ".adapters[6].env.address"));
 
         // Blackhole factories (from config)
-        address blackholeAmmFactory = vm.parseJsonAddress(json, string.concat(CHAIN_KEY, ".adapters[6].env.factory"));
+        address blackholeAmmFactory = vm.parseJsonAddress(json, string.concat(CHAIN_KEY, ".adapters[7].env.factory"));
         address blackholeClPoolDeployer =
-            vm.parseJsonAddress(json, string.concat(CHAIN_KEY, ".adapters[7].env.poolDeployer"));
+            vm.parseJsonAddress(json, string.concat(CHAIN_KEY, ".adapters[8].env.poolDeployer"));
         address blackholeCl1Deployer =
-            vm.parseJsonAddress(json, string.concat(CHAIN_KEY, ".adapters[7].env.customDeployer"));
+            vm.parseJsonAddress(json, string.concat(CHAIN_KEY, ".adapters[9].env.customDeployer"));
         address blackholeClDefaultDeployer =
             vm.parseJsonAddress(json, string.concat(CHAIN_KEY, ".adapters[8].env.customDeployer"));
         address blackholeCl50Deployer =
-            vm.parseJsonAddress(json, string.concat(CHAIN_KEY, ".adapters[9].env.customDeployer"));
-        address blackholeCl100Deployer =
             vm.parseJsonAddress(json, string.concat(CHAIN_KEY, ".adapters[10].env.customDeployer"));
-        address blackholeCl200Deployer =
+        address blackholeCl100Deployer =
             vm.parseJsonAddress(json, string.concat(CHAIN_KEY, ".adapters[11].env.customDeployer"));
+        address blackholeCl200Deployer =
+            vm.parseJsonAddress(json, string.concat(CHAIN_KEY, ".adapters[12].env.customDeployer"));
         bytes32 blackholeInitcodeHash =
-            vm.parseJsonBytes32(json, string.concat(CHAIN_KEY, ".adapters[7].env.initcodehash"));
+            vm.parseJsonBytes32(json, string.concat(CHAIN_KEY, ".adapters[8].env.initcodehash"));
 
         BaseCoinWrapper baseCoinWrapper = new BaseCoinWrapper(NATIVE, IERC20(WETH));
         IWrapper[] memory initialWrappers = new IWrapper[](1);
