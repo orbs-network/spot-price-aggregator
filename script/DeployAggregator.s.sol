@@ -21,7 +21,14 @@ contract DeployAggregator is Script {
         string memory json = vm.readFile("script/input/config.json");
         string memory chainKey = string.concat(".", vm.toString(block.chainid));
 
-        bytes32 salt = vm.parseJsonBytes32(json, string.concat(chainKey, ".aggregatorSalt"));
+        string memory saltPath = string.concat(chainKey, ".aggregatorSalt");
+        bytes32 salt;
+        if (vm.keyExistsJson(json, saltPath)) {
+            string memory saltStr = vm.parseJsonString(json, saltPath);
+            if (bytes(saltStr).length != 0) {
+                salt = vm.parseJsonBytes32(json, saltPath);
+            }
+        }
 
         IERC20[] memory connectors =
             _appendConnectors(vm.parseJsonAddressArray(json, string.concat(chainKey, ".connectors")), weth);

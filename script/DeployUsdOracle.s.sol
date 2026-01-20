@@ -9,7 +9,14 @@ contract DeployUsdOracle is Script {
     function run() external returns (UsdOracle oracle) {
         string memory json = vm.readFile("script/input/config.json");
         string memory chainKey = string.concat(".", vm.toString(block.chainid));
-        bytes32 salt = vm.parseJsonBytes32(json, string.concat(chainKey, ".salt"));
+        string memory saltPath = string.concat(chainKey, ".salt");
+        bytes32 salt;
+        if (vm.keyExistsJson(json, saltPath)) {
+            string memory saltStr = vm.parseJsonString(json, saltPath);
+            if (bytes(saltStr).length != 0) {
+                salt = vm.parseJsonBytes32(json, saltPath);
+            }
+        }
         address aggregator = vm.parseJsonAddress(json, string.concat(chainKey, ".aggregator"));
         uint256 ttl = vm.parseJsonUint(json, string.concat(chainKey, ".env.ttl"));
         address[] memory tokens = vm.parseJsonAddressArray(json, string.concat(chainKey, ".env.tokens"));

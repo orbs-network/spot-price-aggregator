@@ -13,9 +13,13 @@ CHAIN_ID=${CHAIN_ID:?CHAIN_ID must be set}
 CHAIN_CFG=$(jq -e ".\"$CHAIN_ID\"" "$CONFIG_FILE") || { echo "No config found for chain id $CHAIN_ID in $CONFIG_FILE" >&2; exit 1 }
 HAS_AGG=$(jq -r ".\"$CHAIN_ID\".aggregator // empty" "$CONFIG_FILE")
 HAS_ORACLE=$(jq -r ".\"$CHAIN_ID\".oracle // empty" "$CONFIG_FILE")
+AGG_SALT=$(jq -r ".\"$CHAIN_ID\".aggregatorSalt // empty" "$CONFIG_FILE")
+ORACLE_SALT=$(jq -r ".\"$CHAIN_ID\".salt // empty" "$CONFIG_FILE")
 AGGREGATOR=""
-AGG_PREFIX_REGEX='^0x111111'
-ORACLE_PREFIX_REGEX='^0xcee000'
+AGG_PREFIX="0x111111"
+AGG_PREFIX_REGEX="^${AGG_PREFIX}"
+ORACLE_PREFIX="0xcee000"
+ORACLE_PREFIX_REGEX="^${ORACLE_PREFIX}"
 
 # Detect broadcast flag in arguments
 SHOULD_BROADCAST=0
@@ -70,35 +74,8 @@ print_deploy_aggregator_hash() {
   hash=$(jq -r '.logs[]? | select(type=="string")' <<<"$json_output" | head -n 1)
   [[ -n "$hash" && "$hash" != "null" ]] || { echo "Unable to parse DeployAggregator hash" >&2; exit 1; }
 
+  echo "expected prefix: $AGG_PREFIX" >&2
   echo "$hash"
-}
-
-expected_aggregator_address() {
-  local output json_output addr
-  local -a forge_args=()
-  for arg in "$@"; do
-    [[ "$arg" == "--broadcast" ]] && continue
-    forge_args+=("$arg")
-  done
-
-  output=$(forge script DeployAggregator --json "${forge_args[@]}") || {
-    echo "DeployAggregator failed" >&2
-    exit 1
-  }
-
-  json_output=$(jq -sR 'split("\n")
-    | map(try fromjson catch empty)
-    | map(select(type=="object" and has("returns")))
-    | last' <<<"$output")
-
-  [[ -n "$json_output" && "$json_output" != "null" ]] || { echo "Unable to parse forge JSON output" >&2; exit 1; }
-
-  addr=$(jq -er '.returns.aggregator.value // .returns[0].value // .returns.aggregator // .returns[0]' <<<"$json_output") || {
-    echo "Unable to parse OffchainOracle address" >&2
-    exit 1
-  }
-
-  echo "$addr"
 }
 
 resolve_usd_oracle_script() {
@@ -136,37 +113,8 @@ print_deploy_usd_oracle_hash() {
   hash=$(jq -r '.logs[]? | select(type=="string")' <<<"$json_output" | head -n 1)
   [[ -n "$hash" && "$hash" != "null" ]] || { echo "Unable to parse USD oracle hash" >&2; exit 1; }
 
+  echo "expected prefix: $ORACLE_PREFIX" >&2
   echo "$hash"
-}
-
-expected_usd_oracle_address() {
-  local oracle_script="$1"
-  shift
-  local output json_output addr
-  local -a forge_args=()
-  for arg in "$@"; do
-    [[ "$arg" == "--broadcast" ]] && continue
-    forge_args+=("$arg")
-  done
-
-  output=$(forge script "$oracle_script" --json "${forge_args[@]}") || {
-    echo "USD oracle deployment failed" >&2
-    exit 1
-  }
-
-  json_output=$(jq -sR 'split("\n")
-    | map(try fromjson catch empty)
-    | map(select(type=="object" and has("returns")))
-    | last' <<<"$output")
-
-  [[ -n "$json_output" && "$json_output" != "null" ]] || { echo "Unable to parse forge JSON output" >&2; exit 1; }
-
-  addr=$(jq -er '.returns.oracle.value // .returns[0].value // .returns.oracle // .returns[0]' <<<"$json_output") || {
-    echo "Unable to parse USD oracle address" >&2
-    exit 1
-  }
-
-  echo "$addr"
 }
 
 deploy_core_stack() {
@@ -199,15 +147,12 @@ deploy_usd_oracle() {
     return
   fi
 
-  if [[ -z "$HAS_ORACLE" || ! "${HAS_ORACLE:l}" =~ $ORACLE_PREFIX_REGEX ]]; then
+  if [[ -n "$HAS_ORACLE" && "${HAS_ORACLE:l}" =~ $ORACLE_PREFIX_REGEX ]]; then
+    return
+  fi
+  if [[ -z "$ORACLE_SALT" ]]; then
     print_deploy_usd_oracle_hash "$oracle_script" "$@"
     exit 0
-  fi
-
-  local expected_oracle
-  expected_oracle=$(expected_usd_oracle_address "$oracle_script" "$@")
-  if [[ "${HAS_ORACLE:l}" == "${expected_oracle:l}" ]]; then
-    return
   fi
 
   echo "Deploying USD oracle ($oracle_script) for chain $CHAIN_ID"
@@ -263,15 +208,14 @@ run_section() {
   done
 }
 
-if [[ -z "$HAS_AGG" || ! "$HAS_AGG" =~ $AGG_PREFIX_REGEX ]]; then
-  print_deploy_aggregator_hash "$@"
+if [[ "$HAS_AGG" =~ $AGG_PREFIX_REGEX ]]; then
+  deploy_usd_oracle "$@"
+  echo "Done for chain $CHAIN_ID"
   exit 0
 fi
 
-expected_agg=$(expected_aggregator_address "$@")
-if [[ "${HAS_AGG:l}" == "${expected_agg:l}" ]]; then
-  deploy_usd_oracle "$@"
-  echo "Done for chain $CHAIN_ID"
+if [[ -z "$AGG_SALT" ]]; then
+  print_deploy_aggregator_hash "$@"
   exit 0
 fi
 
