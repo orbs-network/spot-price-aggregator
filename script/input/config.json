@@ -509,11 +509,43 @@
             }
         ]
     },
+    "80094": {
+        "connectors": [
+            "0xFCBD14DC51f0A4d49d5E53C2E0950e0bC26d0Dce",
+            "0x779Ded0c9e1022225f8E0630b35a9b54bE713736",
+            "0x2F6F07CDcf3588944Bf4C42aC74ff24bF56e7590",
+            "0x549943e04f40284185054145c6E4e9568C1D3241",
+            "0x0555E30da8f98308EdB960aa94C0Db47230d2B9c"
+        ],
+        "adapters": [
+            {
+                "label": "Kodiak",
+                "name": "UniswapV2LikeOracle",
+                "env": {
+                    "factory": "0x5e705e184d233ff2a7cb1553793464a9d0c3028f",
+                    "initcodehash": "0x190cc7bdd70507a793b76d7bc2bf03e1866989ca7881812e0e1947b23e099534"
+                }
+            },
+            {
+                "label": "Kodiak",
+                "name": "UniswapV3LikeOracle",
+                "env": {
+                    "factory": "0xD84CBf0B02636E7f53dB9E5e45A616E05d710990",
+                    "initcodehash": "0xd8e2091bc519b509176fc39aeb148cc8444418d3ce260820edc44e806c2c2339",
+                    "fees": [
+                        500,
+                        3000,
+                        10000,
+                        20000
+                    ]
+                }
+            }
+        ]
+    },
     "146": {},
     "137": {},
     "8453": {},
     "59144": {},
     "42161": {},
-    "14": {},
-    "80094": {}
+    "14": {}
 }
