@@ -334,7 +334,181 @@
             }
         ]
     },
-    "56": {},
+    "56": {
+        "oracle": "",
+        "salt": "0x086f045667f6cfe09d857fdfc4873c7919df9a4b126658b0469d9a64000532f9",
+        "env": {
+            "ttl": 86400,
+            "tokens": [
+                "0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3",
+                "0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
+                "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
+                "0x55d398326f99059fF775485246999027B3197955",
+                "0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c"
+            ],
+            "feeds": [
+                "0x0567F2323251f0Aab15c8dFb1967E4e8A7D42aeE",
+                "0x0567F2323251f0Aab15c8dFb1967E4e8A7D42aeE",
+                "0x132d3C0B1D2cEa0BC552588063bdBb210FDeecfA",
+                "0x9ef1B8c0E4F7dc8bF5719Ea496883DC6401d5b2e",
+                "0x51597f405303C4377E36123cBc172b13269EA163",
+                "0xB97Ad0E74fa7d920791E90258A6E2085088b4320",
+                "0x264990fbd0A4796A3E3d8E37C4d5F87a3aCa5Ebf"
+            ]
+        },
+        "aggregator": "",
+        "aggregatorSalt": "0x1cff50fcf68d350f7e47e34255496e7b19cfcd57704552b984cd991fc5c013e7",
+        "connectors": [
+            "0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3",
+            "0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
+            "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
+            "0x55d398326f99059fF775485246999027B3197955",
+            "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+            "0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c",
+            "0x111111111117dC0aa78b770fA6A738034120C302"
+        ],
+        "wrappers": [
+            {
+                "label": "AaveV3",
+                "name": "AaveWrapperV3",
+                "env": {
+                    "address": "0x0c8fc7a71C28c768FDC1f7d75835229beBEB1573"
+                }
+            },
+            {
+                "label": "StataTokens",
+                "name": "StataTokenWrapper",
+                "env": {
+                    "address": "0x1A75DF59f464a70Cc8f7383983852FF72e5F5167"
+                }
+            },
+            {
+                "label": "Venus",
+                "name": "CompoundLikeWrapper",
+                "env": {
+                    "address": "0x11DEE30E710B8d4a8630392781Cc3c0046365d4c"
+                }
+            }
+        ],
+        "adapters": [
+            {
+                "label": "ApeSwap",
+                "name": "UniswapV2LikeOracle",
+                "env": {
+                    "address": "0xeD55d76Bb48E042a177d1E21AffBe1B72d0c7dB0"
+                }
+            },
+            {
+                "label": "BakerySwap",
+                "name": "UniswapV2LikeOracle",
+                "env": {
+                    "address": "0x82b6B75F5fEabbfD370D45daCEFae3D5c06099DA"
+                }
+            },
+            {
+                "label": "BSCswap",
+                "name": "UniswapV2LikeOracle",
+                "env": {
+                    "address": "0xD4eFb5998DFBDFB791182fb610D0061136E9DB50"
+                }
+            },
+            {
+                "label": "Demax",
+                "name": "UniswapV2LikeOracle",
+                "env": {
+                    "address": "0x7bdc6954e1c7869B4147A320d589689F628E9921"
+                }
+            },
+            {
+                "label": "KyberDMM",
+                "name": "KyberDmmOracle",
+                "env": {
+                    "address": "0xb194735EdC3Ab0F77Ef1E961f7e14E12dC0CF2AF"
+                }
+            },
+            {
+                "label": "Mooniswap",
+                "name": "MooniswapOracle",
+                "env": {
+                    "address": "0x5F6a6428756CfAF96584286Ef9f7411621196f3A"
+                }
+            },
+            {
+                "label": "Pancake 1",
+                "name": "UniswapV2LikeOracle",
+                "env": {
+                    "address": "0x1b947aF8b3dd6aa96F8726cd92c894D0Ba6367a3"
+                }
+            },
+            {
+                "label": "Pancake 2",
+                "name": "UniswapV2LikeOracle",
+                "env": {
+                    "address": "0xB9fa95a38D50c5Bad1eA2b4E85e106Fe886cCb3A"
+                }
+            },
+            {
+                "label": "Pancake 3",
+                "name": "UniswapV3LikeOracle",
+                "env": {
+                    "address": "0x7e72b1e0e6DD6F71e3b98f768E814613C2097e61"
+                }
+            },
+            {
+                "label": "Thugswap",
+                "name": "UniswapV2LikeOracle",
+                "env": {
+                    "address": "0x7bBc0156c31A19097eEd6B636AA2F4AB8A31BFD9"
+                }
+            },
+            {
+                "label": "UniswapV2",
+                "name": "UniswapV2LikeOracle",
+                "env": {
+                    "address": "0x4C5B9573dE7660c097F1a21050038378CD691066"
+                }
+            },
+            {
+                "label": "UniswapV3",
+                "name": "UniswapV3LikeOracle",
+                "env": {
+                    "address": "0xe920521dcC084efc1BB830b2cd795029a58d6eF0"
+                }
+            },
+            {
+                "label": "UniswapV4",
+                "name": "UniswapV4LikeOracle",
+                "env": {
+                    "address": "0xFbF54317e4820B461E7fA1B2819B6755e1cc0F62"
+                }
+            },
+            {
+                "label": "Thena",
+                "name": "SolidlyOracleNoCreate2",
+                "env": {
+                    "factory": "0xAFD89d21BdB66d00817d4153E055830B1c2B3970"
+                }
+            },
+            {
+                "label": "ThenaV3",
+                "name": "AlgebraCustomPoolOracle",
+                "env": {
+                    "poolDeployer": "0x06852dC9D6E44782Dd02994C368feBc4dC1b8a17",
+                    "customDeployer": "0x0000000000000000000000000000000000000000",
+                    "initcodehash": "0xb3fc09be5eb433d99b1ec89fd8435aaf5ffea75c1879e19028aa2414a14b3c85"
+                }
+            },
+            {
+                "label": "ThenaV3Fee-only",
+                "name": "AlgebraCustomPoolOracle",
+                "env": {
+                    "poolDeployer": "0x06852dC9D6E44782Dd02994C368feBc4dC1b8a17",
+                    "customDeployer": "0xF807462b5ce54A89e2F5B847D8281030eAfE241B",
+                    "initcodehash": "0xb3fc09be5eb433d99b1ec89fd8435aaf5ffea75c1879e19028aa2414a14b3c85"
+                }
+            }
+        ]
+    },
     "146": {},
     "137": {},
     "8453": {},

@@ -1,0 +1,72 @@
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.23;
+
+import "forge-std/Test.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
+import {AlgebraCustomPoolOracle} from "contracts/oracles/AlgebraCustomPoolOracle.sol";
+
+contract AlgebraCustomPoolOracleBscTest is Test {
+    IERC20 private constant NONE = IERC20(0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF);
+
+    string private constant BSC_RPC = "https://bsc-rpc.publicnode.com";
+    string private constant CONFIG_PATH = "script/input/config.json";
+    string private constant CHAIN_KEY = ".56";
+
+    IERC20 private constant WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
+    IERC20 private constant DAI = IERC20(0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3);
+    IERC20 private constant ETH = IERC20(0x2170Ed0880ac9A755fd29B2688956BD959F933F8);
+    IERC20 private constant USDC = IERC20(0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d);
+    IERC20 private constant USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
+    IERC20 private constant BUSD = IERC20(0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56);
+    IERC20 private constant BTCB = IERC20(0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c);
+
+    address private poolDeployer;
+    address private feeOnlyDeployer;
+    bytes32 private initcodeHash;
+
+    function setUp() public {
+        vm.createSelectFork(BSC_RPC);
+
+        string memory json = vm.readFile(CONFIG_PATH);
+        poolDeployer = vm.parseJsonAddress(json, string.concat(CHAIN_KEY, ".adapters[14].env.poolDeployer"));
+        feeOnlyDeployer = vm.parseJsonAddress(json, string.concat(CHAIN_KEY, ".adapters[15].env.customDeployer"));
+        initcodeHash = vm.parseJsonBytes32(json, string.concat(CHAIN_KEY, ".adapters[14].env.initcodehash"));
+    }
+
+    function test_thenaV3_resolvesPools() public {
+        AlgebraCustomPoolOracle oracle = new AlgebraCustomPoolOracle(poolDeployer, address(0), initcodeHash);
+        (uint256 rate, uint256 weight) = _findRate(oracle);
+        assertGt(rate, 0, "no Thena V3 pool resolved");
+        assertGt(weight, 0, "no Thena V3 pool weight");
+    }
+
+    function test_thenaV3FeeOnly_resolvesPools() public {
+        AlgebraCustomPoolOracle oracle = new AlgebraCustomPoolOracle(poolDeployer, feeOnlyDeployer, initcodeHash);
+        (uint256 rate, uint256 weight) = _findRate(oracle);
+        assertGt(rate, 0, "no Thena V3 fee-only pool resolved");
+        assertGt(weight, 0, "no Thena V3 fee-only pool weight");
+    }
+
+    function _findRate(AlgebraCustomPoolOracle oracle) internal view returns (uint256 rate, uint256 weight) {
+        IERC20[] memory tokens = new IERC20[](7);
+        tokens[0] = WBNB;
+        tokens[1] = USDC;
+        tokens[2] = USDT;
+        tokens[3] = BUSD;
+        tokens[4] = DAI;
+        tokens[5] = BTCB;
+        tokens[6] = ETH;
+
+        for (uint256 i = 0; i < tokens.length; i++) {
+            for (uint256 j = i + 1; j < tokens.length; j++) {
+                (rate, weight) = oracle.getRate(tokens[i], tokens[j], NONE, 0);
+                if (rate > 0 && weight > 0) return (rate, weight);
+                (rate, weight) = oracle.getRate(tokens[j], tokens[i], NONE, 0);
+                if (rate > 0 && weight > 0) return (rate, weight);
+            }
+        }
+
+        return (0, 0);
+    }
+}

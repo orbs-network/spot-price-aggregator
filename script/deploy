@@ -12,8 +12,10 @@ CHAIN_ID=${CHAIN_ID:?CHAIN_ID must be set}
 
 CHAIN_CFG=$(jq -e ".\"$CHAIN_ID\"" "$CONFIG_FILE") || { echo "No config found for chain id $CHAIN_ID in $CONFIG_FILE" >&2; exit 1 }
 HAS_AGG=$(jq -r ".\"$CHAIN_ID\".aggregator // empty" "$CONFIG_FILE")
-
+HAS_ORACLE=$(jq -r ".\"$CHAIN_ID\".oracle // empty" "$CONFIG_FILE")
 AGGREGATOR=""
+AGG_PREFIX_REGEX='^0x111111'
+ORACLE_PREFIX_REGEX='^0xcee000'
 
 # Detect broadcast flag in arguments
 SHOULD_BROADCAST=0
@@ -45,6 +47,128 @@ resolve_script_name() {
   echo "Deploy${name}"
 }
 
+print_deploy_aggregator_hash() {
+  local output json_output hash
+  local -a forge_args=()
+  for arg in "$@"; do
+    [[ "$arg" == "--broadcast" ]] && continue
+    forge_args+=("$arg")
+  done
+
+  output=$(forge script DeployAggregator --json "${forge_args[@]}") || {
+    echo "DeployAggregator failed" >&2
+    exit 1
+  }
+
+  json_output=$(jq -sR 'split("\n")
+    | map(try fromjson catch empty)
+    | map(select(type=="object" and has("logs")))
+    | last' <<<"$output")
+
+  [[ -n "$json_output" && "$json_output" != "null" ]] || { echo "Unable to parse forge JSON output" >&2; exit 1; }
+
+  hash=$(jq -r '.logs[]? | select(type=="string")' <<<"$json_output" | head -n 1)
+  [[ -n "$hash" && "$hash" != "null" ]] || { echo "Unable to parse DeployAggregator hash" >&2; exit 1; }
+
+  echo "$hash"
+}
+
+expected_aggregator_address() {
+  local output json_output addr
+  local -a forge_args=()
+  for arg in "$@"; do
+    [[ "$arg" == "--broadcast" ]] && continue
+    forge_args+=("$arg")
+  done
+
+  output=$(forge script DeployAggregator --json "${forge_args[@]}") || {
+    echo "DeployAggregator failed" >&2
+    exit 1
+  }
+
+  json_output=$(jq -sR 'split("\n")
+    | map(try fromjson catch empty)
+    | map(select(type=="object" and has("returns")))
+    | last' <<<"$output")
+
+  [[ -n "$json_output" && "$json_output" != "null" ]] || { echo "Unable to parse forge JSON output" >&2; exit 1; }
+
+  addr=$(jq -er '.returns.aggregator.value // .returns[0].value // .returns.aggregator // .returns[0]' <<<"$json_output") || {
+    echo "Unable to parse OffchainOracle address" >&2
+    exit 1
+  }
+
+  echo "$addr"
+}
+
+resolve_usd_oracle_script() {
+  if echo "$CHAIN_CFG" | jq -e '.env.denoms? // empty | length > 0' >/dev/null; then
+    echo "DeployUsdOracleSei"
+  elif echo "$CHAIN_CFG" | jq -e '.env.feeds? // empty | length > 0' >/dev/null; then
+    echo "DeployUsdOracle"
+  else
+    return 1
+  fi
+}
+
+print_deploy_usd_oracle_hash() {
+  local oracle_script="$1"
+  shift
+  local output json_output hash
+  local -a forge_args=()
+  for arg in "$@"; do
+    [[ "$arg" == "--broadcast" ]] && continue
+    forge_args+=("$arg")
+  done
+
+  output=$(forge script "$oracle_script" --json "${forge_args[@]}") || {
+    echo "USD oracle deployment failed" >&2
+    exit 1
+  }
+
+  json_output=$(jq -sR 'split("\n")
+    | map(try fromjson catch empty)
+    | map(select(type=="object" and has("logs")))
+    | last' <<<"$output")
+
+  [[ -n "$json_output" && "$json_output" != "null" ]] || { echo "Unable to parse forge JSON output" >&2; exit 1; }
+
+  hash=$(jq -r '.logs[]? | select(type=="string")' <<<"$json_output" | head -n 1)
+  [[ -n "$hash" && "$hash" != "null" ]] || { echo "Unable to parse USD oracle hash" >&2; exit 1; }
+
+  echo "$hash"
+}
+
+expected_usd_oracle_address() {
+  local oracle_script="$1"
+  shift
+  local output json_output addr
+  local -a forge_args=()
+  for arg in "$@"; do
+    [[ "$arg" == "--broadcast" ]] && continue
+    forge_args+=("$arg")
+  done
+
+  output=$(forge script "$oracle_script" --json "${forge_args[@]}") || {
+    echo "USD oracle deployment failed" >&2
+    exit 1
+  }
+
+  json_output=$(jq -sR 'split("\n")
+    | map(try fromjson catch empty)
+    | map(select(type=="object" and has("returns")))
+    | last' <<<"$output")
+
+  [[ -n "$json_output" && "$json_output" != "null" ]] || { echo "Unable to parse forge JSON output" >&2; exit 1; }
+
+  addr=$(jq -er '.returns.oracle.value // .returns[0].value // .returns.oracle // .returns[0]' <<<"$json_output") || {
+    echo "Unable to parse USD oracle address" >&2
+    exit 1
+  }
+
+  echo "$addr"
+}
+
 deploy_core_stack() {
   echo "Deploying Aggregator: BaseCoinWrapper + MultiWrapper + OffchainOracle (chain $CHAIN_ID)"
   local output json_output
@@ -68,14 +192,21 @@ deploy_core_stack() {
 }
 
 deploy_usd_oracle() {
-  local oracle_script=""
+  local oracle_script
 
-  if echo "$CHAIN_CFG" | jq -e '.env.denoms? // empty | length > 0' >/dev/null; then
-    oracle_script="DeployUsdOracleSei"
-  elif echo "$CHAIN_CFG" | jq -e '.env.feeds? // empty | length > 0' >/dev/null; then
-    oracle_script="DeployUsdOracle"
-  else
+  if ! oracle_script=$(resolve_usd_oracle_script); then
     echo "No USD oracle config found for chain $CHAIN_ID; skipping"
+    return
+  fi
+
+  if [[ -z "$HAS_ORACLE" || ! "${HAS_ORACLE:l}" =~ $ORACLE_PREFIX_REGEX ]]; then
+    print_deploy_usd_oracle_hash "$oracle_script" "$@"
+    exit 0
+  fi
+
+  local expected_oracle
+  expected_oracle=$(expected_usd_oracle_address "$oracle_script" "$@")
+  if [[ "${HAS_ORACLE:l}" == "${expected_oracle:l}" ]]; then
     return
   fi
 
@@ -132,11 +263,21 @@ run_section() {
   done
 }
 
-[[ -n "$HAS_AGG" ]] || deploy_core_stack "$@"
+if [[ -z "$HAS_AGG" || ! "$HAS_AGG" =~ $AGG_PREFIX_REGEX ]]; then
+  print_deploy_aggregator_hash "$@"
+  exit 0
+fi
 
-[[ -n "$HAS_AGG" ]] || run_section "wrappers" "$@"
-[[ -n "$HAS_AGG" ]] || run_section "adapters" "$@"
+expected_agg=$(expected_aggregator_address "$@")
+if [[ "${HAS_AGG:l}" == "${expected_agg:l}" ]]; then
+  deploy_usd_oracle "$@"
+  echo "Done for chain $CHAIN_ID"
+  exit 0
+fi
 
+deploy_core_stack "$@"
+run_section "wrappers" "$@"
+run_section "adapters" "$@"
 deploy_usd_oracle "$@"
 
 echo "Done for chain $CHAIN_ID"
