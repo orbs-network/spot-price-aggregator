@@ -1,15 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.23;
 
-import "forge-std/Test.sol";
+import {RpcUtils} from "test/utils/RpcUtils.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import {AlgebraCustomPoolOracle} from "contracts/oracles/AlgebraCustomPoolOracle.sol";
 
-contract AlgebraCustomPoolOracleBscTest is Test {
+contract AlgebraCustomPoolOracleBscTest is RpcUtils {
     IERC20 private constant NONE = IERC20(0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF);
 
-    string private constant BSC_RPC = "https://bsc-rpc.publicnode.com";
     string private constant CONFIG_PATH = "script/input/config.json";
     string private constant CHAIN_KEY = ".56";
 
@@ -26,7 +25,7 @@ contract AlgebraCustomPoolOracleBscTest is Test {
     bytes32 private initcodeHash;
 
     function setUp() public {
-        vm.createSelectFork(BSC_RPC);
+        vm.createSelectFork(_rpcUrl("bnb"));
 
         string memory json = vm.readFile(CONFIG_PATH);
         poolDeployer = vm.parseJsonAddress(json, string.concat(CHAIN_KEY, ".adapters[14].env.poolDeployer"));

@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.23;
 
-import "forge-std/Test.sol";
+import {RpcUtils} from "test/utils/RpcUtils.sol";
 import {UsdOracle} from "contracts/view/UsdOracle.sol";
 
-contract UsdOracleMonadTest is Test {
+contract UsdOracleMonadTest is RpcUtils {
     UsdOracle public oracle;
 
     address private constant WBASE = 0x3bd359C1119dA7Da1D913D1C4D2B7c461115433A;
@@ -15,7 +15,7 @@ contract UsdOracleMonadTest is Test {
     address public wbtc;
 
     function setUp() public {
-        vm.createSelectFork("https://rpc.monad.xyz");
+        vm.createSelectFork(_rpcUrl("monad"));
 
         string memory json = vm.readFile("script/input/config.json");
         string memory chainKey = ".143";

@@ -43,6 +43,20 @@ contract UsdOracleTest is Test {
         assertEq(usdPerToken, 1.5e18); // 0.0005 ETH * 3000 USD/ETH = 1.5 USD
     }
 
+    function testUsd_batch() public {
+        MockToken token = new MockToken(6);
+        offchainOracle.setRateToEth(5e26);
+
+        address[] memory tokens = new address[](2);
+        tokens[0] = address(0);
+        tokens[1] = address(token);
+
+        uint256[] memory prices = oracleUsd.usd(tokens);
+        assertEq(prices.length, 2);
+        assertEq(prices[0], 3000e18);
+        assertEq(prices[1], 1.5e18);
+    }
+
     function testEthUsd_revertsOnStaleAnswer() public {
         ethUsdFeed.setAnswer(3000e8, block.timestamp);
         vm.warp(block.timestamp + 2 days);

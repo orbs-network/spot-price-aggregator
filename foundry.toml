@@ -1,5 +1,6 @@
 [profile.default]
 via_ir = true
+ffi = true
 fs_permissions = [{ access = "read", path = "./script/input" }]
 remappings = [
     "@openzeppelin/=lib/openzeppelin-contracts/",

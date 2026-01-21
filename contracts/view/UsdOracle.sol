@@ -47,6 +47,22 @@ contract UsdOracle {
         return aggregator.usdFromBase(token, base, usdFromFeed(base));
     }
 
+    /// @notice Returns token/USD prices scaled to 1e18.
+    /// @param tokens Tokens to price.
+    /// @return prices USD prices scaled to 1e18.
+    function usd(address[] memory tokens) public view returns (uint256[] memory prices) {
+        prices = new uint256[](tokens.length);
+        uint256 baseUsd = usdFromFeed(base);
+
+        for (uint256 i; i < tokens.length; i++) {
+            if (usdFeed[tokens[i]] != address(0)) {
+                prices[i] = usdFromFeed(tokens[i]);
+            } else {
+                prices[i] = aggregator.usdFromBase(tokens[i], base, baseUsd);
+            }
+        }
+    }
+
     /// @notice Returns USD price from a configured feed, scaled to 1e18.
     /// @param token Token with a configured feed.
     /// @return USD price scaled to 1e18.

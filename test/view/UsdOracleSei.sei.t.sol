@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.23;
 
-import "forge-std/Test.sol";
+import {RpcUtils} from "test/utils/RpcUtils.sol";
 import {UsdOracleSei, ISeiPrecompile} from "contracts/view/UsdOracleSei.sol";
 
-contract UsdOracleSeiTest is Test {
+contract UsdOracleSeiTest is RpcUtils {
     UsdOracleSei public oracleSei;
 
     address private constant WBASE = 0xE30feDd158A2e3b13e9badaeABaFc5516e95e8C7;
@@ -34,8 +34,6 @@ contract UsdOracleSeiTest is Test {
             tokens[i + 2] = deployTokens[i];
         }
 
-        string memory rpcUrl = "https://sei-evm-rpc.publicnode.com";
-
         sei = tokens[0];
         wsei = tokens[1];
         usdc = tokens[2];
@@ -43,7 +41,7 @@ contract UsdOracleSeiTest is Test {
         weth = tokens[4];
         wbtc = tokens[5];
 
-        vm.createSelectFork(rpcUrl);
+        vm.createSelectFork(_rpcUrl("sei"));
 
         // Foundry (revm) doesn't implement Sei's custom oracle precompile at 0x1008. We fetch the real
         // precompile output via `vm.rpc(eth_call)` and mock the call locally for determinism.
@@ -95,6 +93,23 @@ contract UsdOracleSeiTest is Test {
         uint256 price = oracleSei.usd(wsei);
         assertGt(price, 0.0001e18);
         assertLt(price, 100e18);
+    }
+
+    function testUsd_batch() public view {
+        address[] memory tokens = new address[](3);
+        tokens[0] = usdc;
+        tokens[1] = usdt;
+        tokens[2] = wbtc;
+
+        uint256[] memory prices = oracleSei.usd(tokens);
+        assertEq(prices.length, 3);
+
+        assertGt(prices[0], 0.9e18);
+        assertLt(prices[0], 1.1e18);
+        assertGt(prices[1], 0.9e18);
+        assertLt(prices[1], 1.1e18);
+        assertGt(prices[2], 1000e18);
+        assertLt(prices[2], 10_000_000e18);
     }
 
     function _fetchRates(address precompile, bytes memory callData) internal returns (bytes memory raw) {

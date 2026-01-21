@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.23;
 
-import "forge-std/Test.sol";
+import {RpcUtils} from "test/utils/RpcUtils.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import {OffchainOracle} from "contracts/OffchainOracle.sol";
@@ -12,20 +12,19 @@ import {IWrapper} from "contracts/interfaces/IWrapper.sol";
 import {AlgebraCustomPoolOracle} from "contracts/oracles/AlgebraCustomPoolOracle.sol";
 import {SolidlyOracleNoCreate2} from "contracts/oracles/SolidlyOracleNoCreate2.sol";
 
-contract OffchainOracleAvaxTest is Test {
+contract OffchainOracleAvaxTest is RpcUtils {
     IERC20 private constant NONE = IERC20(0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF);
     IERC20 private constant NATIVE = IERC20(address(0));
 
     address private constant WETH = 0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7;
     address private constant TOKEN_FBOMB = 0x5C09A9cE08C4B332Ef1CC5f7caDB1158C32767Ce;
-    string private constant AVAX_RPC = "https://avalanche-c-chain-rpc.publicnode.com";
     string private constant CONFIG_PATH = "script/input/config.json";
     string private constant CHAIN_KEY = ".43114";
 
     OffchainOracle private aggregator;
 
     function setUp() public {
-        vm.createSelectFork(AVAX_RPC);
+        vm.createSelectFork(_rpcUrl("avax"));
         _deployFromConfig();
     }
 
