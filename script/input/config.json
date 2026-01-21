@@ -1,7 +1,7 @@
 {
     "143": {
-        "oracle": "0xCee0939B0C8B359fb06eAbe004c2784E6C1c2000",
-        "salt": "0xec3b46c7307726f387716fdc8f6b3b333370deb199182fbe2aaf702883314b74",
+        "oracle": "",
+        "salt": "",
         "env": {
             "ttl": 86400,
             "tokens": [
@@ -19,8 +19,8 @@
                 "0x2D1Df1bD061AAc38C22407AD69d69bCC3C62edBD"
             ]
         },
-        "aggregator": "0x111616cF20ACcF1e95A2BD1F0c3115A52fd18111",
-        "aggregatorSalt": "0x1cff50fcf68d350f7e47e34255496e7b19cfcd57704552b984cd991fc5c013e7",
+        "aggregator": "",
+        "aggregatorSalt": "",
         "connectors": [
             "0x754704Bc059F8C67012fEd69BC8A327a5aafb603",
             "0xe7cd86e13AC4309349F30B3435a9d337750fC82D",
@@ -67,8 +67,8 @@
         ]
     },
     "1329": {
-        "oracle": "0xcee0928A8384D5A151AbeB91ccC63170dD475000",
-        "salt": "0x669aecda51f77fece14ad69015b8a3759e8eb62a91da13c6fad9ae583446617d",
+        "oracle": "",
+        "salt": "",
         "env": {
             "tokens": [
                 "0xe15fC38F6D8c56aF07bbCBe3BAf5708A2Bf42392",
@@ -85,8 +85,8 @@
                 "ubtc"
             ]
         },
-        "aggregator": "0xE399ec2D1bB9057ee5C5a172AE7c2Ddb0750C431",
-        "aggregatorSalt": "0x7317a6060face3f4e3de510f9e4b3c9dd3410016dd881f98fcdf5c91612a9d30",
+        "aggregator": "",
+        "aggregatorSalt": "",
         "connectors": [
             "0xe15fC38F6D8c56aF07bbCBe3BAf5708A2Bf42392",
             "0x3894085Ef7Ff0f0aeDf52E2A2704928d1Ec074F1"
@@ -173,8 +173,8 @@
         ]
     },
     "43114": {
-        "oracle": "0xcee0AA7Ae1C0f52Bca8F658586C146012900C000",
-        "salt": "0x9dab0edc3f1b82e1d07a0092a0ad3e022dd2ecfe703cff6f9ce6d7ba0a054a37",
+        "oracle": "",
+        "salt": "",
         "env": {
             "ttl": 86400,
             "tokens": [
@@ -198,8 +198,8 @@
                 "0x976B3D034E162d8bD72D6b9C989d545b839003b0"
             ]
         },
-        "aggregator": "0x1111739418aAa695eEEF490Ee4CFb30C31b91111",
-        "aggregatorSalt": "0x1cff50fcf68d350f7e47e34255496e7b19cfcd57704552b984cd991fc5c013e7",
+        "aggregator": "",
+        "aggregatorSalt": "0x795da76477d46b3de6b305f8779764acf064b82cab99ab2ddf37d10918784848",
         "connectors": [
             "0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB",
             "0xc7198437980c041c805A1EDcbA50c1Ce5db95118",
@@ -335,8 +335,8 @@
         ]
     },
     "56": {
-        "oracle": "0xcee000626359E232726f78e1B472b9dFf16a7A90",
-        "salt": "0x4c52e73510a796bf098b4ddb7df91bf35e7bd9e69566695d226e1c7966af1309",
+        "oracle": "0xcEE00048C216ecEDAd86033622DB353D6CBdd862",
+        "salt": "0xd15966814ecb971427f35ef37fec503ebdbb5d25c6ac612f63f1a67ebea03f22",
         "env": {
             "ttl": 86400,
             "tokens": [
