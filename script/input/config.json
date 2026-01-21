@@ -199,7 +199,7 @@
             ]
         },
         "aggregator": "",
-        "aggregatorSalt": "0x795da76477d46b3de6b305f8779764acf064b82cab99ab2ddf37d10918784848",
+        "aggregatorSalt": "",
         "connectors": [
             "0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB",
             "0xc7198437980c041c805A1EDcbA50c1Ce5db95118",
