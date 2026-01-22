@@ -43,6 +43,41 @@ persist_oracle_address() {
   echo "Updated oracle in config for chain $CHAIN_ID"
 }
 
+persist_aggregator_salt() {
+  local tmp
+  tmp=$(mktemp)
+  jq --indent 4 ".\"$CHAIN_ID\".aggregatorSalt = \"$AGG_SALT\"" "$CONFIG_FILE" > "$tmp"
+  mv "$tmp" "$CONFIG_FILE"
+  echo "Updated aggregatorSalt in config for chain $CHAIN_ID"
+}
+
+persist_oracle_salt() {
+  local tmp
+  tmp=$(mktemp)
+  jq --indent 4 ".\"$CHAIN_ID\".salt = \"$ORACLE_SALT\"" "$CONFIG_FILE" > "$tmp"
+  mv "$tmp" "$CONFIG_FILE"
+  echo "Updated salt in config for chain $CHAIN_ID"
+}
+
+mine_create2_salt() {
+  local prefix="$1" hash="$2"
+  local output salt
+
+  output=$(cast create2 -s "$prefix" --init-code-hash "$hash") || {
+    echo "cast create2 failed" >&2
+    exit 1
+  }
+
+  echo "$output" >&2
+  salt=$(awk '/^Salt:/ {print $2; exit}' <<<"$output")
+  [[ -n "$salt" && "$salt" != "null" ]] || {
+    echo "Unable to parse salt from cast create2 output" >&2
+    exit 1
+  }
+
+  echo "$salt"
+}
+
 resolve_script_name() {
   local section="$1" name="$2" dir file
   dir=$([[ "$section" == "wrappers" ]] && echo "wrapper" || echo "adapter")
@@ -151,7 +186,10 @@ deploy_usd_oracle() {
     return
   fi
   if [[ -z "$ORACLE_SALT" ]]; then
-    print_deploy_usd_oracle_hash "$oracle_script" "$@"
+    local hash
+    hash=$(print_deploy_usd_oracle_hash "$oracle_script" "$@")
+    ORACLE_SALT=$(mine_create2_salt "$ORACLE_PREFIX" "$hash")
+    persist_oracle_salt
     exit 0
   fi
 
@@ -215,7 +253,9 @@ if [[ "$HAS_AGG" =~ $AGG_PREFIX_REGEX ]]; then
 fi
 
 if [[ -z "$AGG_SALT" ]]; then
-  print_deploy_aggregator_hash "$@"
+  hash=$(print_deploy_aggregator_hash "$@")
+  AGG_SALT=$(mine_create2_salt "$AGG_PREFIX" "$hash")
+  persist_aggregator_salt
   exit 0
 fi
 
