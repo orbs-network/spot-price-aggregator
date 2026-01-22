@@ -1,7 +1,7 @@
 {
     "143": {
-        "oracle": "0xCeE0005b16cADCa1b5c1B377b5B9BFc350855e0C",
-        "salt": "0x0954f077af81ab3abc363c2d7528cb37e4b456c134d72560cee26838cfdf2813",
+        "oracle": "",
+        "salt": "",
         "env": {
             "ttl": 86400,
             "tokens": [
@@ -19,8 +19,8 @@
                 "0x2D1Df1bD061AAc38C22407AD69d69bCC3C62edBD"
             ]
         },
-        "aggregator": "0x111111923C2e9D38626105976A295663e114f959",
-        "aggregatorSalt": "0xbe3ce9b390ceb3d8f9b0310f49701117ee1c5b97474179b30914c6c8a173859c",
+        "aggregator": "",
+        "aggregatorSalt": "",
         "connectors": [
             "0x754704Bc059F8C67012fEd69BC8A327a5aafb603",
             "0xe7cd86e13AC4309349F30B3435a9d337750fC82D",
@@ -29,7 +29,7 @@
         ],
         "adapters": [
             {
-                "label": "Uniswap",
+                "label": "UniswapV2",
                 "name": "UniswapV2LikeOracle",
                 "env": {
                     "factory": "0x182a927119d56008d921126764bf884221b10f59",
@@ -37,7 +37,7 @@
                 }
             },
             {
-                "label": "Uniswap",
+                "label": "UniswapV3",
                 "name": "UniswapV3LikeOracle",
                 "env": {
                     "factory": "0x204faca1764b154221e35c0d20abb3c525710498",
@@ -67,8 +67,8 @@
         ]
     },
     "1329": {
-        "oracle": "0xceE000116C340376963ACf4eFC53A5F2534287E2",
-        "salt": "0x7faa386f8a26f804cbe156058bb6f4ca1b757fbbb9d37b8e1ca53dc63b967d4b",
+        "oracle": "",
+        "salt": "",
         "env": {
             "tokens": [
                 "0xe15fC38F6D8c56aF07bbCBe3BAf5708A2Bf42392",
@@ -85,54 +85,13 @@
                 "ubtc"
             ]
         },
-        "aggregator": "0x11111170904F16331A09E916736d55323AB76D65",
-        "aggregatorSalt": "0xd88c95231413fd11952aa4feb601314d9e55dc247a81b3bedc7df4a6c8594a2b",
+        "aggregator": "",
+        "aggregatorSalt": "",
         "connectors": [
             "0xe15fC38F6D8c56aF07bbCBe3BAf5708A2Bf42392",
             "0x3894085Ef7Ff0f0aeDf52E2A2704928d1Ec074F1"
         ],
-        "wrappers": [
-            {
-                "label": "Yei",
-                "name": "AaveWrapperV3",
-                "env": {
-                    "pool": "0x60c82A40C57736a9c692C42e87A8849Fb407F0d6",
-                    "markets": [
-                        "0x3894085Ef7Ff0f0aeDf52E2A2704928d1Ec074F1",
-                        "0xB75D0B03c06A926e488e2659DF1A861F860bD3d1",
-                        "0xE30feDd158A2e3b13e9badaeABaFc5516e95e8C7",
-                        "0x160345fC359604fC6e70E3c5fAcbdE5F7A9342d8",
-                        "0x5Cf6826140C1C56Ff49C808A1A75407Cd1DF9423",
-                        "0x80Eede496655FB9047dd39d9f418d5483ED600df",
-                        "0x5Bff88cA1442c2496f7E475E9e7786383Bc070c0",
-                        "0x43eDD7f3831b08FE70B7555ddD373C8bF65a9050",
-                        "0x3Ec3849C33291a9eF4c5dB86De593EB4A37fDe45",
-                        "0x37a4dD9CED2b19Cfe8FAC251cd727b5787E45269",
-                        "0x0555E30da8f98308EdB960aa94C0Db47230d2B9c",
-                        "0xdf77686D99667Ae56BC18f539B777DBc2BBE3E9F",
-                        "0x541FD749419CA806a8bc7da8ac23D346f2dF8B77",
-                        "0xBE574b6219C6D985d08712e90C21A88fd55f1ae8",
-                        "0x9151434b16b9763660705744891fA906F660EcC5",
-                        "0x81D3A238b02827F62B9f390f947D36d4A5bf89D2",
-                        "0xe15fC38F6D8c56aF07bbCBe3BAf5708A2Bf42392"
-                    ]
-                }
-            },
-            {
-                "label": "Takara",
-                "name": "CompoundLikeWrapperSei",
-                "env": {
-                    "comptroller": "0x71034bf5eC0FAd7aEE81a213403c8892F3d8CAeE",
-                    "cbase": "0xA26b9BFe606d29F16B5Aecf30F9233934452c4E2",
-                    "markets": [
-                        "0xC3c9e322F4aAe352ace79D0E62ADe3563fB86e87",
-                        "0xc68351B9B3638A6f4A3Ae100Bd251e227BbD7479",
-                        "0x92e51466482146E71b692ced2265284968E8B3d6",
-                        "0xda642A7821E91eD285262fead162E5fd17200429"
-                    ]
-                }
-            }
-        ],
+        "wrappers": [],
         "adapters": [
             {
                 "label": "Dragonswap",
@@ -173,8 +132,8 @@
         ]
     },
     "43114": {
-        "oracle": "0xCeE000FA58eB27E988769763f7002607585fA295",
-        "salt": "0x203ee730aafce6f0d0b58aff03b575111da885d035076a019a9dd19e30f8dc98",
+        "oracle": "",
+        "salt": "",
         "env": {
             "ttl": 86400,
             "tokens": [
@@ -198,8 +157,8 @@
                 "0x976B3D034E162d8bD72D6b9C989d545b839003b0"
             ]
         },
-        "aggregator": "0x111111a0e40039385E79e9DBc3B91125C39E6ad2",
-        "aggregatorSalt": "0xd6991e5fe619d4c8f90e54e5f494b502acee87c05c1bdb1ded45a1736df48acf",
+        "aggregator": "",
+        "aggregatorSalt": "",
         "connectors": [
             "0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB",
             "0xc7198437980c041c805A1EDcbA50c1Ce5db95118",
@@ -207,29 +166,7 @@
             "0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664",
             "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E"
         ],
-        "wrappers": [
-            {
-                "label": "AaveV2",
-                "name": "AaveWrapperV2",
-                "env": {
-                    "address": "0x8Aa57827C3D147E39F1058517939461538D9C56A"
-                }
-            },
-            {
-                "label": "AaveV3",
-                "name": "AaveWrapperV3",
-                "env": {
-                    "address": "0x0c8fc7a71C28c768FDC1f7d75835229beBEB1573"
-                }
-            },
-            {
-                "label": "StataTokens",
-                "name": "StataTokenWrapper",
-                "env": {
-                    "address": "0x1A75DF59f464a70Cc8f7383983852FF72e5F5167"
-                }
-            }
-        ],
+        "wrappers": [],
         "adapters": [
             {
                 "label": "Joe",
@@ -335,8 +272,8 @@
         ]
     },
     "56": {
-        "oracle": "0xCEe000D37d5a1Af80272e2BA7a17156831114680",
-        "salt": "0xe460dcc0830aaabd429bb515573a16a827d682da5786648278a85062e7a372e0",
+        "oracle": "",
+        "salt": "",
         "env": {
             "ttl": 86400,
             "tokens": [
@@ -356,8 +293,8 @@
                 "0x264990fbd0A4796A3E3d8E37C4d5F87a3aCa5Ebf"
             ]
         },
-        "aggregator": "0x11111142601D2F8ec0106e914daed7a76726847b",
-        "aggregatorSalt": "0x80708deb54b6cfa05c6fbc393cbf44646168ef57d4a4db1132661f7f4d72b1da",
+        "aggregator": "",
+        "aggregatorSalt": "",
         "connectors": [
             "0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3",
             "0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
