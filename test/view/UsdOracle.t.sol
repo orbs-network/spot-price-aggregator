@@ -39,8 +39,9 @@ contract UsdOracleTest is Test {
         //   rateToEth = (5e14 / 1e6) * 1e18 = 5e26
         offchainOracle.setRateToEth(5e26);
 
-        uint256 usdPerToken = oracleUsd.usd(address(token));
+        (uint256 usdPerToken, uint8 tokenDecimals) = oracleUsd.usd(address(token));
         assertEq(usdPerToken, 1.5e18); // 0.0005 ETH * 3000 USD/ETH = 1.5 USD
+        assertEq(tokenDecimals, 6);
     }
 
     function testUsd_batch() public {
@@ -51,10 +52,13 @@ contract UsdOracleTest is Test {
         tokens[0] = address(0);
         tokens[1] = address(token);
 
-        uint256[] memory prices = oracleUsd.usd(tokens);
+        (uint256[] memory prices, uint8[] memory decimals) = oracleUsd.usd(tokens);
         assertEq(prices.length, 2);
         assertEq(prices[0], 3000e18);
         assertEq(prices[1], 1.5e18);
+        assertEq(decimals.length, 2);
+        assertEq(decimals[0], 18);
+        assertEq(decimals[1], 6);
     }
 
     function testEthUsd_revertsOnStaleAnswer() public {

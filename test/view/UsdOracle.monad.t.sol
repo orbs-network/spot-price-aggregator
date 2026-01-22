@@ -42,25 +42,25 @@ contract UsdOracleMonadTest is RpcUtils {
     }
 
     function testUsd_usdc() public view {
-        uint256 price = oracle.usd(usdc);
+        (uint256 price,) = oracle.usd(usdc);
         assertGt(price, 0.9e18);
         assertLt(price, 1.1e18);
     }
 
     function testUsd_usdt() public view {
-        uint256 price = oracle.usd(usdt);
+        (uint256 price,) = oracle.usd(usdt);
         assertGt(price, 0.9e18);
         assertLt(price, 1.1e18);
     }
 
     function testUsd_weth() public view {
-        uint256 price = oracle.usd(weth);
+        (uint256 price,) = oracle.usd(weth);
         assertGt(price, 100e18);
         assertLt(price, 10_000e18);
     }
 
     function testUsd_wbtc() public view {
-        uint256 price = oracle.usd(wbtc);
+        (uint256 price,) = oracle.usd(wbtc);
         assertGt(price, 1000e18);
         assertLt(price, 1_000_000e18);
     }

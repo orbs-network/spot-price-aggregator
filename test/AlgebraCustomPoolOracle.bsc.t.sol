@@ -20,28 +20,26 @@ contract AlgebraCustomPoolOracleBscTest is RpcUtils {
     IERC20 private constant BUSD = IERC20(0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56);
     IERC20 private constant BTCB = IERC20(0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c);
 
-    address private poolDeployer;
-    address private feeOnlyDeployer;
-    bytes32 private initcodeHash;
+    address private thenaV3Oracle;
+    address private thenaV3FeeOnlyOracle;
 
     function setUp() public {
         vm.createSelectFork(_rpcUrl("bnb"));
 
         string memory json = vm.readFile(CONFIG_PATH);
-        poolDeployer = vm.parseJsonAddress(json, string.concat(CHAIN_KEY, ".adapters[14].env.poolDeployer"));
-        feeOnlyDeployer = vm.parseJsonAddress(json, string.concat(CHAIN_KEY, ".adapters[15].env.customDeployer"));
-        initcodeHash = vm.parseJsonBytes32(json, string.concat(CHAIN_KEY, ".adapters[14].env.initcodehash"));
+        thenaV3Oracle = vm.parseJsonAddress(json, string.concat(CHAIN_KEY, ".adapters[7].env.address"));
+        thenaV3FeeOnlyOracle = vm.parseJsonAddress(json, string.concat(CHAIN_KEY, ".adapters[8].env.address"));
     }
 
-    function test_thenaV3_resolvesPools() public {
-        AlgebraCustomPoolOracle oracle = new AlgebraCustomPoolOracle(poolDeployer, address(0), initcodeHash);
+    function test_thenaV3_resolvesPools() public view {
+        AlgebraCustomPoolOracle oracle = AlgebraCustomPoolOracle(thenaV3Oracle);
         (uint256 rate, uint256 weight) = _findRate(oracle);
         assertGt(rate, 0, "no Thena V3 pool resolved");
         assertGt(weight, 0, "no Thena V3 pool weight");
     }
 
-    function test_thenaV3FeeOnly_resolvesPools() public {
-        AlgebraCustomPoolOracle oracle = new AlgebraCustomPoolOracle(poolDeployer, feeOnlyDeployer, initcodeHash);
+    function test_thenaV3FeeOnly_resolvesPools() public view {
+        AlgebraCustomPoolOracle oracle = AlgebraCustomPoolOracle(thenaV3FeeOnlyOracle);
         (uint256 rate, uint256 weight) = _findRate(oracle);
         assertGt(rate, 0, "no Thena V3 fee-only pool resolved");
         assertGt(weight, 0, "no Thena V3 fee-only pool weight");

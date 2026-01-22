@@ -37,21 +37,28 @@ contract UsdOracleSei {
 
     /// @notice Returns token/USD price scaled to 1e18.
     /// @param token Token to price.
-    /// @return USD price scaled to 1e18.
-    function usd(address token) public view returns (uint256) {
-        if (denomHash[token] != bytes32(0)) return usdFromPrecompile(token);
-        return aggregator.usdFromBase(token, base, usdFromPrecompile(base));
+    /// @return price USD price scaled to 1e18.
+    /// @return decimals Token decimals (or 18 if unavailable).
+    function usd(address token) public view returns (uint256 price, uint8 decimals) {
+        decimals = AggregatorLib.decimals(token);
+        if (denomHash[token] != bytes32(0)) return (usdFromPrecompile(token), decimals);
+        return (aggregator.usdFromBase(token, base, usdFromPrecompile(base)), decimals);
     }
 
     /// @notice Returns token/USD prices scaled to 1e18.
     /// @param tokens Tokens to price.
     /// @return prices USD prices scaled to 1e18.
-    function usd(address[] memory tokens) public view returns (uint256[] memory prices) {
+    /// @return decimals Token decimals (or 18 if unavailable).
+    function usd(address[] memory tokens) public view returns (uint256[] memory prices, uint8[] memory decimals) {
         prices = new uint256[](tokens.length);
+        decimals = new uint8[](tokens.length);
         uint256 baseUsd = usdFromPrecompile(base);
 
         for (uint256 i; i < tokens.length; i++) {
-            if (denomHash[tokens[i]] != bytes32(0)) {
+            decimals[i] = AggregatorLib.decimals(tokens[i]);
+            if (tokens[i] == base) {
+                prices[i] = baseUsd;
+            } else if (denomHash[tokens[i]] != bytes32(0)) {
                 prices[i] = usdFromPrecompile(tokens[i]);
             } else {
                 prices[i] = aggregator.usdFromBase(tokens[i], base, baseUsd);

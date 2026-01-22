@@ -20,6 +20,7 @@ AGG_PREFIX="0x111111"
 AGG_PREFIX_REGEX="^${AGG_PREFIX}"
 ORACLE_PREFIX="0xcee000"
 ORACLE_PREFIX_REGEX="^${ORACLE_PREFIX}"
+STEP_SEPARATOR="------------------------------------------------------------"
 
 # Detect broadcast flag in arguments
 SHOULD_BROADCAST=0
@@ -57,6 +58,21 @@ persist_oracle_salt() {
   jq --indent 4 ".\"$CHAIN_ID\".salt = \"$ORACLE_SALT\"" "$CONFIG_FILE" > "$tmp"
   mv "$tmp" "$CONFIG_FILE"
   echo "Updated salt in config for chain $CHAIN_ID"
+}
+
+persist_adapter_address() {
+  local index="$1" addr="$2" tmp
+  tmp=$(mktemp)
+  jq --indent 4 ".\"$CHAIN_ID\".adapters[$index].env.address = \"$addr\"" "$CONFIG_FILE" > "$tmp"
+  mv "$tmp" "$CONFIG_FILE"
+  echo "Updated adapter env.address in config for chain $CHAIN_ID (index $index)"
+}
+
+print_step() {
+  local label="$1"
+  echo ""
+  echo "$STEP_SEPARATOR"
+  echo "$label"
 }
 
 mine_create2_salt() {
@@ -153,7 +169,7 @@ print_deploy_usd_oracle_hash() {
 }
 
 deploy_core_stack() {
-  echo "Deploying Aggregator: BaseCoinWrapper + MultiWrapper + OffchainOracle (chain $CHAIN_ID)"
+  print_step "Deploying Aggregator: BaseCoinWrapper + MultiWrapper + OffchainOracle (chain $CHAIN_ID)"
   local output json_output
   output=$(forge script DeployAggregator --json "$@") || {
     echo "Core deployment failed" >&2
@@ -192,7 +208,7 @@ deploy_usd_oracle() {
     persist_oracle_salt
   fi
 
-  echo "Deploying USD oracle ($oracle_script) for chain $CHAIN_ID"
+  print_step "Deploying USD oracle ($oracle_script) for chain $CHAIN_ID"
   local output json_output
   output=$(forge script "$oracle_script" --json "$@") || {
     echo "USD oracle deployment failed" >&2
@@ -222,7 +238,7 @@ run_section() {
   [[ "$entries_len" -eq 0 ]] && { echo "No ${section} configured for chain $CHAIN_ID"; return; }
 
   for ((i=0; i<entries_len; i++)); do
-    local name script addr
+    local name script addr label
     name=$(echo "$CHAIN_CFG" | jq -r ".${section}[$i].name")
     addr=$(echo "$CHAIN_CFG" | jq -r ".${section}[$i].env.address // empty")
 
@@ -232,15 +248,43 @@ run_section() {
       else
         script="AddOracleFromConfig"
       fi
-      echo "Using existing $section -> $name ($addr) via $script"
+      label="Using existing $section -> $name ($addr) via $script"
     else
       script=$(resolve_script_name "$section" "$name")
-      echo "Running $section -> $name ($script)"
+      label="Deploying $section -> $name ($script)"
     fi
 
-    if ! env "INDEX=$i" forge script "$script" "${forge_args[@]}"; then
-      echo "Error running $section/$name ($script); aborting." >&2
-      exit 1
+    print_step "$label"
+
+    if [[ -n "$addr" ]]; then
+      if ! env "INDEX=$i" forge script "$script" "${forge_args[@]}"; then
+        echo "Error running $section/$name ($script); aborting." >&2
+        exit 1
+      fi
+    else
+      local output json_output deployed_addr
+      output=$(env "INDEX=$i" forge script "$script" --json "${forge_args[@]}") || {
+        echo "Error running $section/$name ($script); aborting." >&2
+        exit 1
+      }
+
+      json_output=$(jq -sR 'split("\n")
+        | map(try fromjson catch empty)
+        | map(select(type=="object" and has("returns")))
+        | last' <<<"$output")
+
+      [[ -n "$json_output" && "$json_output" != "null" ]] || { echo "Unable to parse forge JSON output" >&2; exit 1; }
+
+      deployed_addr=$(jq -er '.returns.oracle.value // .returns.wrapper.value // .returns[0].value // .returns.oracle // .returns.wrapper // .returns[0]' <<<"$json_output") || {
+        echo "Unable to parse deployed $section address" >&2
+        exit 1
+      }
+
+      echo "$section -> $name set to $deployed_addr"
+
+      if [[ "$section" == "adapters" && "$SHOULD_BROADCAST" -eq 1 ]]; then
+        persist_adapter_address "$i" "$deployed_addr"
+      fi
     fi
   done
 }

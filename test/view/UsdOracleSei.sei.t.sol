@@ -60,37 +60,37 @@ contract UsdOracleSeiTest is RpcUtils {
     }
 
     function testUsd_usdc() public view {
-        uint256 price = oracleSei.usd(usdc);
+        (uint256 price,) = oracleSei.usd(usdc);
         assertGt(price, 0.9e18);
         assertLt(price, 1.1e18);
     }
 
     function testUsd_usdt() public view {
-        uint256 price = oracleSei.usd(usdt);
+        (uint256 price,) = oracleSei.usd(usdt);
         assertGt(price, 0.9e18);
         assertLt(price, 1.1e18);
     }
 
     function testUsd_weth() public view {
-        uint256 price = oracleSei.usd(weth);
+        (uint256 price,) = oracleSei.usd(weth);
         assertGt(price, 100e18);
         assertLt(price, 100_000e18);
     }
 
     function testUsd_wbtc() public view {
-        uint256 price = oracleSei.usd(wbtc);
+        (uint256 price,) = oracleSei.usd(wbtc);
         assertGt(price, 1000e18);
         assertLt(price, 10_000_000e18);
     }
 
     function testUsd_sei() public view {
-        uint256 price = oracleSei.usd(sei);
+        (uint256 price,) = oracleSei.usd(sei);
         assertGt(price, 0.0001e18);
         assertLt(price, 100e18);
     }
 
     function testUsd_wsei() public view {
-        uint256 price = oracleSei.usd(wsei);
+        (uint256 price,) = oracleSei.usd(wsei);
         assertGt(price, 0.0001e18);
         assertLt(price, 100e18);
     }
@@ -101,7 +101,7 @@ contract UsdOracleSeiTest is RpcUtils {
         tokens[1] = usdt;
         tokens[2] = wbtc;
 
-        uint256[] memory prices = oracleSei.usd(tokens);
+        (uint256[] memory prices,) = oracleSei.usd(tokens);
         assertEq(prices.length, 3);
 
         assertGt(prices[0], 0.9e18);
