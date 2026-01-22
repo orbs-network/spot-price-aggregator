@@ -67,8 +67,8 @@
         ]
     },
     "1329": {
-        "oracle": "",
-        "salt": "",
+        "oracle": "0xceE000116C340376963ACf4eFC53A5F2534287E2",
+        "salt": "0x7faa386f8a26f804cbe156058bb6f4ca1b757fbbb9d37b8e1ca53dc63b967d4b",
         "env": {
             "tokens": [
                 "0xe15fC38F6D8c56aF07bbCBe3BAf5708A2Bf42392",
@@ -85,8 +85,8 @@
                 "ubtc"
             ]
         },
-        "aggregator": "",
-        "aggregatorSalt": "",
+        "aggregator": "0x11111170904F16331A09E916736d55323AB76D65",
+        "aggregatorSalt": "0xd88c95231413fd11952aa4feb601314d9e55dc247a81b3bedc7df4a6c8594a2b",
         "connectors": [
             "0xe15fC38F6D8c56aF07bbCBe3BAf5708A2Bf42392",
             "0x3894085Ef7Ff0f0aeDf52E2A2704928d1Ec074F1"
