@@ -335,8 +335,8 @@
         ]
     },
     "56": {
-        "oracle": "0xcEE00048C216ecEDAd86033622DB353D6CBdd862",
-        "salt": "0xd15966814ecb971427f35ef37fec503ebdbb5d25c6ac612f63f1a67ebea03f22",
+        "oracle": "0xCEe000D37d5a1Af80272e2BA7a17156831114680",
+        "salt": "0xe460dcc0830aaabd429bb515573a16a827d682da5786648278a85062e7a372e0",
         "env": {
             "ttl": 86400,
             "tokens": [
@@ -356,8 +356,8 @@
                 "0x264990fbd0A4796A3E3d8E37C4d5F87a3aCa5Ebf"
             ]
         },
-        "aggregator": "0x1111115e9E903892B02f709cAB3879CDB6b007D7",
-        "aggregatorSalt": "0x4e95adeccf84f2a13ea195e597409f9c101f1b7de520aca91aceccbfcc6c681b",
+        "aggregator": "0x11111142601D2F8ec0106e914daed7a76726847b",
+        "aggregatorSalt": "0x80708deb54b6cfa05c6fbc393cbf44646168ef57d4a4db1132661f7f4d72b1da",
         "connectors": [
             "0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3",
             "0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
@@ -367,72 +367,8 @@
             "0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c",
             "0x111111111117dC0aa78b770fA6A738034120C302"
         ],
-        "wrappers": [
-            {
-                "label": "AaveV3",
-                "name": "AaveWrapperV3",
-                "env": {
-                    "address": "0x0c8fc7a71C28c768FDC1f7d75835229beBEB1573"
-                }
-            },
-            {
-                "label": "StataTokens",
-                "name": "StataTokenWrapper",
-                "env": {
-                    "address": "0x1A75DF59f464a70Cc8f7383983852FF72e5F5167"
-                }
-            },
-            {
-                "label": "Venus",
-                "name": "CompoundLikeWrapper",
-                "env": {
-                    "address": "0x11DEE30E710B8d4a8630392781Cc3c0046365d4c"
-                }
-            }
-        ],
+        "wrappers": [],
         "adapters": [
-            {
-                "label": "ApeSwap",
-                "name": "UniswapV2LikeOracle",
-                "env": {
-                    "address": "0xeD55d76Bb48E042a177d1E21AffBe1B72d0c7dB0"
-                }
-            },
-            {
-                "label": "BakerySwap",
-                "name": "UniswapV2LikeOracle",
-                "env": {
-                    "address": "0x82b6B75F5fEabbfD370D45daCEFae3D5c06099DA"
-                }
-            },
-            {
-                "label": "BSCswap",
-                "name": "UniswapV2LikeOracle",
-                "env": {
-                    "address": "0xD4eFb5998DFBDFB791182fb610D0061136E9DB50"
-                }
-            },
-            {
-                "label": "Demax",
-                "name": "UniswapV2LikeOracle",
-                "env": {
-                    "address": "0x7bdc6954e1c7869B4147A320d589689F628E9921"
-                }
-            },
-            {
-                "label": "KyberDMM",
-                "name": "KyberDmmOracle",
-                "env": {
-                    "address": "0xb194735EdC3Ab0F77Ef1E961f7e14E12dC0CF2AF"
-                }
-            },
-            {
-                "label": "Mooniswap",
-                "name": "MooniswapOracle",
-                "env": {
-                    "address": "0x5F6a6428756CfAF96584286Ef9f7411621196f3A"
-                }
-            },
             {
                 "label": "Pancake 1",
                 "name": "UniswapV2LikeOracle",
@@ -452,13 +388,6 @@
                 "name": "UniswapV3LikeOracle",
                 "env": {
                     "address": "0x7e72b1e0e6DD6F71e3b98f768E814613C2097e61"
-                }
-            },
-            {
-                "label": "Thugswap",
-                "name": "UniswapV2LikeOracle",
-                "env": {
-                    "address": "0x7bBc0156c31A19097eEd6B636AA2F4AB8A31BFD9"
                 }
             },
             {
@@ -486,25 +415,21 @@
                 "label": "Thena",
                 "name": "SolidlyOracleNoCreate2",
                 "env": {
-                    "factory": "0xAFD89d21BdB66d00817d4153E055830B1c2B3970"
+                    "address": "0xdceD95811cd0C73018DBb793A114D6bCE74dB2AC"
                 }
             },
             {
                 "label": "ThenaV3",
                 "name": "AlgebraCustomPoolOracle",
                 "env": {
-                    "poolDeployer": "0x06852dC9D6E44782Dd02994C368feBc4dC1b8a17",
-                    "customDeployer": "0x0000000000000000000000000000000000000000",
-                    "initcodehash": "0xb3fc09be5eb433d99b1ec89fd8435aaf5ffea75c1879e19028aa2414a14b3c85"
+                    "address": "0x675dA2bF81b5C94B3dCd1e6a6f2A0A26029E1D50"
                 }
             },
             {
-                "label": "ThenaV3Fee-only",
+                "label": "ThenaV3-2",
                 "name": "AlgebraCustomPoolOracle",
                 "env": {
-                    "poolDeployer": "0x06852dC9D6E44782Dd02994C368feBc4dC1b8a17",
-                    "customDeployer": "0xF807462b5ce54A89e2F5B847D8281030eAfE241B",
-                    "initcodehash": "0xb3fc09be5eb433d99b1ec89fd8435aaf5ffea75c1879e19028aa2414a14b3c85"
+                    "address": "0xA722bb41d656d07d48961EE03743aDde561A1152"
                 }
             }
         ]
@@ -539,7 +464,7 @@
             "0x0555E30da8f98308EdB960aa94C0Db47230d2B9c",
             "0xD2C41BF4033A83C0FC3A7F58a392Bf37d6dCDb58",
             "0xC3827A4BC8224ee2D116637023b124CED6db6e90",
-            "0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34",
+            "0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34"
         ],
         "wrappers": [],
         "adapters": [
