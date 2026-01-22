@@ -173,8 +173,8 @@
         ]
     },
     "43114": {
-        "oracle": "",
-        "salt": "",
+        "oracle": "0xCeE000FA58eB27E988769763f7002607585fA295",
+        "salt": "0x203ee730aafce6f0d0b58aff03b575111da885d035076a019a9dd19e30f8dc98",
         "env": {
             "ttl": 86400,
             "tokens": [
@@ -198,8 +198,8 @@
                 "0x976B3D034E162d8bD72D6b9C989d545b839003b0"
             ]
         },
-        "aggregator": "",
-        "aggregatorSalt": "",
+        "aggregator": "0x111111a0e40039385E79e9DBc3B91125C39E6ad2",
+        "aggregatorSalt": "0xd6991e5fe619d4c8f90e54e5f494b502acee87c05c1bdb1ded45a1736df48acf",
         "connectors": [
             "0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB",
             "0xc7198437980c041c805A1EDcbA50c1Ce5db95118",
