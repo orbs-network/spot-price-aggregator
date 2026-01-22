@@ -190,7 +190,6 @@ deploy_usd_oracle() {
     hash=$(print_deploy_usd_oracle_hash "$oracle_script" "$@")
     ORACLE_SALT=$(mine_create2_salt "$ORACLE_PREFIX" "$hash")
     persist_oracle_salt
-    exit 0
   fi
 
   echo "Deploying USD oracle ($oracle_script) for chain $CHAIN_ID"
@@ -256,7 +255,6 @@ if [[ -z "$AGG_SALT" ]]; then
   hash=$(print_deploy_aggregator_hash "$@")
   AGG_SALT=$(mine_create2_salt "$AGG_PREFIX" "$hash")
   persist_aggregator_salt
-  exit 0
 fi
 
 deploy_core_stack "$@"
