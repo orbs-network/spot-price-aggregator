@@ -3,6 +3,7 @@ pragma solidity 0.8.23;
 
 import {RpcUtils} from "test/utils/RpcUtils.sol";
 import {UsdOracleSei, ISeiPrecompile} from "contracts/view/UsdOracleSei.sol";
+import {UsdOracleCore} from "contracts/view/UsdOracleCore.sol";
 
 contract UsdOracleSeiTest is RpcUtils {
     UsdOracleSei public oracleSei;
@@ -20,9 +21,12 @@ contract UsdOracleSeiTest is RpcUtils {
     function setUp() public {
         string memory json = vm.readFile("script/input/config.json");
         string memory chainKey = ".1329";
+        string memory aggregatorRaw = vm.parseJsonString(json, string.concat(chainKey, ".aggregator"));
+        require(bytes(aggregatorRaw).length != 0, "missing aggregator for chain 1329");
         address[] memory deployTokens = vm.parseJsonAddressArray(json, string.concat(chainKey, ".env.tokens"));
         string[] memory deployDenoms = vm.parseJsonStringArray(json, string.concat(chainKey, ".env.denoms"));
         aggregator = vm.parseJsonAddress(json, string.concat(chainKey, ".aggregator"));
+        require(aggregator != address(0), "aggregator is zero for chain 1329");
         require(deployTokens.length >= 4, "tokens length < 4");
         require(deployDenoms.length == deployTokens.length + 2, "denoms length must be tokens+2");
 
@@ -101,15 +105,15 @@ contract UsdOracleSeiTest is RpcUtils {
         tokens[1] = usdt;
         tokens[2] = wbtc;
 
-        (uint256[] memory prices,) = oracleSei.usd(tokens);
-        assertEq(prices.length, 3);
+        UsdOracleCore.Quote[] memory quotes = oracleSei.usd(tokens);
+        assertEq(quotes.length, 3);
 
-        assertGt(prices[0], 0.9e18);
-        assertLt(prices[0], 1.1e18);
-        assertGt(prices[1], 0.9e18);
-        assertLt(prices[1], 1.1e18);
-        assertGt(prices[2], 1000e18);
-        assertLt(prices[2], 10_000_000e18);
+        assertGt(quotes[0].price, 0.9e18);
+        assertLt(quotes[0].price, 1.1e18);
+        assertGt(quotes[1].price, 0.9e18);
+        assertLt(quotes[1].price, 1.1e18);
+        assertGt(quotes[2].price, 1000e18);
+        assertLt(quotes[2].price, 10_000_000e18);
     }
 
     function _fetchRates(address precompile, bytes memory callData) internal returns (bytes memory raw) {

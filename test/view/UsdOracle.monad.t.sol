@@ -19,8 +19,10 @@ contract UsdOracleMonadTest is RpcUtils {
 
         string memory json = vm.readFile("script/input/config.json");
         string memory chainKey = ".143";
+        string memory aggregatorRaw = vm.parseJsonString(json, string.concat(chainKey, ".aggregator"));
+        require(bytes(aggregatorRaw).length != 0, "missing aggregator for chain 143");
         address aggregator = vm.parseJsonAddress(json, string.concat(chainKey, ".aggregator"));
-        uint256 ttl = vm.parseJsonUint(json, string.concat(chainKey, ".env.ttl"));
+        require(aggregator != address(0), "aggregator is zero for chain 143");
         address[] memory tokens = vm.parseJsonAddressArray(json, string.concat(chainKey, ".env.tokens"));
         address[] memory feeds = vm.parseJsonAddressArray(json, string.concat(chainKey, ".env.feeds"));
         require(tokens.length >= 4, "tokens length < 4");
@@ -33,7 +35,7 @@ contract UsdOracleMonadTest is RpcUtils {
             deployTokens[i + 2] = tokens[i];
         }
 
-        oracle = new UsdOracle(aggregator, ttl, deployTokens, feeds);
+        oracle = new UsdOracle(aggregator, deployTokens, feeds);
 
         weth = tokens[0];
         usdt = tokens[1];

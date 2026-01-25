@@ -53,11 +53,6 @@ contract OffchainOracleAvaxTest is RpcUtils {
             connectors[i + 3] = IERC20(extraConnectors[i]);
         }
 
-        // Wrappers (from config)
-        address wrapperAaveV2 = vm.parseJsonAddress(json, string.concat(CHAIN_KEY, ".wrappers[0].env.address"));
-        address wrapperAaveV3 = vm.parseJsonAddress(json, string.concat(CHAIN_KEY, ".wrappers[1].env.address"));
-        address wrapperStata = vm.parseJsonAddress(json, string.concat(CHAIN_KEY, ".wrappers[2].env.address"));
-
         // Existing adapter deployments (from config)
         address oracleJoe = vm.parseJsonAddress(json, string.concat(CHAIN_KEY, ".adapters[0].env.address"));
         address oraclePangolin = vm.parseJsonAddress(json, string.concat(CHAIN_KEY, ".adapters[1].env.address"));
@@ -92,11 +87,6 @@ contract OffchainOracleAvaxTest is RpcUtils {
         IOracle[] memory emptyOracles = new IOracle[](0);
         OffchainOracle.OracleType[] memory emptyTypes = new OffchainOracle.OracleType[](0);
         aggregator = new OffchainOracle(multiWrapper, emptyOracles, emptyTypes, connectors, IERC20(WETH), owner);
-
-        // Add wrappers
-        multiWrapper.addWrapper(IWrapper(wrapperAaveV2));
-        multiWrapper.addWrapper(IWrapper(wrapperAaveV3));
-        multiWrapper.addWrapper(IWrapper(wrapperStata));
 
         // Add existing oracle deployments
         aggregator.addOracle(IOracle(oracleJoe), OffchainOracle.OracleType(0));

@@ -3,6 +3,7 @@ pragma solidity 0.8.23;
 
 import "forge-std/Test.sol";
 import {UsdOracle, IChainlinkAggregatorV3} from "contracts/view/UsdOracle.sol";
+import {UsdOracleCore} from "contracts/view/UsdOracleCore.sol";
 import {IOffchainOracleAggregator} from "contracts/view/AggregatorLib.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
@@ -24,11 +25,13 @@ contract UsdOracleTest is Test {
         tokens[0] = address(0); // ETH as base
         feeds[0] = address(ethUsdFeed);
 
-        oracleUsd = new UsdOracle(address(offchainOracle), 1 days, tokens, feeds);
+        oracleUsd = new UsdOracle(address(offchainOracle), tokens, feeds);
     }
 
     function testEthUsd_scalesTo1e18() public view {
-        assertEq(oracleUsd.usdFromFeed(address(0)), 3000e18);
+        (uint256 price, uint8 decimals) = oracleUsd.usd(address(0));
+        assertEq(price, 3000e18);
+        assertEq(decimals, 18);
     }
 
     function testUsd_convertsTokenToUsd() public {
@@ -52,20 +55,19 @@ contract UsdOracleTest is Test {
         tokens[0] = address(0);
         tokens[1] = address(token);
 
-        (uint256[] memory prices, uint8[] memory decimals) = oracleUsd.usd(tokens);
-        assertEq(prices.length, 2);
-        assertEq(prices[0], 3000e18);
-        assertEq(prices[1], 1.5e18);
-        assertEq(decimals.length, 2);
-        assertEq(decimals[0], 18);
-        assertEq(decimals[1], 6);
+        UsdOracleCore.Quote[] memory quotes = oracleUsd.usd(tokens);
+        assertEq(quotes.length, 2);
+        assertEq(quotes[0].price, 3000e18);
+        assertEq(quotes[1].price, 1.5e18);
+        assertEq(quotes[0].decimals, 18);
+        assertEq(quotes[1].decimals, 6);
     }
 
     function testEthUsd_revertsOnStaleAnswer() public {
         ethUsdFeed.setAnswer(3000e8, block.timestamp);
         vm.warp(block.timestamp + 2 days);
-        vm.expectRevert(UsdOracle.StaleFeedAnswer.selector);
-        oracleUsd.usdFromFeed(address(0));
+        vm.expectRevert(abi.encodeWithSelector(UsdOracleCore.StaleAnswer.selector, address(0)));
+        oracleUsd.usd(address(0));
     }
 }
 
@@ -84,7 +86,7 @@ contract MockOffchainOracleAggregator is IOffchainOracleAggregator {
 contract MockAggregatorV3 is IChainlinkAggregatorV3 {
     uint8 public override decimals;
     int256 public answer;
-    uint256 public updatedAt;
+    uint256 public updated;
 
     function setDecimals(uint8 d) external {
         decimals = d;
@@ -92,16 +94,16 @@ contract MockAggregatorV3 is IChainlinkAggregatorV3 {
 
     function setAnswer(int256 a, uint256 t) external {
         answer = a;
-        updatedAt = t;
+        updated = t;
     }
 
     function latestRoundData()
         external
         view
         override
-        returns (uint80 roundId, int256 _answer, uint256 startedAt, uint256 _updatedAt, uint80 answeredInRound)
+        returns (uint80 roundId, int256 _answer, uint256 startedAt, uint256 _updated, uint80 answeredInRound)
     {
-        return (1, answer, updatedAt, updatedAt, 1);
+        return (1, answer, updated, updated, 1);
     }
 }
 

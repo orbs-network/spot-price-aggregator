@@ -3,89 +3,48 @@
 pragma solidity 0.8.23;
 
 import {SafeCast} from "@openzeppelin/contracts/utils/math/SafeCast.sol";
-import {AggregatorLib} from "./AggregatorLib.sol";
+import {UsdOracleCore} from "./UsdOracleCore.sol";
 
 /// @notice View-only USD oracle (1e18) using direct feeds or offchain conversion to a base token.
 /// @dev Pricing flow: (1) direct USD feed when configured; otherwise (2) token -> base via OffchainOracle;
 /// @dev then (3) base -> USD via the base feed.
 /// @dev Intended for off-chain reads; not suitable for on-chain pricing.
-contract UsdOracle {
+contract UsdOracle is UsdOracleCore {
     using SafeCast for int256;
-    using AggregatorLib for address;
 
     error ArraysLengthMismatch();
     error MissingFeed(address token);
-    error InvalidFeedAnswer();
-    error StaleFeedAnswer();
-
-    address public immutable aggregator;
-    address public immutable base;
-    uint256 public immutable ttl;
 
     mapping(address => address) public usdFeed;
 
     /// @param _aggregator Offchain oracle used for token -> base conversion.
-    /// @param _ttl Max age for feed answers before they are treated as stale.
     /// @param tokens Token list; tokens[0] is the base token.
     /// @param feeds Chainlink feed addresses, aligned 1:1 with tokens.
-    constructor(address _aggregator, uint256 _ttl, address[] memory tokens, address[] memory feeds) {
-        aggregator = _aggregator;
-        ttl = _ttl;
-
+    constructor(address _aggregator, address[] memory tokens, address[] memory feeds)
+        UsdOracleCore(_aggregator, tokens[0])
+    {
         if (tokens.length == 0 || tokens.length != feeds.length) revert ArraysLengthMismatch();
-        base = tokens[0];
         for (uint256 i; i < tokens.length; i++) {
             usdFeed[tokens[i]] = feeds[i];
         }
     }
 
-    /// @notice Returns token/USD price scaled to 1e18.
-    /// @param token Token to price.
-    /// @return price USD price scaled to 1e18.
-    /// @return decimals Token decimals (or 18 if unavailable).
-    function usd(address token) public view returns (uint256 price, uint8 decimals) {
-        decimals = AggregatorLib.decimals(token);
-        if (usdFeed[token] != address(0)) return (usdFromFeed(token), decimals);
-        return (aggregator.usdFromBase(token, base, usdFromFeed(base)), decimals);
+    function _hasDirect(address token) internal view override returns (bool) {
+        return usdFeed[token] != address(0);
     }
 
-    /// @notice Returns token/USD prices scaled to 1e18.
-    /// @param tokens Tokens to price.
-    /// @return prices USD prices scaled to 1e18.
-    /// @return decimals Token decimals (or 18 if unavailable).
-    function usd(address[] memory tokens) public view returns (uint256[] memory prices, uint8[] memory decimals) {
-        prices = new uint256[](tokens.length);
-        decimals = new uint8[](tokens.length);
-        uint256 baseUsd = usdFromFeed(base);
-
-        for (uint256 i; i < tokens.length; i++) {
-            decimals[i] = AggregatorLib.decimals(tokens[i]);
-            if (tokens[i] == base) {
-                prices[i] = baseUsd;
-            } else if (usdFeed[tokens[i]] != address(0)) {
-                prices[i] = usdFromFeed(tokens[i]);
-            } else {
-                prices[i] = aggregator.usdFromBase(tokens[i], base, baseUsd);
-            }
-        }
-    }
-
-    /// @notice Returns USD price from a configured feed, scaled to 1e18.
-    /// @param token Token with a configured feed.
-    /// @return USD price scaled to 1e18.
-    function usdFromFeed(address token) public view returns (uint256) {
+    function _directUsd(address token) internal view override returns (uint256 price, uint256 updated) {
         address feed = usdFeed[token];
         if (feed == address(0)) revert MissingFeed(token);
 
-        (, int256 answer,, uint256 updatedAt,) = IChainlinkAggregatorV3(feed).latestRoundData();
-        if (answer <= 0) revert InvalidFeedAnswer();
-        if (block.timestamp >= updatedAt + ttl) revert StaleFeedAnswer();
+        (, int256 answer,, uint256 feedUpdated,) = IChainlinkAggregatorV3(feed).latestRoundData();
+        updated = feedUpdated;
 
-        uint256 price = answer.toUint256();
+        uint256 rawPrice = answer.toUint256();
         uint8 d = IChainlinkAggregatorV3(feed).decimals();
-        if (d == 18) return price;
-        if (d < 18) return price * (10 ** (18 - d));
-        return price / (10 ** (d - 18));
+        if (d == 18) price = rawPrice;
+        else if (d < 18) price = rawPrice * (10 ** (18 - d));
+        else price = rawPrice / (10 ** (d - 18));
     }
 }
 
@@ -96,5 +55,5 @@ interface IChainlinkAggregatorV3 {
     function latestRoundData()
         external
         view
-        returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound);
+        returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updated, uint80 answeredInRound);
 }

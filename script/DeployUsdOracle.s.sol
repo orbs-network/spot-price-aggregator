@@ -18,17 +18,14 @@ contract DeployUsdOracle is Script {
             }
         }
         address aggregator = vm.parseJsonAddress(json, string.concat(chainKey, ".aggregator"));
-        uint256 ttl = vm.parseJsonUint(json, string.concat(chainKey, ".env.ttl"));
         address[] memory tokens = vm.parseJsonAddressArray(json, string.concat(chainKey, ".env.tokens"));
         address[] memory feeds = vm.parseJsonAddressArray(json, string.concat(chainKey, ".env.feeds"));
         require(feeds.length == tokens.length + 2, "feeds length must be tokens+2");
         address[] memory tokensWithBase = _prependNativeAndWrapped(tokens);
 
         vm.startBroadcast();
-        console.logBytes32(
-            hashInitCode(type(UsdOracle).creationCode, abi.encode(aggregator, ttl, tokensWithBase, feeds))
-        );
-        oracle = new UsdOracle{salt: salt}(aggregator, ttl, tokensWithBase, feeds);
+        console.logBytes32(hashInitCode(type(UsdOracle).creationCode, abi.encode(aggregator, tokensWithBase, feeds)));
+        oracle = new UsdOracle{salt: salt}(aggregator, tokensWithBase, feeds);
         vm.stopBroadcast();
     }
 

@@ -3,7 +3,6 @@
         "oracle": "",
         "salt": "",
         "env": {
-            "ttl": 86400,
             "tokens": [
                 "0xEE8c0E9f1BFFb4Eb878d8f15f368A02a35481242",
                 "0xe7cd86e13AC4309349F30B3435a9d337750fC82D",
@@ -135,7 +134,6 @@
         "oracle": "",
         "salt": "",
         "env": {
-            "ttl": 86400,
             "tokens": [
                 "0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664",
                 "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E",
@@ -275,7 +273,6 @@
         "oracle": "0xCeE0007b6056555BB835A2cCF7BF163704e8015d",
         "salt": "0x97b79fcaa1e6694dd14557b85de2333f5a895fdd72753c06d42848d965c8a148",
         "env": {
-            "ttl": 86400,
             "tokens": [
                 "0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3",
                 "0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
@@ -373,7 +370,6 @@
     },
     "80094": {
         "env": {
-            "ttl": 86400,
             "tokens": [
                 "0xFCBD14DC51f0A4d49d5E53C2E0950e0bC26d0Dce",
                 "0x779Ded0c9e1022225f8E0630b35a9b54bE713736",

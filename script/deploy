@@ -20,7 +20,8 @@ AGG_PREFIX="0x111111"
 AGG_PREFIX_REGEX="^${AGG_PREFIX}"
 ORACLE_PREFIX="0xcee000"
 ORACLE_PREFIX_REGEX="^${ORACLE_PREFIX}"
-STEP_SEPARATOR="------------------------------------------------------------"
+STEP_ICON_LEFT="🔹====================="
+STEP_ICON_RIGHT="===================== 🔹"
 
 # Detect broadcast flag in arguments
 SHOULD_BROADCAST=0
@@ -71,8 +72,7 @@ persist_adapter_address() {
 print_step() {
   local label="$1"
   echo ""
-  echo "$STEP_SEPARATOR"
-  echo "$label"
+  echo "${STEP_ICON_LEFT} ${label} ${STEP_ICON_RIGHT}"
 }
 
 mine_create2_salt() {
