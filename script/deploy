@@ -84,7 +84,6 @@ mine_create2_salt() {
     exit 1
   }
 
-  echo "$output" >&2
   salt=$(awk '/^Salt:/ {print $2; exit}' <<<"$output")
   [[ -n "$salt" && "$salt" != "null" ]] || {
     echo "Unable to parse salt from cast create2 output" >&2
@@ -110,7 +109,7 @@ print_deploy_aggregator_hash() {
     forge_args+=("$arg")
   done
 
-  output=$(forge script DeployAggregator --json "${forge_args[@]}") || {
+  output=$(run_forge_json DeployAggregator "${forge_args[@]}") || {
     echo "DeployAggregator failed" >&2
     exit 1
   }
@@ -125,7 +124,6 @@ print_deploy_aggregator_hash() {
   hash=$(jq -r '.logs[]? | select(type=="string")' <<<"$json_output" | head -n 1)
   [[ -n "$hash" && "$hash" != "null" ]] || { echo "Unable to parse DeployAggregator hash" >&2; exit 1; }
 
-  echo "expected prefix: $AGG_PREFIX" >&2
   echo "$hash"
 }
 
@@ -149,7 +147,7 @@ print_deploy_usd_oracle_hash() {
     forge_args+=("$arg")
   done
 
-  output=$(forge script "$oracle_script" --json "${forge_args[@]}") || {
+  output=$(run_forge_json "$oracle_script" "${forge_args[@]}") || {
     echo "USD oracle deployment failed" >&2
     exit 1
   }
@@ -164,14 +162,13 @@ print_deploy_usd_oracle_hash() {
   hash=$(jq -r '.logs[]? | select(type=="string")' <<<"$json_output" | head -n 1)
   [[ -n "$hash" && "$hash" != "null" ]] || { echo "Unable to parse USD oracle hash" >&2; exit 1; }
 
-  echo "expected prefix: $ORACLE_PREFIX" >&2
   echo "$hash"
 }
 
 deploy_core_stack() {
   print_step "Deploying Aggregator: BaseCoinWrapper + MultiWrapper + OffchainOracle (chain $CHAIN_ID)"
   local output json_output
-  output=$(forge script DeployAggregator --json "$@") || {
+  output=$(run_forge_json DeployAggregator "$@") || {
     echo "Core deployment failed" >&2
     exit 1
   }
@@ -210,7 +207,7 @@ deploy_usd_oracle() {
 
   print_step "Deploying USD oracle ($oracle_script) for chain $CHAIN_ID"
   local output json_output
-  output=$(forge script "$oracle_script" --json "$@") || {
+  output=$(run_forge_json "$oracle_script" "$@") || {
     echo "USD oracle deployment failed" >&2
     exit 1
   }
@@ -257,13 +254,13 @@ run_section() {
     print_step "$label"
 
     if [[ -n "$addr" ]]; then
-      if ! env "INDEX=$i" forge script "$script" "${forge_args[@]}"; then
+      if ! _=$(INDEX=$i run_forge_json "$script" "${forge_args[@]}"); then
         echo "Error running $section/$name ($script); aborting." >&2
         exit 1
       fi
     else
       local output json_output deployed_addr
-      output=$(env "INDEX=$i" forge script "$script" --json "${forge_args[@]}") || {
+      output=$(INDEX=$i run_forge_json "$script" "${forge_args[@]}") || {
         echo "Error running $section/$name ($script); aborting." >&2
         exit 1
       }
@@ -287,6 +284,18 @@ run_section() {
       fi
     fi
   done
+}
+
+run_forge_json() {
+  local output err_file
+  err_file=$(mktemp)
+  if ! output=$(forge script --json "$@" 2>"$err_file"); then
+    cat "$err_file" >&2
+    rm -f "$err_file"
+    return 1
+  fi
+  rm -f "$err_file"
+  echo "$output"
 }
 
 if [[ "$HAS_AGG" =~ $AGG_PREFIX_REGEX ]]; then
