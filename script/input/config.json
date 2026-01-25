@@ -137,8 +137,8 @@
         ]
     },
     "43114": {
-        "oracle": "",
-        "salt": "",
+        "oracle": "0xCEe0009dE799996Deae4eF1c198D2F61dd5CfD63",
+        "salt": "0x596b70b586f4c19de78f6d1f2bd745b91abd7585e00952a81af9d970de17d6c0",
         "env": {
             "tokens": [
                 "0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664",
@@ -161,8 +161,8 @@
                 "0x976B3D034E162d8bD72D6b9C989d545b839003b0"
             ]
         },
-        "aggregator": "",
-        "aggregatorSalt": "",
+        "aggregator": "0x111111A61Ea1f671A7842c1f7D33B76BcAc3497f",
+        "aggregatorSalt": "0x8c98a860a84415492a3c06e353638277efe256ba375ff9522d031312848841c0",
         "connectors": [
             "0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB",
             "0xc7198437980c041c805A1EDcbA50c1Ce5db95118",
@@ -225,7 +225,8 @@
                 "label": "BlackholeAMM",
                 "name": "SolidlyOracleNoCreate2",
                 "env": {
-                    "factory": "0xFe926062fB99cA5653080D6c14fe945AD68C265c"
+                    "factory": "0xFe926062fB99cA5653080D6c14fe945AD68C265c",
+                    "address": "0x5256b16da3642D25b2d421f5f9169845c7982a29"
                 }
             },
             {
@@ -234,7 +235,8 @@
                 "env": {
                     "poolDeployer": "0x9B2441037E286d5Bf9456a3BE7b5273fe28DbA1e",
                     "customDeployer": "0x0000000000000000000000000000000000000000",
-                    "initcodehash": "0xeaa3eea3233916c82fe1281a51bd9cde844b7c4673c0714ca0028a57f5634752"
+                    "initcodehash": "0xeaa3eea3233916c82fe1281a51bd9cde844b7c4673c0714ca0028a57f5634752",
+                    "address": "0xed262AD7C75c2B7b9b1726dD992bd63CCAef7F0A"
                 }
             },
             {
@@ -243,7 +245,8 @@
                 "env": {
                     "poolDeployer": "0x9B2441037E286d5Bf9456a3BE7b5273fe28DbA1e",
                     "customDeployer": "0xDcFccf2e8c4EfBba9127B80eAc76c5A122125d29",
-                    "initcodehash": "0xeaa3eea3233916c82fe1281a51bd9cde844b7c4673c0714ca0028a57f5634752"
+                    "initcodehash": "0xeaa3eea3233916c82fe1281a51bd9cde844b7c4673c0714ca0028a57f5634752",
+                    "address": "0x1B07231991AC136957b0a2324696578195A83Bc4"
                 }
             },
             {
@@ -252,7 +255,8 @@
                 "env": {
                     "poolDeployer": "0x9B2441037E286d5Bf9456a3BE7b5273fe28DbA1e",
                     "customDeployer": "0x58b05074D52D1a84D8FfDAddA3c1b652e8C56994",
-                    "initcodehash": "0xeaa3eea3233916c82fe1281a51bd9cde844b7c4673c0714ca0028a57f5634752"
+                    "initcodehash": "0xeaa3eea3233916c82fe1281a51bd9cde844b7c4673c0714ca0028a57f5634752",
+                    "address": "0xF8fd8d3409b6685d663498D9D501062D0Cf5cD61"
                 }
             },
             {
@@ -261,7 +265,8 @@
                 "env": {
                     "poolDeployer": "0x9B2441037E286d5Bf9456a3BE7b5273fe28DbA1e",
                     "customDeployer": "0xf9221dE143A0E57c324bF2a0f281e605e845D767",
-                    "initcodehash": "0xeaa3eea3233916c82fe1281a51bd9cde844b7c4673c0714ca0028a57f5634752"
+                    "initcodehash": "0xeaa3eea3233916c82fe1281a51bd9cde844b7c4673c0714ca0028a57f5634752",
+                    "address": "0x093111cb9D868e74fE71385592cd939Af8f77714"
                 }
             },
             {
@@ -270,7 +275,8 @@
                 "env": {
                     "poolDeployer": "0x9B2441037E286d5Bf9456a3BE7b5273fe28DbA1e",
                     "customDeployer": "0x5D433A94A4a2aA8f9AA34D8D15692Dc2E9960584",
-                    "initcodehash": "0xeaa3eea3233916c82fe1281a51bd9cde844b7c4673c0714ca0028a57f5634752"
+                    "initcodehash": "0xeaa3eea3233916c82fe1281a51bd9cde844b7c4673c0714ca0028a57f5634752",
+                    "address": "0x7085faB4d9DB9b68fBAC99b36d23Faef49BEfF4F"
                 }
             }
         ]
