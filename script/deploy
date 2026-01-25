@@ -37,44 +37,12 @@ log_err() {
   echo "$@" >&2
 }
 
-persist_aggregator_address() {
-  local tmp
+update_config_value() {
+  local path="$1" value="$2" message="$3" tmp
   tmp=$(mktemp)
-  jq --indent 4 ".\"$CHAIN_ID\".aggregator = \"$AGGREGATOR\"" "$CONFIG_FILE" > "$tmp"
+  jq --indent 4 --arg value "$value" ".\"$CHAIN_ID\".${path} = \$value" "$CONFIG_FILE" > "$tmp"
   mv "$tmp" "$CONFIG_FILE"
-  log_info "Updated aggregator in config for chain $CHAIN_ID"
-}
-
-persist_oracle_address() {
-  local tmp
-  tmp=$(mktemp)
-  jq --indent 4 ".\"$CHAIN_ID\".oracle = \"$ORACLE\"" "$CONFIG_FILE" > "$tmp"
-  mv "$tmp" "$CONFIG_FILE"
-  log_info "Updated oracle in config for chain $CHAIN_ID"
-}
-
-persist_aggregator_salt() {
-  local tmp
-  tmp=$(mktemp)
-  jq --indent 4 ".\"$CHAIN_ID\".aggregatorSalt = \"$AGG_SALT\"" "$CONFIG_FILE" > "$tmp"
-  mv "$tmp" "$CONFIG_FILE"
-  log_info "Updated aggregatorSalt in config for chain $CHAIN_ID"
-}
-
-persist_oracle_salt() {
-  local tmp
-  tmp=$(mktemp)
-  jq --indent 4 ".\"$CHAIN_ID\".salt = \"$ORACLE_SALT\"" "$CONFIG_FILE" > "$tmp"
-  mv "$tmp" "$CONFIG_FILE"
-  log_info "Updated salt in config for chain $CHAIN_ID"
-}
-
-persist_adapter_address() {
-  local index="$1" addr="$2" tmp
-  tmp=$(mktemp)
-  jq --indent 4 ".\"$CHAIN_ID\".adapters[$index].env.address = \"$addr\"" "$CONFIG_FILE" > "$tmp"
-  mv "$tmp" "$CONFIG_FILE"
-  log_info "Updated adapter env.address in config for chain $CHAIN_ID (index $index)"
+  log_info "$message"
 }
 
 print_step() {
@@ -104,36 +72,66 @@ mine_create2_salt() {
   echo "$salt"
 }
 
+run_forge_json() {
+  local out_file err_file
+  out_file=$(mktemp)
+  err_file=$(mktemp)
+  if ! forge script --json "$@" >"$out_file" 2>"$err_file"; then
+    cat "$err_file" >&2
+    rm -f "$err_file" "$out_file"
+    return 1
+  fi
+  rm -f "$err_file"
+  echo "$out_file"
+}
+
+run_forge_json_or_die() {
+  local label="$1"
+  shift
+  local output_file
+  output_file=$(run_forge_json "$@") || {
+    log_err "$label"
+    exit 1
+  }
+  echo "$output_file"
+}
+
+run_forge_json_no_broadcast() {
+  local script="$1"
+  shift
+  local -a args=()
+  local arg
+  for arg in "$@"; do
+    [[ "$arg" == "--broadcast" ]] && continue
+    args+=("$arg")
+  done
+  run_forge_json "$script" "${args[@]}"
+}
+
+extract_hash_from_logs() {
+  local output_file="$1"
+  jq -sRr 'split("\n")
+    | map(try fromjson catch empty)
+    | map(select(type=="object" and has("logs")))
+    | last
+    | .logs[]? | select(type=="string")' "$output_file" | grep -m1 -oE '0x[0-9a-fA-F]{64}'
+}
+
+extract_return_value() {
+  local output_file="$1" jq_expr="$2"
+  jq -sRer "split(\"\n\")
+    | map(try fromjson catch empty)
+    | map(select(type==\"object\" and has(\"returns\")))
+    | last
+    | ${jq_expr}" "$output_file"
+}
+
 resolve_script_name() {
   local section="$1" name="$2" dir file
   dir=$([[ "$section" == "wrappers" ]] && echo "wrapper" || echo "adapter")
   file="script/${dir}/Deploy${name}.s.sol"
   [[ -f "$file" ]] || { echo "Expected script file not found: $file" >&2; exit 1; }
   echo "Deploy${name}"
-}
-
-print_deploy_aggregator_hash() {
-  local output_file hash
-  local -a forge_args=()
-  for arg in "$@"; do
-    [[ "$arg" == "--broadcast" ]] && continue
-    forge_args+=("$arg")
-  done
-
-  output_file=$(run_forge_json DeployAggregator "${forge_args[@]}") || {
-    log_err "DeployAggregator failed"
-    exit 1
-  }
-
-  hash=$(jq -sRr 'split("\n")
-    | map(try fromjson catch empty)
-    | map(select(type=="object" and has("logs")))
-    | last
-    | .logs[]? | select(type=="string")' "$output_file" | grep -m1 -oE '0x[0-9a-fA-F]{64}')
-  rm -f "$output_file"
-  [[ -n "$hash" && "$hash" != "null" ]] || { log_err "Unable to parse DeployAggregator hash"; exit 1; }
-
-  echo "$hash"
 }
 
 resolve_usd_oracle_script() {
@@ -146,28 +144,18 @@ resolve_usd_oracle_script() {
   fi
 }
 
-print_deploy_usd_oracle_hash() {
-  local oracle_script="$1"
-  shift
+print_deploy_hash() {
+  local script="$1" label="$2"
+  shift 2
   local output_file hash
-  local -a forge_args=()
-  for arg in "$@"; do
-    [[ "$arg" == "--broadcast" ]] && continue
-    forge_args+=("$arg")
-  done
-
-  output_file=$(run_forge_json "$oracle_script" "${forge_args[@]}") || {
-    log_err "USD oracle deployment failed"
+  output_file=$(run_forge_json_no_broadcast "$script" "$@") || {
+    log_err "$label"
     exit 1
   }
 
-  hash=$(jq -sRr 'split("\n")
-    | map(try fromjson catch empty)
-    | map(select(type=="object" and has("logs")))
-    | last
-    | .logs[]? | select(type=="string")' "$output_file" | grep -m1 -oE '0x[0-9a-fA-F]{64}')
+  hash=$(extract_hash_from_logs "$output_file")
   rm -f "$output_file"
-  [[ -n "$hash" && "$hash" != "null" ]] || { log_err "Unable to parse USD oracle hash"; exit 1; }
+  [[ -n "$hash" && "$hash" != "null" ]] || { log_err "Unable to parse ${script} hash"; exit 1; }
 
   echo "$hash"
 }
@@ -175,17 +163,10 @@ print_deploy_usd_oracle_hash() {
 deploy_core_stack() {
   print_step "Deploying Aggregator: BaseCoinWrapper + MultiWrapper + OffchainOracle (chain $CHAIN_ID)"
   local output_file
-  output_file=$(run_forge_json DeployAggregator "$@") || {
-    log_err "Core deployment failed"
-    exit 1
-  }
+  output_file=$(run_forge_json_or_die "Core deployment failed" DeployAggregator "$@")
 
   # forge may emit warnings and secondary JSON lines; pick the last object that contains `returns`
-  AGGREGATOR=$(jq -sRer 'split("\n")
-    | map(try fromjson catch empty)
-    | map(select(type=="object" and has("returns")))
-    | last
-    | (.returns.aggregator.value // .returns[0].value // .returns.aggregator // .returns[0])' "$output_file") || {
+  AGGREGATOR=$(extract_return_value "$output_file" '(.returns.aggregator.value // .returns[0].value // .returns.aggregator // .returns[0])') || {
       rm -f "$output_file"
       log_err "Unable to parse OffchainOracle address"
       exit 1
@@ -193,7 +174,7 @@ deploy_core_stack() {
   rm -f "$output_file"
   log_info "aggregator set to $AGGREGATOR"
 
-  [[ "$SHOULD_BROADCAST" -eq 1 ]] && persist_aggregator_address
+  [[ "$SHOULD_BROADCAST" -eq 1 ]] && update_config_value "aggregator" "$AGGREGATOR" "Updated aggregator in config for chain $CHAIN_ID"
 }
 
 deploy_usd_oracle() {
@@ -209,23 +190,16 @@ deploy_usd_oracle() {
   fi
   if [[ -z "$ORACLE_SALT" ]]; then
     local hash
-    hash=$(print_deploy_usd_oracle_hash "$oracle_script" "$@")
+    hash=$(print_deploy_hash "$oracle_script" "USD oracle deployment failed" "$@")
     ORACLE_SALT=$(mine_create2_salt "$ORACLE_PREFIX" "$hash")
-    persist_oracle_salt
+    update_config_value "salt" "$ORACLE_SALT" "Updated salt in config for chain $CHAIN_ID"
   fi
 
   print_step "Deploying USD oracle ($oracle_script) for chain $CHAIN_ID"
   local output_file
-  output_file=$(run_forge_json "$oracle_script" "$@") || {
-    log_err "USD oracle deployment failed"
-    exit 1
-  }
+  output_file=$(run_forge_json_or_die "USD oracle deployment failed" "$oracle_script" "$@")
 
-  ORACLE=$(jq -sRer 'split("\n")
-    | map(try fromjson catch empty)
-    | map(select(type=="object" and has("returns")))
-    | last
-    | (.returns.oracle.value // .returns[0].value // .returns.oracle // .returns[0])' "$output_file") || {
+  ORACLE=$(extract_return_value "$output_file" '(.returns.oracle.value // .returns[0].value // .returns.oracle // .returns[0])') || {
       rm -f "$output_file"
       log_err "Unable to parse USD oracle address"
       exit 1
@@ -233,7 +207,7 @@ deploy_usd_oracle() {
   rm -f "$output_file"
   log_info "USD oracle set to $ORACLE"
 
-  [[ "$SHOULD_BROADCAST" -eq 1 ]] && persist_oracle_address
+  [[ "$SHOULD_BROADCAST" -eq 1 ]] && update_config_value "oracle" "$ORACLE" "Updated oracle in config for chain $CHAIN_ID"
 }
 
 run_section() {
@@ -246,8 +220,18 @@ run_section() {
   [[ "$entries_len" -eq 0 ]] && { log_info "No ${section} configured for chain $CHAIN_ID"; return; }
 
   for ((i=0; i<entries_len; i++)); do
-    local name script addr label
+    local name script addr label env_name display_name name_detail
     name=$(echo "$CHAIN_CFG" | jq -r ".${section}[$i].name")
+    env_name=$(echo "$CHAIN_CFG" | jq -r ".${section}[$i].env.name // empty")
+    display_name="$env_name"
+    if [[ -z "$display_name" ]]; then
+      display_name=$(echo "$CHAIN_CFG" | jq -r ".${section}[$i].label // empty")
+    fi
+    [[ -z "$display_name" ]] && display_name="$name"
+
+    name_detail=""
+    [[ "$display_name" != "$name" ]] && name_detail="$name"
+
     addr=$(echo "$CHAIN_CFG" | jq -r ".${section}[$i].env.address // empty")
 
     if [[ -n "$addr" ]]; then
@@ -256,59 +240,44 @@ run_section() {
       else
         script="AddOracleFromConfig"
       fi
-      label="Using existing $section -> $name ($addr) via $script"
+      if [[ -n "$name_detail" ]]; then
+        label="Using existing $section -> $display_name ($name_detail, $addr) via $script"
+      else
+        label="Using existing $section -> $display_name ($addr) via $script"
+      fi
     else
       script=$(resolve_script_name "$section" "$name")
-      label="Deploying $section -> $name ($script)"
+      if [[ -n "$name_detail" ]]; then
+        label="Deploying $section -> $display_name ($name_detail, $script)"
+      else
+        label="Deploying $section -> $display_name ($script)"
+      fi
     fi
 
     print_step "$label"
 
+    local output_file
+    output_file=$(INDEX=$i run_forge_json_or_die "Error running $section/$name ($script); aborting." "$script" "${forge_args[@]}")
+
     if [[ -n "$addr" ]]; then
-      local output_file
-      output_file=$(INDEX=$i run_forge_json "$script" "${forge_args[@]}") || {
-        log_err "Error running $section/$name ($script); aborting."
-        exit 1
-      }
       rm -f "$output_file"
-    else
-      local output_file deployed_addr
-      output_file=$(INDEX=$i run_forge_json "$script" "${forge_args[@]}") || {
-        log_err "Error running $section/$name ($script); aborting."
-        exit 1
-      }
+      continue
+    fi
 
-      deployed_addr=$(jq -sRer 'split("\n")
-        | map(try fromjson catch empty)
-        | map(select(type=="object" and has("returns")))
-        | last
-        | (.returns.oracle.value // .returns.wrapper.value // .returns[0].value // .returns.oracle // .returns.wrapper // .returns[0])' "$output_file") || {
-          rm -f "$output_file"
-          log_err "Unable to parse deployed $section address"
-          exit 1
-        }
+    local deployed_addr
+    deployed_addr=$(extract_return_value "$output_file" '(.returns.oracle.value // .returns.wrapper.value // .returns[0].value // .returns.oracle // .returns.wrapper // .returns[0])') || {
       rm -f "$output_file"
+      log_err "Unable to parse deployed $section address"
+      exit 1
+    }
+    rm -f "$output_file"
 
-      log_info "$section -> $name set to $deployed_addr"
+    log_info "Deployed address: $deployed_addr"
 
-      if [[ "$section" == "adapters" && "$SHOULD_BROADCAST" -eq 1 ]]; then
-        persist_adapter_address "$i" "$deployed_addr"
-      fi
+    if [[ "$section" == "adapters" && "$SHOULD_BROADCAST" -eq 1 ]]; then
+      update_config_value "adapters[$i].env.address" "$deployed_addr" "Updated adapter env.address in config for chain $CHAIN_ID (index $i)"
     fi
   done
-}
-
-run_forge_json() {
-  local out_file err_file
-  out_file=$(mktemp)
-  err_file=$(mktemp)
-  if ! forge script --json "$@" >"$out_file" 2>"$err_file"; then
-    cat "$err_file" >&2
-    rm -f "$err_file" "$out_file"
-    return 1
-  fi
-  rm -f "$err_file"
-  echo "$out_file"
 }
 
 if [[ "$HAS_AGG" =~ $AGG_PREFIX_REGEX ]]; then
@@ -318,9 +287,9 @@ if [[ "$HAS_AGG" =~ $AGG_PREFIX_REGEX ]]; then
 fi
 
 if [[ -z "$AGG_SALT" ]]; then
-  hash=$(print_deploy_aggregator_hash "$@")
+  hash=$(print_deploy_hash "DeployAggregator" "DeployAggregator failed" "$@")
   AGG_SALT=$(mine_create2_salt "$AGG_PREFIX" "$hash")
-  persist_aggregator_salt
+  update_config_value "aggregatorSalt" "$AGG_SALT" "Updated aggregatorSalt in config for chain $CHAIN_ID"
 fi
 
 deploy_core_stack "$@"
@@ -329,3 +298,4 @@ run_section "adapters" "$@"
 deploy_usd_oracle "$@"
 
 log_info "Done for chain $CHAIN_ID"
+exit 0
