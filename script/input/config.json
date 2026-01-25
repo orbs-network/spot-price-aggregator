@@ -418,7 +418,8 @@
                 "name": "UniswapV2LikeOracle",
                 "env": {
                     "factory": "0x5e705e184d233ff2a7cb1553793464a9d0c3028f",
-                    "initcodehash": "0x190cc7bdd70507a793b76d7bc2bf03e1866989ca7881812e0e1947b23e099534"
+                    "initcodehash": "0x190cc7bdd70507a793b76d7bc2bf03e1866989ca7881812e0e1947b23e099534",
+                    "address": "0x67e631F71232D63AcA98a2D5E9B2Bce5FCc39d5D"
                 }
             },
             {
@@ -432,10 +433,15 @@
                         3000,
                         10000,
                         20000
-                    ]
+                    ],
+                    "address": "0x766eb13315D666E15A7B9082deC376a270082455"
                 }
             }
-        ]
+        ],
+        "aggregatorSalt": "0x46fa1c3c897d0d71dea51b17c941a987beef36b5530f1b424a3ebdea8893a123",
+        "aggregator": "0x11111152eC8364D33BC6013858BBbD26aC51710D",
+        "salt": "0x0e221e9d855e06fd6b6140e8c0673165a6cbcd7beb0d6ed5d3aa95c3d60cbe82",
+        "oracle": "0xcee000eead89C65FF7fdD6983753563D7ee96843"
     },
     "146": {},
     "137": {},
