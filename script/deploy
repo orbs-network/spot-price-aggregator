@@ -207,7 +207,10 @@ deploy_usd_oracle() {
   rm -f "$output_file"
   log_info "USD oracle set to $ORACLE"
 
-  [[ "$SHOULD_BROADCAST" -eq 1 ]] && update_config_value "oracle" "$ORACLE" "Updated oracle in config for chain $CHAIN_ID"
+  if [[ "$SHOULD_BROADCAST" -eq 1 ]]; then
+    cast call "$ORACLE" "usd(address[])((uint256,uint8)[])" "[$(a 0),$(a w),$(a usdc),$(a usdt),$(a weth),$(a wbtc)]"
+    update_config_value "oracle" "$ORACLE" "Updated oracle in config for chain $CHAIN_ID"
+  fi
 }
 
 run_section() {
