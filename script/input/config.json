@@ -270,8 +270,8 @@
         ]
     },
     "56": {
-        "oracle": "0xCeE0007b6056555BB835A2cCF7BF163704e8015d",
-        "salt": "0x97b79fcaa1e6694dd14557b85de2333f5a895fdd72753c06d42848d965c8a148",
+        "oracle": "0xCEE000451B18BE133CA3EE2300db7137313f5d13",
+        "salt": "0x177ada0128219cd43dc7865a5daccbec55666b3e958d834d9650ad2c4da21704",
         "env": {
             "tokens": [
                 "0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3",
