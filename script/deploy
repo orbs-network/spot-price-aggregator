@@ -25,13 +25,16 @@ for arg in "$@"; do
 done
 
 log_info() {
-  echo "$@"
+  :
 }
 
 log_err() {
   echo "$@" >&2
 }
 
+log_addr() {
+  echo "$@"
+}
 cfg_get() {
   jq -r ".\"$CHAIN_ID\".${1} // empty" "$CONFIG_FILE"
 }
@@ -159,7 +162,7 @@ print_deploy_hash() {
 }
 
 deploy_core_stack() {
-  print_step "Deploying Aggregator stack (chain $CHAIN_ID)"
+  print_step "Deploying Aggregator stack"
   local output_file aggregator
   output_file=$(run_forge_json_or_die "Core deployment failed" DeployAggregator "$@")
 
@@ -170,7 +173,7 @@ deploy_core_stack() {
       exit 1
     }
   rm -f "$output_file"
-  log_info "aggregator set to $aggregator"
+  log_addr "aggregator: $aggregator"
 
   [[ "$SHOULD_BROADCAST" -eq 1 ]] && update_config_value "aggregator" "$aggregator" "Updated aggregator in config for chain $CHAIN_ID"
 }
@@ -179,7 +182,6 @@ deploy_usd_oracle() {
   local oracle_script
 
   if ! oracle_script=$(resolve_usd_oracle_script); then
-    log_info "No USD oracle config found for chain $CHAIN_ID; skipping"
     return
   fi
 
@@ -193,7 +195,7 @@ deploy_usd_oracle() {
     update_config_value "salt" "$ORACLE_SALT" "Updated salt in config for chain $CHAIN_ID"
   fi
 
-  print_step "Deploying USD oracle ($oracle_script) for chain $CHAIN_ID"
+  print_step "Deploying USD oracle ($oracle_script)"
   local output_file
   output_file=$(run_forge_json_or_die "USD oracle deployment failed" "$oracle_script" "$@")
 
@@ -203,12 +205,9 @@ deploy_usd_oracle() {
       exit 1
     }
   rm -f "$output_file"
-  log_info "USD oracle set to $ORACLE"
+  log_addr "usd_oracle: $ORACLE"
 
-  if [[ "$SHOULD_BROADCAST" -eq 1 ]]; then
-    cast call "$ORACLE" "usd(address[])((uint256,uint8)[])" "[$(a 0),$(a w),$(a usdc),$(a usdt),$(a weth),$(a wbtc)]"
-    update_config_value "oracle" "$ORACLE" "Updated oracle in config for chain $CHAIN_ID"
-  fi
+  [[ "$SHOULD_BROADCAST" -eq 1 ]] && update_config_value "oracle" "$ORACLE" "Updated oracle in config for chain $CHAIN_ID"
 }
 
 run_adapters() {
@@ -216,41 +215,29 @@ run_adapters() {
   local entries_len
   entries_len=$(echo "$CHAIN_CFG" | jq -r ".adapters // [] | length")
 
-  [[ "$entries_len" -eq 0 ]] && { log_info "No adapters configured for chain $CHAIN_ID"; return; }
+  [[ "$entries_len" -eq 0 ]] && return
 
   for ((i=0; i<entries_len; i++)); do
-    local name script addr label display_name name_detail
+    local name script addr display_name
     name=$(echo "$CHAIN_CFG" | jq -r ".adapters[$i].name")
     display_name=$(echo "$CHAIN_CFG" | jq -r ".adapters[$i].env.name // .adapters[$i].label // .adapters[$i].name")
-
-    name_detail=""
-    [[ "$display_name" != "$name" ]] && name_detail="$name"
 
     addr=$(echo "$CHAIN_CFG" | jq -r ".adapters[$i].env.address // empty")
 
     if [[ -n "$addr" ]]; then
       script="AddOracleFromConfig"
-      if [[ -n "$name_detail" ]]; then
-        label="Using existing adapter -> $display_name ($name_detail, $addr) via $script"
-      else
-        label="Using existing adapter -> $display_name ($addr) via $script"
-      fi
+      print_step "Adapter existing: $display_name"
     else
       script=$(resolve_adapter_script "$name")
-      if [[ -n "$name_detail" ]]; then
-        label="Deploying adapter -> $display_name ($name_detail, $script)"
-      else
-        label="Deploying adapter -> $display_name ($script)"
-      fi
+      print_step "Adapter deploy: $display_name"
     fi
-
-    print_step "$label"
 
     local output_file
     output_file=$(INDEX=$i run_forge_json_or_die "Error running adapters/$name ($script); aborting." "$script" "${forge_args[@]}")
 
     if [[ -n "$addr" ]]; then
       rm -f "$output_file"
+      log_addr "adapter[$i] $display_name: $addr"
       continue
     fi
 
@@ -262,7 +249,7 @@ run_adapters() {
     }
     rm -f "$output_file"
 
-    log_info "Deployed address: $deployed_addr"
+    log_addr "adapter[$i] $display_name: $deployed_addr"
 
     if [[ "$SHOULD_BROADCAST" -eq 1 ]]; then
       update_config_value "adapters[$i].env.address" "$deployed_addr" "Updated adapter env.address in config for chain $CHAIN_ID (index $i)"
@@ -272,7 +259,6 @@ run_adapters() {
 
 if [[ "$HAS_AGG" == ${AGG_PREFIX}* ]]; then
   deploy_usd_oracle "$@"
-  log_info "Done for chain $CHAIN_ID"
   exit 0
 fi
 
@@ -288,5 +274,4 @@ deploy_core_stack "$@"
 run_adapters "$@"
 deploy_usd_oracle "$@"
 
-log_info "Done for chain $CHAIN_ID"
 exit 0
