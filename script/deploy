@@ -10,6 +10,9 @@ CONFIG_FILE="$SCRIPT_DIR/input/config.json"
 
 CHAIN_ID=${CHAIN_ID:?CHAIN_ID must be set}
 
+# print all oracles:
+jq -r 'to_entries[] | "\(.key):\t\(.value.oracle)"' $CONFIG_FILE
+
 AGG_PREFIX="0x111111"
 ORACLE_PREFIX="0xcee000"
 STEP_ICON_LEFT="🔹====================="
