@@ -93,7 +93,6 @@
             "0xe15fC38F6D8c56aF07bbCBe3BAf5708A2Bf42392",
             "0x3894085Ef7Ff0f0aeDf52E2A2704928d1Ec074F1"
         ],
-        "wrappers": [],
         "adapters": [
             {
                 "label": "Dragonswap",
@@ -170,7 +169,6 @@
             "0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664",
             "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E"
         ],
-        "wrappers": [],
         "adapters": [
             {
                 "label": "Joe",
@@ -313,7 +311,6 @@
             "0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c",
             "0x111111111117dC0aa78b770fA6A738034120C302"
         ],
-        "wrappers": [],
         "adapters": [
             {
                 "label": "Pancake 1",
@@ -411,7 +408,6 @@
             "0xC3827A4BC8224ee2D116637023b124CED6db6e90",
             "0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34"
         ],
-        "wrappers": [],
         "adapters": [
             {
                 "label": "Kodiak",

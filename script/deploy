@@ -15,8 +15,6 @@ jq -r 'to_entries[] | "\(.key):\t\(.value.oracle)"' $CONFIG_FILE
 
 AGG_PREFIX="0x111111"
 ORACLE_PREFIX="0xcee000"
-STEP_ICON_LEFT="🔹====================="
-STEP_ICON_RIGHT="===================== 🔹"
 
 # Detect flags in arguments
 SHOULD_BROADCAST=0
@@ -24,27 +22,18 @@ for arg in "$@"; do
   [[ "$arg" == "--broadcast" ]] && SHOULD_BROADCAST=1
 done
 
-log_info() {
-  :
-}
-
 log_err() {
   echo "$@" >&2
-}
-
-log_addr() {
-  echo "$@"
 }
 cfg_get() {
   jq -r ".\"$CHAIN_ID\".${1} // empty" "$CONFIG_FILE"
 }
 
 update_config_value() {
-  local cfg_path="$1" value="$2" message="$3" tmp
+  local cfg_path="$1" value="$2" tmp
   tmp=$(mktemp)
   jq --indent 4 --arg value "$value" ".\"$CHAIN_ID\".${cfg_path} = \$value" "$CONFIG_FILE" > "$tmp"
   mv "$tmp" "$CONFIG_FILE"
-  log_info "$message"
 }
 
 CHAIN_CFG=$(jq -e ".\"$CHAIN_ID\"" "$CONFIG_FILE") || { echo "No config found for chain id $CHAIN_ID in $CONFIG_FILE" >&2; exit 1 }
@@ -55,8 +44,7 @@ ORACLE_SALT=$(cfg_get "salt")
 
 print_step() {
   local label="$1"
-  echo ""
-  echo "${STEP_ICON_LEFT} ${label} ${STEP_ICON_RIGHT}"
+  echo "$label"
 }
 
 mine_create2_salt() {
@@ -162,7 +150,7 @@ print_deploy_hash() {
 }
 
 deploy_core_stack() {
-  print_step "Deploying Aggregator stack"
+  print_step "aggregator deploy"
   local output_file aggregator
   output_file=$(run_forge_json_or_die "Core deployment failed" DeployAggregator "$@")
 
@@ -173,9 +161,9 @@ deploy_core_stack() {
       exit 1
     }
   rm -f "$output_file"
-  log_addr "aggregator: $aggregator"
+  echo "$aggregator"
 
-  [[ "$SHOULD_BROADCAST" -eq 1 ]] && update_config_value "aggregator" "$aggregator" "Updated aggregator in config for chain $CHAIN_ID"
+  [[ "$SHOULD_BROADCAST" -eq 1 ]] && update_config_value "aggregator" "$aggregator"
 }
 
 deploy_usd_oracle() {
@@ -192,10 +180,10 @@ deploy_usd_oracle() {
     local hash
     hash=$(print_deploy_hash "$oracle_script" "USD oracle deployment failed" "$@")
     ORACLE_SALT=$(mine_create2_salt "$ORACLE_PREFIX" "$hash")
-    update_config_value "salt" "$ORACLE_SALT" "Updated salt in config for chain $CHAIN_ID"
+    update_config_value "salt" "$ORACLE_SALT"
   fi
 
-  print_step "Deploying USD oracle ($oracle_script)"
+  print_step "usd_oracle deploy"
   local output_file
   output_file=$(run_forge_json_or_die "USD oracle deployment failed" "$oracle_script" "$@")
 
@@ -205,9 +193,9 @@ deploy_usd_oracle() {
       exit 1
     }
   rm -f "$output_file"
-  log_addr "usd_oracle: $ORACLE"
+  echo "$ORACLE"
 
-  [[ "$SHOULD_BROADCAST" -eq 1 ]] && update_config_value "oracle" "$ORACLE" "Updated oracle in config for chain $CHAIN_ID"
+  [[ "$SHOULD_BROADCAST" -eq 1 ]] && update_config_value "oracle" "$ORACLE"
 }
 
 run_adapters() {
@@ -226,10 +214,10 @@ run_adapters() {
 
     if [[ -n "$addr" ]]; then
       script="AddOracleFromConfig"
-      print_step "Adapter existing: $display_name"
+      print_step "$display_name ($name)"
     else
       script=$(resolve_adapter_script "$name")
-      print_step "Adapter deploy: $display_name"
+      print_step "$display_name ($name)"
     fi
 
     local output_file
@@ -237,7 +225,7 @@ run_adapters() {
 
     if [[ -n "$addr" ]]; then
       rm -f "$output_file"
-      log_addr "adapter[$i] $display_name: $addr"
+      echo "$addr"
       continue
     fi
 
@@ -249,10 +237,10 @@ run_adapters() {
     }
     rm -f "$output_file"
 
-    log_addr "adapter[$i] $display_name: $deployed_addr"
+    echo "$deployed_addr"
 
     if [[ "$SHOULD_BROADCAST" -eq 1 ]]; then
-      update_config_value "adapters[$i].env.address" "$deployed_addr" "Updated adapter env.address in config for chain $CHAIN_ID (index $i)"
+      update_config_value "adapters[$i].env.address" "$deployed_addr"
     fi
   done
 }
@@ -266,7 +254,7 @@ if [[ -z "$AGG_SALT" ]]; then
   hash=$(print_deploy_hash "DeployAggregator" "DeployAggregator failed" "$@")
   AGG_SALT=$(mine_create2_salt "$AGG_PREFIX" "$hash")
   if [[ "$SHOULD_BROADCAST" -eq 1 ]]; then
-    update_config_value "aggregatorSalt" "$AGG_SALT" "Updated aggregatorSalt in config for chain $CHAIN_ID"
+    update_config_value "aggregatorSalt" "$AGG_SALT"
   fi
 fi
 
