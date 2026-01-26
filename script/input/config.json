@@ -381,32 +381,32 @@
         "env": {
             "tokens": [
                 "0xFCBD14DC51f0A4d49d5E53C2E0950e0bC26d0Dce",
-                "0x779Ded0c9e1022225f8E0630b35a9b54bE713736",
-                "0x2F6F07CDcf3588944Bf4C42aC74ff24bF56e7590",
                 "0x549943e04f40284185054145c6E4e9568C1D3241",
-                "0x0555E30da8f98308EdB960aa94C0Db47230d2B9c",
-                "0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34"
+                "0x779Ded0c9e1022225f8E0630b35a9b54bE713736",
+                "0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34",
+                "0x2F6F07CDcf3588944Bf4C42aC74ff24bF56e7590",
+                "0x0555E30da8f98308EdB960aa94C0Db47230d2B9c"
             ],
-            "feeds": [
-                "0x5a631155dF276F0c02d19953BC8B67fbbCb35e01",
-                "0x5a631155dF276F0c02d19953BC8B67fbbCb35e01",
-                "0xd800ca44fFABecd159c7889c3bf64a217361AEc8",
-                "0xC32753217DcC7Bb2F449bD6f1bC384d1AC72a7B6",
-                "0x3d97ad50ce86a1Fc3425B46ac799074b0Fa35570",
-                "0x1621F3A7889E87812A747B82d85a33eA7386BD27",
-                "0xa3105DeE5ec73A7003482b1a8968DC88666F3589",
-                "0x152598809FB59db55cA76f89a192Fb23555531D8"
+            "pyth": [
+                "0x962088abcfdbdb6e30db2e340c8cf887d9efb311b1f2f17b155a63dbb6d40265",
+                "0x962088abcfdbdb6e30db2e340c8cf887d9efb311b1f2f17b155a63dbb6d40265",
+                "0xf67b033925d73d43ba4401e00308d9b0f26ab4fbd1250e8b5407b9eaade7e1f4",
+                "0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a",
+                "0x2b89b9dc8fdf9f34709a5b106b472f0f39bb6ca9ce04b0fd7f2e971688e2e53b",
+                "0x6ec879b1e9963de5ee97e9c8710b742d6228252a5e2ca12d4ae81d7fe5ee8c5d",
+                "0x9d4294bbcd1174d6f2003ec365831e64cc31d9f6f15a2b85399db8d5000960f6",
+                "0xc9d8b075a5c69303365ae23633d4e085199bf5c520a3b90fed1322a0342ffc33"
             ]
         },
         "connectors": [
             "0xFCBD14DC51f0A4d49d5E53C2E0950e0bC26d0Dce",
-            "0x779Ded0c9e1022225f8E0630b35a9b54bE713736",
-            "0x2F6F07CDcf3588944Bf4C42aC74ff24bF56e7590",
             "0x549943e04f40284185054145c6E4e9568C1D3241",
+            "0x779Ded0c9e1022225f8E0630b35a9b54bE713736",
+            "0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34",
+            "0x2F6F07CDcf3588944Bf4C42aC74ff24bF56e7590",
             "0x0555E30da8f98308EdB960aa94C0Db47230d2B9c",
             "0xD2C41BF4033A83C0FC3A7F58a392Bf37d6dCDb58",
-            "0xC3827A4BC8224ee2D116637023b124CED6db6e90",
-            "0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34"
+            "0xC3827A4BC8224ee2D116637023b124CED6db6e90"
         ],
         "adapters": [
             {
@@ -433,11 +433,7 @@
                     "address": "0x766eb13315D666E15A7B9082deC376a270082455"
                 }
             }
-        ],
-        "aggregatorSalt": "0x46fa1c3c897d0d71dea51b17c941a987beef36b5530f1b424a3ebdea8893a123",
-        "aggregator": "0x11111152eC8364D33BC6013858BBbD26aC51710D",
-        "salt": "0x0e221e9d855e06fd6b6140e8c0673165a6cbcd7beb0d6ed5d3aa95c3d60cbe82",
-        "oracle": "0xcee000eead89C65FF7fdD6983753563D7ee96843"
+        ]
     },
     "146": {},
     "137": {},
