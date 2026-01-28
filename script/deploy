@@ -5,10 +5,10 @@ set -euo pipefail
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 CONFIG_FILE="$SCRIPT_DIR/../config.json"
 
-CHAIN_ID=${CHAIN_ID:?CHAIN_ID must be set}
-
 # print all oracles:
 jq -r 'to_entries[] | "\(.key):\t\(.value.oracle)"' $CONFIG_FILE
+
+CHAIN_ID=${CHAIN_ID:?CHAIN_ID must be set}
 
 AGG_PREFIX="0x111111"
 ORACLE_PREFIX="0xcee000"
