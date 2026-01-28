@@ -436,7 +436,9 @@
             }
         ],
         "aggregatorSalt": "0xfe7487b4a52190a76a88ecab7c6d66fc62f1a3f7c43c1bd3baafa19da188714f",
-        "aggregator": "0x11111150b59F2753F21ac86A75766a07F638B33f"
+        "aggregator": "0x11111150b59F2753F21ac86A75766a07F638B33f",
+        "salt": "0x46e52ab4ca6dacce89c3f8167677ac78837a1ace888dfd8bb5b06c6a13d3a369",
+        "oracle": "0xceE000ce8ee48a4924986CE3D80f5DD859c8d53a"
     },
     "146": {},
     "137": {},
