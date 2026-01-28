@@ -396,7 +396,7 @@
                 "0x2b89b9dc8fdf9f34709a5b106b472f0f39bb6ca9ce04b0fd7f2e971688e2e53b",
                 "0x6ec879b1e9963de5ee97e9c8710b742d6228252a5e2ca12d4ae81d7fe5ee8c5d",
                 "0x9d4294bbcd1174d6f2003ec365831e64cc31d9f6f15a2b85399db8d5000960f6",
-                "0xc9d8b075a5c69303365ae23633d4e085199bf5c520a3b90fed1322a0342ffc33"
+                "0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43"
             ]
         },
         "connectors": [
@@ -434,7 +434,9 @@
                     "address": "0x766eb13315D666E15A7B9082deC376a270082455"
                 }
             }
-        ]
+        ],
+        "aggregatorSalt": "0xfe7487b4a52190a76a88ecab7c6d66fc62f1a3f7c43c1bd3baafa19da188714f",
+        "aggregator": "0x11111150b59F2753F21ac86A75766a07F638B33f"
     },
     "146": {},
     "137": {},
