@@ -1,26 +1,20 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.23;
 
-import "forge-std/Script.sol";
+import {CoreDeploy} from "script/CoreDeploy.s.sol";
 import {OffchainOracle} from "contracts/OffchainOracle.sol";
 import {UniswapV2LikeOracle} from "contracts/oracles/UniswapV2LikeOracle.sol";
 
-contract DeployUniswapV2LikeOracle is Script {
+contract DeployUniswapV2LikeOracle is CoreDeploy {
     function run() external returns (UniswapV2LikeOracle oracle) {
-        string memory json = vm.readFile("script/input/config.json");
-        string memory chainKey = string.concat(".", vm.toString(block.chainid));
-        uint256 index = vm.envUint("INDEX");
-        address aggregator = vm.parseJsonAddress(json, string.concat(chainKey, ".aggregator"));
-        OffchainOracle oc = OffchainOracle(aggregator);
-        address factory =
-            vm.parseJsonAddress(json, string.concat(chainKey, ".adapters[", vm.toString(index), "].env.factory"));
-        bytes32 initcodeHash =
-            vm.parseJsonBytes32(json, string.concat(chainKey, ".adapters[", vm.toString(index), "].env.initcodehash"));
-        uint256 oracleType = vm.envOr("TYPE", uint256(0)); // AMM defaults to WETH
+        address factory = _adapterAddress("factory");
+        bytes32 initcodehash = _adapterBytes32("initcodehash");
+        require(factory != address(0), "missing factory");
+        require(initcodehash != bytes32(0), "missing initcodehash");
 
-        vm.startBroadcast();
-        oracle = new UniswapV2LikeOracle(factory, initcodeHash);
-        oc.addOracle(oracle, OffchainOracle.OracleType(oracleType));
-        vm.stopBroadcast();
+        vm.broadcast();
+        oracle = new UniswapV2LikeOracle(factory, initcodehash);
+        vm.broadcast();
+        _addOracle(oracle, OffchainOracle.OracleType.WETH);
     }
 }

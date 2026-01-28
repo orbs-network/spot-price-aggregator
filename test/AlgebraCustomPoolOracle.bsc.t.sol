@@ -9,7 +9,7 @@ import {AlgebraCustomPoolOracle} from "contracts/oracles/AlgebraCustomPoolOracle
 contract AlgebraCustomPoolOracleBscTest is RpcUtils {
     IERC20 private constant NONE = IERC20(0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF);
 
-    string private constant CONFIG_PATH = "script/input/config.json";
+    string private constant CONFIG_PATH = "config.json";
     string private constant CHAIN_KEY = ".56";
 
     IERC20 private constant WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);

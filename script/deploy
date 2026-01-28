@@ -3,10 +3,7 @@
 set -euo pipefail
 
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
-CONFIG_FILE="$SCRIPT_DIR/input/config.json"
-
-: "${OWNER:?Set OWNER (address) globally in env}"
-: "${WETH:?Set WETH (address) globally in env}"
+CONFIG_FILE="$SCRIPT_DIR/../config.json"
 
 CHAIN_ID=${CHAIN_ID:?CHAIN_ID must be set}
 
@@ -120,6 +117,8 @@ resolve_adapter_script() {
 resolve_usd_oracle_script() {
   if echo "$CHAIN_CFG" | jq -e '.env.denoms? // empty | length > 0' >/dev/null; then
     echo "DeployUsdOracleSei"
+  elif echo "$CHAIN_CFG" | jq -e '.env.pyths? // empty | length > 0' >/dev/null; then
+    echo "DeployUsdOraclePyth"
   elif echo "$CHAIN_CFG" | jq -e '.env.feeds? // empty | length > 0' >/dev/null; then
     echo "DeployUsdOracle"
   else

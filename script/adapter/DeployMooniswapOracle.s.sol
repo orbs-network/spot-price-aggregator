@@ -1,25 +1,19 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.23;
 
-import "forge-std/Script.sol";
+import {CoreDeploy} from "script/CoreDeploy.s.sol";
 import {OffchainOracle} from "contracts/OffchainOracle.sol";
 import {MooniswapOracle} from "contracts/oracles/MooniswapOracle.sol";
 import {IMooniswapFactory} from "contracts/interfaces/IMooniswapFactory.sol";
 
-contract DeployMooniswapOracle is Script {
+contract DeployMooniswapOracle is CoreDeploy {
     function run() external returns (MooniswapOracle oracle) {
-        string memory json = vm.readFile("script/input/config.json");
-        string memory chainKey = string.concat(".", vm.toString(block.chainid));
-        uint256 index = vm.envUint("INDEX");
-        address aggregator = vm.parseJsonAddress(json, string.concat(chainKey, ".aggregator"));
-        OffchainOracle oc = OffchainOracle(aggregator);
-        address factory =
-            vm.parseJsonAddress(json, string.concat(chainKey, ".adapters[", vm.toString(index), "].env.factory"));
-        uint256 oracleType = vm.envOr("TYPE", uint256(2)); // Mooniswap defaults to WETH_ETH
+        address factory = _adapterAddress("factory");
+        require(factory != address(0), "missing factory");
 
-        vm.startBroadcast();
+        vm.broadcast();
         oracle = new MooniswapOracle(IMooniswapFactory(factory));
-        oc.addOracle(oracle, OffchainOracle.OracleType(oracleType));
-        vm.stopBroadcast();
+        vm.broadcast();
+        _addOracle(oracle, OffchainOracle.OracleType.WETH_ETH);
     }
 }

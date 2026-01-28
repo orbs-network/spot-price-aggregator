@@ -17,7 +17,7 @@ contract UsdOracleMonadTest is RpcUtils {
     function setUp() public {
         vm.createSelectFork(_rpcUrl("monad"));
 
-        string memory json = vm.readFile("script/input/config.json");
+        string memory json = vm.readFile("config.json");
         string memory chainKey = ".143";
         string memory aggregatorRaw = vm.parseJsonString(json, string.concat(chainKey, ".aggregator"));
         require(bytes(aggregatorRaw).length != 0, "missing aggregator for chain 143");

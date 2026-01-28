@@ -19,7 +19,7 @@ contract UsdOracleSeiTest is RpcUtils {
     address public wsei;
 
     function setUp() public {
-        string memory json = vm.readFile("script/input/config.json");
+        string memory json = vm.readFile("config.json");
         string memory chainKey = ".1329";
         string memory aggregatorRaw = vm.parseJsonString(json, string.concat(chainKey, ".aggregator"));
         require(bytes(aggregatorRaw).length != 0, "missing aggregator for chain 1329");

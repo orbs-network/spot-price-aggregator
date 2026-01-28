@@ -1,45 +1,23 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.23;
 
-import "forge-std/Script.sol";
+import {CoreDeploy} from "script/CoreDeploy.s.sol";
 import {OffchainOracle} from "contracts/OffchainOracle.sol";
 import {UniswapV4LikeOracle} from "contracts/oracles/UniswapV4LikeOracle.sol";
 import {IUniswapV4StateView} from "contracts/interfaces/IUniswapV4StateView.sol";
 
-contract DeployUniswapV4LikeOracle is Script {
+contract DeployUniswapV4LikeOracle is CoreDeploy {
     function run() external returns (UniswapV4LikeOracle oracle) {
-        string memory json = vm.readFile("script/input/config.json");
-        string memory chainKey = string.concat(".", vm.toString(block.chainid));
-        uint256 index = vm.envUint("INDEX");
-        address aggregator = vm.parseJsonAddress(json, string.concat(chainKey, ".aggregator"));
-        OffchainOracle oc = OffchainOracle(aggregator);
-        address stateView =
-            vm.parseJsonAddress(json, string.concat(chainKey, ".adapters[", vm.toString(index), "].env.stateview"));
-        uint256[] memory feesRaw =
-            vm.parseJsonUintArray(json, string.concat(chainKey, ".adapters[", vm.toString(index), "].env.fees")); // uint24[]
-        uint256[] memory spacingsRaw =
-            vm.parseJsonUintArray(json, string.concat(chainKey, ".adapters[", vm.toString(index), "].env.spacings")); // int24[]
-        uint24[] memory fees = _toUint24(feesRaw);
-        int24[] memory spacings = _toInt24(spacingsRaw);
-        uint256 oracleType = vm.envOr("TYPE", uint256(0)); // AMM defaults to WETH
+        address stateView = _adapterAddress("stateview");
+        uint256[] memory fees = _adapterUintArray("fees");
+        uint256[] memory spacings = _adapterUintArray("spacings");
+        require(stateView != address(0), "missing stateview");
+        require(fees.length > 0, "missing fees");
+        require(spacings.length > 0, "missing spacings");
 
-        vm.startBroadcast();
-        oracle = new UniswapV4LikeOracle(IUniswapV4StateView(stateView), fees, spacings);
-        oc.addOracle(oracle, OffchainOracle.OracleType(oracleType));
-        vm.stopBroadcast();
-    }
-
-    function _toUint24(uint256[] memory src) private pure returns (uint24[] memory dst) {
-        dst = new uint24[](src.length);
-        for (uint256 i = 0; i < src.length; i++) {
-            dst[i] = uint24(src[i]);
-        }
-    }
-
-    function _toInt24(uint256[] memory src) private pure returns (int24[] memory dst) {
-        dst = new int24[](src.length);
-        for (uint256 i = 0; i < src.length; i++) {
-            dst[i] = int24(int256(src[i]));
-        }
+        vm.broadcast();
+        oracle = new UniswapV4LikeOracle(IUniswapV4StateView(stateView), _toUint24(fees), _toInt24(spacings));
+        vm.broadcast();
+        _addOracle(oracle, OffchainOracle.OracleType.WETH);
     }
 }

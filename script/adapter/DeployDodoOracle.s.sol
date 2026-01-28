@@ -1,24 +1,19 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.23;
 
-import "forge-std/Script.sol";
+import {CoreDeploy} from "script/CoreDeploy.s.sol";
 import {OffchainOracle} from "contracts/OffchainOracle.sol";
 import {DodoOracle} from "contracts/oracles/DodoOracle.sol";
 import {IDodoZoo} from "contracts/interfaces/IDodoFactories.sol";
 
-contract DeployDodoOracle is Script {
+contract DeployDodoOracle is CoreDeploy {
     function run() external returns (DodoOracle oracle) {
-        string memory json = vm.readFile("script/input/config.json");
-        string memory chainKey = string.concat(".", vm.toString(block.chainid));
-        uint256 index = vm.envUint("INDEX");
-        address aggregator = vm.parseJsonAddress(json, string.concat(chainKey, ".aggregator"));
-        OffchainOracle oc = OffchainOracle(aggregator);
-        address zoo = vm.parseJsonAddress(json, string.concat(chainKey, ".adapters[", vm.toString(index), "].env.zoo"));
-        uint256 oracleType = vm.envOr("TYPE", uint256(0)); // AMM defaults to WETH
+        address zoo = _adapterAddress("zoo");
+        require(zoo != address(0), "missing zoo");
 
-        vm.startBroadcast();
+        vm.broadcast();
         oracle = new DodoOracle(IDodoZoo(zoo));
-        oc.addOracle(oracle, OffchainOracle.OracleType(oracleType));
-        vm.stopBroadcast();
+        vm.broadcast();
+        _addOracle(oracle, OffchainOracle.OracleType.WETH);
     }
 }

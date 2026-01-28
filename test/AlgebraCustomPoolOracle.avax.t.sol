@@ -9,7 +9,7 @@ import {AlgebraCustomPoolOracle} from "contracts/oracles/AlgebraCustomPoolOracle
 
 contract AlgebraCustomPoolOracleAvaxTest is RpcUtils {
     IERC20 private constant NONE = IERC20(0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF);
-    string private constant CONFIG_PATH = "script/input/config.json";
+    string private constant CONFIG_PATH = "config.json";
     string private constant CHAIN_KEY = ".43114";
 
     address private poolDeployer;

@@ -6,7 +6,7 @@ This is a fork of the upstream 1inch Spot Price Aggregator. The original README 
 
 ### Configuration
 
-- [`config.json`](./script/input/config.json)
+- [`config.json`](./config.json)
 
 ## `/contracts/view` overview
 

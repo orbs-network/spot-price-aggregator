@@ -1,43 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.23;
 
-import "forge-std/Script.sol";
-
+import {CoreDeploy} from "script/CoreDeploy.s.sol";
 import {UsdOracleSei} from "contracts/view/UsdOracleSei.sol";
 
-contract DeployUsdOracleSei is Script {
+contract DeployUsdOracleSei is CoreDeploy {
     function run() external returns (UsdOracleSei oracle) {
-        string memory json = vm.readFile("script/input/config.json");
-        string memory chainKey = string.concat(".", vm.toString(block.chainid));
-        string memory saltPath = string.concat(chainKey, ".salt");
-        bytes32 salt;
-        if (vm.keyExistsJson(json, saltPath)) {
-            string memory saltStr = vm.parseJsonString(json, saltPath);
-            if (bytes(saltStr).length != 0) {
-                salt = vm.parseJsonBytes32(json, saltPath);
-            }
-        }
-        address aggregator = vm.parseJsonAddress(json, string.concat(chainKey, ".aggregator"));
-        address[] memory tokens = vm.parseJsonAddressArray(json, string.concat(chainKey, ".env.tokens"));
-        string[] memory denoms = vm.parseJsonStringArray(json, string.concat(chainKey, ".env.denoms"));
-        require(denoms.length == tokens.length + 2, "denoms length must be tokens+2");
-        address[] memory tokensWithBase = _prependNativeAndWrapped(tokens);
+        address[] memory tokens = _tokens();
+        string[] memory denoms = _envStringArray("denoms");
 
-        vm.startBroadcast();
-        console.logBytes32(
-            hashInitCode(type(UsdOracleSei).creationCode, abi.encode(aggregator, tokensWithBase, denoms))
-        );
-        oracle = new UsdOracleSei{salt: salt}(aggregator, tokensWithBase, denoms);
-        vm.stopBroadcast();
-    }
-
-    function _prependNativeAndWrapped(address[] memory tokens) private view returns (address[] memory tokensWithBase) {
-        address weth = vm.envAddress("WETH");
-        tokensWithBase = new address[](tokens.length + 2);
-        tokensWithBase[0] = address(0);
-        tokensWithBase[1] = weth;
-        for (uint256 i; i < tokens.length; i++) {
-            tokensWithBase[i + 2] = tokens[i];
-        }
+        _logCreate2(type(UsdOracleSei).creationCode, abi.encode(cfg.aggregator, tokens, denoms));
+        vm.broadcast();
+        oracle = new UsdOracleSei{salt: cfg.salt}(cfg.aggregator, tokens, denoms);
     }
 }

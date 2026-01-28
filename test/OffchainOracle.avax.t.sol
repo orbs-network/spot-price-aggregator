@@ -18,7 +18,7 @@ contract OffchainOracleAvaxTest is RpcUtils {
 
     address private constant WETH = 0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7;
     address private constant TOKEN_FBOMB = 0x5C09A9cE08C4B332Ef1CC5f7caDB1158C32767Ce;
-    string private constant CONFIG_PATH = "script/input/config.json";
+    string private constant CONFIG_PATH = "config.json";
     string private constant CHAIN_KEY = ".43114";
 
     OffchainOracle private aggregator;

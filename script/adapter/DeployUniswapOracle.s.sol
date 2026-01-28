@@ -1,25 +1,19 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.23;
 
-import "forge-std/Script.sol";
+import {CoreDeploy} from "script/CoreDeploy.s.sol";
 import {OffchainOracle} from "contracts/OffchainOracle.sol";
 import {UniswapOracle} from "contracts/oracles/UniswapOracle.sol";
 import {IUniswapFactory} from "contracts/interfaces/IUniswapFactory.sol";
 
-contract DeployUniswapOracle is Script {
+contract DeployUniswapOracle is CoreDeploy {
     function run() external returns (UniswapOracle oracle) {
-        string memory json = vm.readFile("script/input/config.json");
-        string memory chainKey = string.concat(".", vm.toString(block.chainid));
-        uint256 index = vm.envUint("INDEX");
-        address aggregator = vm.parseJsonAddress(json, string.concat(chainKey, ".aggregator"));
-        OffchainOracle oc = OffchainOracle(aggregator);
-        address factory =
-            vm.parseJsonAddress(json, string.concat(chainKey, ".adapters[", vm.toString(index), "].env.factory"));
-        uint256 oracleType = vm.envOr("TYPE", uint256(1)); // Router oracle defaults to ETH
+        address factory = _adapterAddress("factory");
+        require(factory != address(0), "missing factory");
 
-        vm.startBroadcast();
+        vm.broadcast();
         oracle = new UniswapOracle(IUniswapFactory(factory));
-        oc.addOracle(oracle, OffchainOracle.OracleType(oracleType));
-        vm.stopBroadcast();
+        vm.broadcast();
+        _addOracle(oracle, OffchainOracle.OracleType.ETH);
     }
 }

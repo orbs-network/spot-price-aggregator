@@ -1,59 +1,43 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.23;
 
-import "forge-std/Script.sol";
+import {CoreDeploy} from "script/CoreDeploy.s.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-
 import {OffchainOracle} from "contracts/OffchainOracle.sol";
 import {MultiWrapper} from "contracts/MultiWrapper.sol";
 import {IOracle} from "contracts/interfaces/IOracle.sol";
 import {IWrapper} from "contracts/interfaces/IWrapper.sol";
 import {BaseCoinWrapper} from "contracts/wrappers/BaseCoinWrapper.sol";
 
-contract DeployAggregator is Script {
+contract DeployAggregator is CoreDeploy {
     IERC20 private constant _NONE = IERC20(0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF);
     IERC20 private constant _NATIVE = IERC20(0x0000000000000000000000000000000000000000);
 
     function run() external returns (OffchainOracle aggregator) {
-        address owner = vm.envAddress("OWNER");
-        IERC20 weth = IERC20(vm.envAddress("WETH"));
-
-        string memory json = vm.readFile("script/input/config.json");
-        string memory chainKey = string.concat(".", vm.toString(block.chainid));
-
-        string memory saltPath = string.concat(chainKey, ".aggregatorSalt");
-        bytes32 salt;
-        if (vm.keyExistsJson(json, saltPath)) {
-            string memory saltStr = vm.parseJsonString(json, saltPath);
-            if (bytes(saltStr).length != 0) {
-                salt = vm.parseJsonBytes32(json, saltPath);
-            }
-        }
-
-        IERC20[] memory connectors =
-            _appendConnectors(vm.parseJsonAddressArray(json, string.concat(chainKey, ".connectors")), weth);
-
-        vm.startBroadcast();
+        IERC20[] memory connectors = _appendConnectors(_cfgAddressArray("connectors"), weth);
 
         // Deploy base WETH wrapper and seed MultiWrapper with it
+        vm.broadcast();
         BaseCoinWrapper baseCoinWrapper = new BaseCoinWrapper(_NATIVE, weth);
         IWrapper[] memory initialWrappers = new IWrapper[](1);
         initialWrappers[0] = baseCoinWrapper;
+
+        vm.broadcast();
         MultiWrapper multiWrapper = new MultiWrapper(initialWrappers, owner);
 
         // Deploy offchain oracle (empty oracles; add later with dedicated scripts)
         IOracle[] memory emptyOracles = new IOracle[](0);
         OffchainOracle.OracleType[] memory emptyTypes = new OffchainOracle.OracleType[](0);
 
-        console.logBytes32(
-            hashInitCode(
-                type(OffchainOracle).creationCode,
-                abi.encode(multiWrapper, emptyOracles, emptyTypes, connectors, weth, owner)
-            )
+        _logCreate2(
+            type(OffchainOracle).creationCode,
+            abi.encode(multiWrapper, emptyOracles, emptyTypes, connectors, weth, owner)
         );
-        aggregator = new OffchainOracle{salt: salt}(multiWrapper, emptyOracles, emptyTypes, connectors, weth, owner);
 
-        vm.stopBroadcast();
+        vm.broadcast();
+        aggregator = new OffchainOracle{salt: cfg.aggregatorSalt}(
+            multiWrapper, emptyOracles, emptyTypes, connectors, weth, owner
+        );
     }
 
     // ------- Internals -------
