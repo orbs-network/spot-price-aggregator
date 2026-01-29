@@ -517,7 +517,11 @@
                     "address": "0x4e5Cee3B8Af0CB46EFAA94Cba5E0f25f8770BB19"
                 }
             }
-        ]
+        ],
+        "aggregatorSalt": "0x1cc57876504546cc2ff1e790b721f260765df4f4da0c3c364ce9e05827ff312d",
+        "aggregator": "0x111111C242e1000758777a6C2a944B4ea488F375",
+        "salt": "0x5f0324b4ef4fa71bb98ef8891b34d08ecb14beafbac03419230686985652e3f5",
+        "oracle": "0xCee00022Ede8aF5258996b60998bE4778F746f7B"
     },
     "8453": {},
     "59144": {},

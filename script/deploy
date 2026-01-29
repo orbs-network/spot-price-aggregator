@@ -44,6 +44,19 @@ print_step() {
   echo "$label"
 }
 
+print_separator() {
+  local icon="$1" label="${2:-}"
+  local line="----------------------------------------"
+  echo
+  if [[ -n "$label" ]]; then
+    echo "${icon} ${line}"
+    echo "${icon} ${label}"
+    echo "${icon} ${line}"
+  else
+    echo "${icon} ${line}"
+  fi
+}
+
 mine_create2_salt() {
   local prefix="$1" hash="$2"
   local output salt err_file
@@ -149,6 +162,7 @@ print_deploy_hash() {
 }
 
 deploy_core_stack() {
+  print_separator "🚀" "Core deployment"
   print_step "aggregator deploy"
   local output_file aggregator
   output_file=$(run_forge_json_or_die "Core deployment failed" DeployAggregator "$@")
@@ -175,6 +189,7 @@ deploy_usd_oracle() {
   if [[ -n "$HAS_ORACLE" && "${HAS_ORACLE:l}" == ${ORACLE_PREFIX}* ]]; then
     return
   fi
+  print_separator "💵" "USD oracle"
   if [[ -z "$ORACLE_SALT" ]]; then
     local hash
     hash=$(print_deploy_hash "$oracle_script" "USD oracle deployment failed" "$@")
@@ -203,6 +218,7 @@ run_adapters() {
   entries_len=$(echo "$CHAIN_CFG" | jq -r ".adapters // [] | length")
 
   [[ "$entries_len" -eq 0 ]] && return
+  print_separator "🧩" "Adapters"
 
   for ((i=0; i<entries_len; i++)); do
     local name script addr display_name
