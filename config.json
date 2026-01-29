@@ -542,7 +542,11 @@
                     "address": "0x95E18FBa568cb075f24DfFBCb4093D43ee92Fa20"
                 }
             }
-        ]
+        ],
+        "aggregatorSalt": "0x9c4d37599e2a15b24299b92338d91ab7e4f03a0f871c344aa953663878b1bcd2",
+        "aggregator": "0x1111112E4d5Bf4f5a1366Dff097197Ce7CcaD9d9",
+        "salt": "0xd451a6c0a167ad504bf707ea8a536dd7e69fa518db2a38ed5da95df639ad9461",
+        "oracle": "0xCee0002821c171Af6794d3e43A407fA0088b2aca"
     },
     "137": {
         "env": {
