@@ -440,7 +440,110 @@
         "salt": "0x46e52ab4ca6dacce89c3f8167677ac78837a1ace888dfd8bb5b06c6a13d3a369",
         "oracle": "0xceE000ce8ee48a4924986CE3D80f5DD859c8d53a"
     },
-    "146": {},
+    "146": {
+        "env": {
+            "tokens": [
+                "0x29219dd400f2Bf60E5a23d13Be72B486D4038894",
+                "0x6047828dc181963ba44974801FF68e538dA5eaF9",
+                "0x50c42dEAcD8Fc9773493ED674b675bE577f2634b",
+                "0x0555E30da8f98308EdB960aa94C0Db47230d2B9c",
+                "0xE5DA20F15420aD15DE0fa650600aFc998bbE3955"
+            ],
+            "feeds": [
+                "0xc76dFb89fF298145b417d221B2c747d84952e01d",
+                "0xc76dFb89fF298145b417d221B2c747d84952e01d",
+                "0x55bCa887199d5520B3Ce285D41e6dC10C08716C9",
+                "0x76F4C040A792aFB7F6dBadC7e30ca3EEa140D216",
+                "0x824364077993847f71293B24ccA8567c00c2de11",
+                "0x61140C09956495F1ce49D28E125Ed4035e1CAE95",
+                "0xdB17996a889706Bd67771dEa59E0Bf9453aF0CE4"
+            ]
+        },
+        "connectors": [
+            "0x29219dd400f2Bf60E5a23d13Be72B486D4038894",
+            "0x6047828dc181963ba44974801FF68e538dA5eaF9",
+            "0x50c42dEAcD8Fc9773493ED674b675bE577f2634b",
+            "0x0555E30da8f98308EdB960aa94C0Db47230d2B9c",
+            "0xE5DA20F15420aD15DE0fa650600aFc998bbE3955"
+        ],
+        "adapters": [
+            {
+                "label": "Shadow",
+                "name": "SolidlyOracle",
+                "env": {
+                    "factory": "0x2dA25E7446A70D7be65fd4c053948BEcAA6374c8",
+                    "initcodehash": "0x4ed7aeec7c0286cad1e282dee1c391719fc17fe923b04fb0775731e413ed3554",
+                    "address": "0xeec05e0D8F7D3f56CECE2026Feaf41b09B423790"
+                }
+            },
+            {
+                "label": "Shadow CLMM",
+                "name": "UniswapV3LikeOracle",
+                "env": {
+                    "factory": "0x8BBDc15759a8eCf99A92E004E0C64ea9A5142d59",
+                    "initcodehash": "0xc701ee63862761c31d620a4a083c61bdc1e81761e6b9c9267fd19afd22e0821d",
+                    "fees": [
+                        1,
+                        5,
+                        10,
+                        50,
+                        100,
+                        200
+                    ],
+                    "address": "0xC290f0b4b322BFD735ADe7E8e0d5edb4B7f88934"
+                }
+            },
+            {
+                "label": "SwapX V2",
+                "name": "SolidlyOracle",
+                "env": {
+                    "factory": "0x05c1be79d3aC21Cc4B727eeD58C9B2fF757F5663",
+                    "initcodehash": "0x6c45999f36731ff6ab43e943fca4b5a700786bbb202116cf6633b32039161e05",
+                    "address": "0x11BFd590f592457b65Eb85327F5938141f61878a"
+                }
+            },
+            {
+                "label": "UniswapV3",
+                "name": "UniswapV3LikeOracle",
+                "env": {
+                    "factory": "0xcb2436774C3e191c85056d248EF4260ce5f27A9D",
+                    "initcodehash": "0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54",
+                    "fees": [
+                        100,
+                        500,
+                        3000,
+                        10000
+                    ],
+                    "address": "0x008D10214049593C6e63564946FFb64A6F706732"
+                }
+            },
+            {
+                "label": "Wagmi",
+                "name": "UniswapV3LikeOracle",
+                "env": {
+                    "factory": "0x56CFC796bC88C9c7e1b38C2b0aF9B7120B079aef",
+                    "initcodehash": "0x30146866f3a846fe3c636beb2756dbd24cf321bc52c9113c837c21f47470dfeb",
+                    "fees": [
+                        0,
+                        500,
+                        1500,
+                        3000,
+                        10000
+                    ],
+                    "address": "0xFd1d18173D2f179a45Bf21F755a261AAe7C2d769"
+                }
+            },
+            {
+                "label": "SwapX Algebra",
+                "name": "AlgebraOracle",
+                "env": {
+                    "factory": "0x885229E48987EA4c68F0aA1bCBff5184198A9188",
+                    "initcodehash": "0xf96d2474815c32e070cd63233f06af5413efc5dcb430aee4ff18cc29007c562d",
+                    "address": "0x95E18FBa568cb075f24DfFBCb4093D43ee92Fa20"
+                }
+            }
+        ]
+    },
     "137": {
         "env": {
             "tokens": [
