@@ -747,7 +747,81 @@
         "salt": "0xb65ad34a2c8830748fa620ba429322c5fa562de3a0a997e96908e5f40599695a",
         "oracle": "0xcEe0006ef393981f44af0326A028C49ca27a6bA3"
     },
-    "59144": {},
+    "59144": {
+        "env": {
+            "tokens": [
+                "0x176211869cA2b568f2A7D4EE941E073a821EE1ff",
+                "0xA219439258ca9da29E9Cc4CE5596924745e12B93",
+                "0x3aAB2285ddcDdaD8edf438C1bAB47e1a9D05a9b4"
+            ],
+            "feeds": [
+                "0x3c6Cd9Cc7c7a4c2Cf5a82734CD249D7D593354dA",
+                "0x3c6Cd9Cc7c7a4c2Cf5a82734CD249D7D593354dA",
+                "0xAADAa473C1bDF7317ec07c915680Af29DeBfdCb5",
+                "0xefCA2bbe0EdD0E22b2e0d2F8248E99F4bEf4A7dB",
+                "0x7A99092816C8BD5ec8ba229e3a6E6Da1E628E1F9"
+            ]
+        },
+        "connectors": [
+            "0x176211869cA2b568f2A7D4EE941E073a821EE1ff",
+            "0xA219439258ca9da29E9Cc4CE5596924745e12B93",
+            "0x3aAB2285ddcDdaD8edf438C1bAB47e1a9D05a9b4"
+        ],
+        "adapters": [
+            {
+                "label": "PancakeV3",
+                "name": "UniswapV3LikeOracle",
+                "env": {
+                    "address": "0x7e72b1e0e6DD6F71e3b98f768E814613C2097e61"
+                }
+            },
+            {
+                "label": "SushiSwap",
+                "name": "UniswapV2LikeOracle",
+                "env": {
+                    "address": "0x2A45d538f460DDBEeA3a899b0674dA3DFE318faa"
+                }
+            },
+            {
+                "label": "Lynex",
+                "name": "SolidlyOracle",
+                "env": {
+                    "address": "0xeD55d76Bb48E042a177d1E21AffBe1B72d0c7dB0"
+                }
+            },
+            {
+                "label": "Etherex (Legacy)",
+                "name": "SolidlyOracle",
+                "env": {
+                    "factory": "0xC0b920f6f1d6122B8187c031554dc8194F644592",
+                    "initcodehash": "0x48dedf148702735269e26de62b67fb89299dc49995e66cb30907d529711d08c9"
+                }
+            },
+            {
+                "label": "Etherex V3",
+                "name": "UniswapV3LikeOracle",
+                "env": {
+                    "factory": "0xAe334f70A7FC44FCC2df9e6A37BC032497Cf80f1",
+                    "initcodehash": "0xd016d9e5e63d722a7852248b4ed8d907ef88e028d8022c66201001ee406052eb",
+                    "fees": [
+                        1,
+                        5,
+                        10,
+                        50,
+                        100,
+                        200
+                    ]
+                }
+            },
+            {
+                "label": "NILE",
+                "name": "UniswapV3LikeOracle",
+                "env": {
+                    "address": "0x3E1Fe1Bd5a5560972bFa2D393b9aC18aF279fF56"
+                }
+            }
+        ]
+    },
     "42161": {},
     "14": {}
 }

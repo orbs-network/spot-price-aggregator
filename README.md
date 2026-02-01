@@ -8,6 +8,13 @@ This is a fork of the upstream 1inch Spot Price Aggregator. The original README 
 
 - [`config.json`](./config.json)
 
+### Automatic base tokens
+
+When deploying view USD oracles and aggregators, the scripts automatically prepend the native token and WETH:
+
+- USD oracle token list: `tokens` is built as `[native, WETH, ...env.tokens]`.
+- Connector list: `connectors` is built as `[NONE, native, WETH, ...connectors]`.
+
 ## `/contracts/view` overview
 
 The `/contracts/view` entrypoints provide view-only USD pricing helpers meant for off-chain reads. They follow a simple flow:
