@@ -794,7 +794,8 @@
                 "name": "SolidlyOracle",
                 "env": {
                     "factory": "0xC0b920f6f1d6122B8187c031554dc8194F644592",
-                    "initcodehash": "0x48dedf148702735269e26de62b67fb89299dc49995e66cb30907d529711d08c9"
+                    "initcodehash": "0x48dedf148702735269e26de62b67fb89299dc49995e66cb30907d529711d08c9",
+                    "address": "0xB6487C1E57c66a35d9bE99DBDdc3DB7F27E1E7DE"
                 }
             },
             {
@@ -810,7 +811,8 @@
                         50,
                         100,
                         200
-                    ]
+                    ],
+                    "address": "0xBD0202055d6B495E55524EaD40Cf4a40cDbBC4eB"
                 }
             },
             {
@@ -820,7 +822,11 @@
                     "address": "0x3E1Fe1Bd5a5560972bFa2D393b9aC18aF279fF56"
                 }
             }
-        ]
+        ],
+        "aggregatorSalt": "0xa22a1aba97eae4c1b708c0c6d3cd6b7fba04452fed98ce006f48bb1489c19682",
+        "aggregator": "0x1111117a9Eb8B998216C32b1445238C33b209EaE",
+        "salt": "0x1c33eaad274597b6b2a035c626263c557e77b1909bff30f239b3e29d83e6f50e",
+        "oracle": "0xCee0004649B81ae456a6305D09f2c7c32732EFf6"
     },
     "42161": {},
     "14": {}
