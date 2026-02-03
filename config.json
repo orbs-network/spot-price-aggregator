@@ -213,28 +213,11 @@
                 }
             },
             {
-                "label": "Curve",
-                "name": "CurveOracle",
-                "env": {
-                    "address": "0x4e5Cee3B8Af0CB46EFAA94Cba5E0f25f8770BB19"
-                }
-            },
-            {
                 "label": "BlackholeAMM",
                 "name": "SolidlyOracleNoCreate2",
                 "env": {
                     "factory": "0xFe926062fB99cA5653080D6c14fe945AD68C265c",
                     "address": "0x5256b16da3642D25b2d421f5f9169845c7982a29"
-                }
-            },
-            {
-                "label": "BlackholeCLDefault",
-                "name": "AlgebraCustomPoolOracle",
-                "env": {
-                    "poolDeployer": "0x9B2441037E286d5Bf9456a3BE7b5273fe28DbA1e",
-                    "customDeployer": "0x0000000000000000000000000000000000000000",
-                    "initcodehash": "0xeaa3eea3233916c82fe1281a51bd9cde844b7c4673c0714ca0028a57f5634752",
-                    "address": "0xed262AD7C75c2B7b9b1726dD992bd63CCAef7F0A"
                 }
             },
             {
