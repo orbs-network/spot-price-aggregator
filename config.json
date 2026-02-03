@@ -892,7 +892,8 @@
                 "env": {
                     "poolDeployer": "0x6Dd3FB9653B10e806650F107C3B5A0a6fF974F65",
                     "customDeployer": "0x0000000000000000000000000000000000000000",
-                    "initcodehash": "0x6c1bebd370ba84753516bc1393c0d0a6c645856da55f5393ac8ab3d6dbc861d3"
+                    "initcodehash": "0x6c1bebd370ba84753516bc1393c0d0a6c645856da55f5393ac8ab3d6dbc861d3",
+                    "address": "0x093111cb9D868e74fE71385592cd939Af8f77714"
                 }
             },
             {
@@ -901,7 +902,8 @@
                 "env": {
                     "poolDeployer": "0x799d2b523B515F466cc0F53512C64e91b75d23ba",
                     "customDeployer": "0x0000000000000000000000000000000000000000",
-                    "initcodehash": "0xa18736c3ee97fe3c96c9428c0cc2a9116facec18e84f95f9da30543f8238a782"
+                    "initcodehash": "0xa18736c3ee97fe3c96c9428c0cc2a9116facec18e84f95f9da30543f8238a782",
+                    "address": "0x7085faB4d9DB9b68fBAC99b36d23Faef49BEfF4F"
                 }
             },
             {
@@ -915,10 +917,15 @@
                 "label": "Fluid",
                 "name": "FluidDexOracle",
                 "env": {
-                    "resolver": "0x05Bd8269A20C472b148246De20E6852091BF16Ff"
+                    "resolver": "0x05Bd8269A20C472b148246De20E6852091BF16Ff",
+                    "address": "0xf843e928e80068A06b79B4f04C11773173aB13fc"
                 }
             }
-        ]
+        ],
+        "aggregatorSalt": "0x6840b119008e4b51def90eb16c27709b46e0c3c72805233af1a51e9c012428a6",
+        "aggregator": "0x11111170c1990A41e4860247461425cd3AD6ae0E",
+        "salt": "0xe4396ae69806af7f177db3a783a63ee8d9eb894bed6efdc019b6b5f1d6564fc5",
+        "oracle": "0xcEe000F9B0d940c9aE9Bd914acE3a1FdFDaf7982"
     },
     "14": {}
 }

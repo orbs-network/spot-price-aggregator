@@ -11,8 +11,8 @@ contract DeployAlgebraCustomPoolOracle is CoreDeploy {
         address customDeployer = _adapterAddress("customDeployer");
         bytes32 initcodehash = _adapterBytes32("initcodehash");
         require(poolDeployer != address(0), "missing poolDeployer");
-        require(customDeployer != address(0), "missing customDeployer");
         require(initcodehash != bytes32(0), "missing initcodehash");
+        // customDeployer is optional; zero means default Algebra salt (token0, token1)
 
         vm.broadcast();
         oracle = new AlgebraCustomPoolOracle(poolDeployer, customDeployer, initcodehash);
