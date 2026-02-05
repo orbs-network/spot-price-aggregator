@@ -23,10 +23,10 @@ contract UsdOracleMonadTest is RpcUtils {
         require(bytes(aggregatorRaw).length != 0, "missing aggregator for chain 143");
         address aggregator = vm.parseJsonAddress(json, string.concat(chainKey, ".aggregator"));
         require(aggregator != address(0), "aggregator is zero for chain 143");
-        address[] memory tokens = vm.parseJsonAddressArray(json, string.concat(chainKey, ".env.tokens"));
+        address[] memory tokens = vm.parseJsonAddressArray(json, string.concat(chainKey, ".connectors"));
         address[] memory feeds = vm.parseJsonAddressArray(json, string.concat(chainKey, ".env.feeds"));
-        require(tokens.length >= 4, "tokens length < 4");
-        require(feeds.length == tokens.length + 2, "feeds length must be tokens+2");
+        require(tokens.length >= 4, "connectors length < 4");
+        require(feeds.length == tokens.length + 2, "feeds length must be connectors+2");
 
         address[] memory deployTokens = new address[](tokens.length + 2);
         deployTokens[0] = address(0);

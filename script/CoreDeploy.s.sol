@@ -115,7 +115,7 @@ abstract contract CoreDeploy is Script {
     }
 
     function _tokens() internal view returns (address[] memory tokens) {
-        address[] memory baseTokens = _envAddressArray("tokens");
+        address[] memory baseTokens = _cfgAddressArray("connectors");
         tokens = new address[](baseTokens.length + 2);
         tokens[0] = address(0);
         tokens[1] = address(weth);

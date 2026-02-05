@@ -23,12 +23,12 @@ contract UsdOracleSeiTest is RpcUtils {
         string memory chainKey = ".1329";
         string memory aggregatorRaw = vm.parseJsonString(json, string.concat(chainKey, ".aggregator"));
         require(bytes(aggregatorRaw).length != 0, "missing aggregator for chain 1329");
-        address[] memory deployTokens = vm.parseJsonAddressArray(json, string.concat(chainKey, ".env.tokens"));
+        address[] memory deployTokens = vm.parseJsonAddressArray(json, string.concat(chainKey, ".connectors"));
         string[] memory deployDenoms = vm.parseJsonStringArray(json, string.concat(chainKey, ".env.denoms"));
         aggregator = vm.parseJsonAddress(json, string.concat(chainKey, ".aggregator"));
         require(aggregator != address(0), "aggregator is zero for chain 1329");
-        require(deployTokens.length >= 4, "tokens length < 4");
-        require(deployDenoms.length == deployTokens.length + 2, "denoms length must be tokens+2");
+        require(deployTokens.length >= 4, "connectors length < 4");
+        require(deployDenoms.length == deployTokens.length + 2, "denoms length must be connectors+2");
 
         address[] memory tokens = new address[](deployTokens.length + 2);
         string[] memory denoms = deployDenoms;

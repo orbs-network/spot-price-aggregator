@@ -12,7 +12,7 @@ This is a fork of the upstream 1inch Spot Price Aggregator. The original README 
 
 When deploying view USD oracles and aggregators, the scripts automatically prepend the native token and WETH:
 
-- USD oracle token list: `tokens` is built as `[native, WETH, ...env.tokens]`.
+- USD oracle token list: `tokens` is built as `[native, WETH, ...connectors]`.
 - Connector list: `connectors` is built as `[NONE, native, WETH, ...connectors]`.
 
 ## `/contracts/view` overview
