@@ -21,10 +21,10 @@
         "aggregator": "0x1111115768673be6e461f9271151b65f74BAf479",
         "aggregatorSalt": "0x14084d12440188b49e914c0469b63e4e1ff200a3ace96e9c918ec5cb4f882dc7",
         "connectors": [
-            "0x754704Bc059F8C67012fEd69BC8A327a5aafb603",
+            "0xEE8c0E9f1BFFb4Eb878d8f15f368A02a35481242",
             "0xe7cd86e13AC4309349F30B3435a9d337750fC82D",
-            "0x0555E30da8f98308EdB960aa94C0Db47230d2B9c",
-            "0xEE8c0E9f1BFFb4Eb878d8f15f368A02a35481242"
+            "0x754704Bc059F8C67012fEd69BC8A327a5aafb603",
+            "0x0555E30da8f98308EdB960aa94C0Db47230d2B9c"
         ],
         "adapters": [
             {
