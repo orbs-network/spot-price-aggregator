@@ -864,5 +864,62 @@
         "salt": "0xe4396ae69806af7f177db3a783a63ee8d9eb894bed6efdc019b6b5f1d6564fc5",
         "oracle": "0xcEe000F9B0d940c9aE9Bd914acE3a1FdFDaf7982"
     },
-    "14": {}
+    "14": {
+        "env": {
+            "ftso": [
+                "0x01464c522f555344000000000000000000000000000000000000000000000000",
+                "0x01464c522f555344000000000000000000000000000000000000000000000000",
+                "0x01555344432f5553440000000000000000000000000000000000000000000000",
+                "0x01555344542f5553440000000000000000000000000000000000000000000000",
+                "0x01555344542f5553440000000000000000000000000000000000000000000000",
+                "0x014554482f555344000000000000000000000000000000000000000000000000"
+            ]
+        },
+        "connectors": [
+            "0xFbDa5F676cB37624f28265A144A48B0d6e87d3b6",
+            "0xe7cd86e13AC4309349F30B3435a9d337750fC82D",
+            "0x0B38e83B86d491735fEaa0a791F65c2B99535396",
+            "0x1502FA4be69d526124D453619276FacCab275d3D"
+        ],
+        "adapters": [
+            {
+                "label": "SparkDEX V2",
+                "name": "UniswapV2LikeOracle",
+                "env": {
+                    "factory": "0x16b619B04c961E8f4F06C10B42FDAbb328980A89",
+                    "initcodehash": "0x60cc0e9ad39c5fa4ee52571f511012ed76fbaa9bbaffd2f3fafffcb3c47cff6e"
+                }
+            },
+            {
+                "label": "SparkDEX V3",
+                "name": "AlgebraOracle",
+                "env": {
+                    "factory": "0x59a662Ed724F19AD019307126CbEBdcF4b57d6B1",
+                    "initcodehash": "0x28ca930dce4183e0e1f76abe6e52699579ae7beaeab98fac2b94e33c213f7d4a"
+                }
+            },
+            {
+                "label": "SparkDEX V3.1",
+                "name": "UniswapV3LikeOracle",
+                "env": {
+                    "factory": "0x8A2578d23d4C532cC9A98FaD91C0523f5efDE652",
+                    "initcodehash": "0x209015062f691a965df159762a8d966b688e328361c53ec32da2ad31287e3b72",
+                    "fees": [
+                        100,
+                        500,
+                        3000,
+                        10000
+                    ]
+                }
+            },
+            {
+                "label": "BlazeSwap",
+                "name": "UniswapV2LikeOracle",
+                "env": {
+                    "factory": "0x440602f459D7Dd500a74528003e6A20A46d6e2A6",
+                    "initcodehash": "0xbf4c1c435583a2bb8d763765a34a46e376071c3b3d80e5bbac0950aeecdf31cb"
+                }
+            }
+        ]
+    }
 }

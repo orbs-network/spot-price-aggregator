@@ -132,6 +132,8 @@ resolve_usd_oracle_script() {
     echo "DeployUsdOracleSei"
   elif echo "$CHAIN_CFG" | jq -e '.env.pyths? // empty | length > 0' >/dev/null; then
     echo "DeployUsdOraclePyth"
+  elif echo "$CHAIN_CFG" | jq -e '.env.ftso? // empty | length > 0' >/dev/null; then
+    echo "DeployUsdOracleFlare"
   elif echo "$CHAIN_CFG" | jq -e '.env.feeds? // empty | length > 0' >/dev/null; then
     echo "DeployUsdOracle"
   else
