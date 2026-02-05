@@ -887,7 +887,8 @@
                 "name": "UniswapV2LikeOracle",
                 "env": {
                     "factory": "0x16b619B04c961E8f4F06C10B42FDAbb328980A89",
-                    "initcodehash": "0x60cc0e9ad39c5fa4ee52571f511012ed76fbaa9bbaffd2f3fafffcb3c47cff6e"
+                    "initcodehash": "0x60cc0e9ad39c5fa4ee52571f511012ed76fbaa9bbaffd2f3fafffcb3c47cff6e",
+                    "address": "0xC8e6A35aD1AbE691Be89e4DA7a69F28F9c905492"
                 }
             },
             {
@@ -895,7 +896,8 @@
                 "name": "AlgebraOracle",
                 "env": {
                     "factory": "0x59a662Ed724F19AD019307126CbEBdcF4b57d6B1",
-                    "initcodehash": "0x28ca930dce4183e0e1f76abe6e52699579ae7beaeab98fac2b94e33c213f7d4a"
+                    "initcodehash": "0x28ca930dce4183e0e1f76abe6e52699579ae7beaeab98fac2b94e33c213f7d4a",
+                    "address": "0x297125B4C5bAc84f394c4CFA68FE86dAf94b5284"
                 }
             },
             {
@@ -909,7 +911,8 @@
                         500,
                         3000,
                         10000
-                    ]
+                    ],
+                    "address": "0xa1376f2Bb80D3cF6c2D8ebEf34b3d122e9af4020"
                 }
             },
             {
@@ -917,9 +920,14 @@
                 "name": "UniswapV2LikeOracle",
                 "env": {
                     "factory": "0x440602f459D7Dd500a74528003e6A20A46d6e2A6",
-                    "initcodehash": "0xbf4c1c435583a2bb8d763765a34a46e376071c3b3d80e5bbac0950aeecdf31cb"
+                    "initcodehash": "0xbf4c1c435583a2bb8d763765a34a46e376071c3b3d80e5bbac0950aeecdf31cb",
+                    "address": "0x44D38A6930FBC50f3E90F8249CA602781b2995b6"
                 }
             }
-        ]
+        ],
+        "aggregatorSalt": "0x306814cdb152ea85788bb7c91e2c69d3e4bd68228de9de4e014e6900d763b467",
+        "aggregator": "0x111111bC84b9378E6AcE346d14C9b830e8eE1d97",
+        "salt": "0x9575ba841d246b03d47ff44b53e3da11249c8e0a3e811d0ba35d5bc758d21200",
+        "oracle": "0xcEE00078C6319e8F748Cc4D73E297Dbd7Aeea6a8"
     }
 }
