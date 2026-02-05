@@ -69,11 +69,12 @@
         ]
     },
     "1329": {
-        "oracle": "0xcEe0001fA4d0F7F7fA82f6556da4D7e301a14D52",
-        "salt": "0x6749166c90d25ba76b6c66a48ba900892d09fcfc0d47e1ed71301bbe4ffdcea7",
+        "oracle": "0xcEe00002936Cd4625ca045c808E2838cBF6766ad",
+        "salt": "0xa067c879da433632c1779c3d4d7e140c8fd3892d590e9d9b390e0a0de138601f",
         "env": {
             "tokens": [
                 "0xe15fC38F6D8c56aF07bbCBe3BAf5708A2Bf42392",
+                "0x3894085Ef7Ff0f0aeDf52E2A2704928d1Ec074F1",
                 "0xB75D0B03c06A926e488e2659DF1A861F860bD3d1",
                 "0x160345fC359604fC6e70E3c5fAcbdE5F7A9342d8",
                 "0x0555E30da8f98308EdB960aa94C0Db47230d2B9c"
@@ -81,6 +82,7 @@
             "denoms": [
                 "usei",
                 "usei",
+                "uusdc",
                 "uusdc",
                 "uusdt",
                 "ueth",
@@ -91,7 +93,10 @@
         "aggregatorSalt": "0x114f4cc5f9f2021a25fd2c45d0f7373c360832bc82a5772ca9c41463399b4fdc",
         "connectors": [
             "0xe15fC38F6D8c56aF07bbCBe3BAf5708A2Bf42392",
-            "0x3894085Ef7Ff0f0aeDf52E2A2704928d1Ec074F1"
+            "0x3894085Ef7Ff0f0aeDf52E2A2704928d1Ec074F1",
+            "0xB75D0B03c06A926e488e2659DF1A861F860bD3d1",
+            "0x160345fC359604fC6e70E3c5fAcbdE5F7A9342d8",
+            "0x0555E30da8f98308EdB960aa94C0Db47230d2B9c"
         ],
         "adapters": [
             {
