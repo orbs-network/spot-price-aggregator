@@ -929,5 +929,47 @@
         "aggregator": "0x111111bC84b9378E6AcE346d14C9b830e8eE1d97",
         "salt": "0x9575ba841d246b03d47ff44b53e3da11249c8e0a3e811d0ba35d5bc758d21200",
         "oracle": "0xcEE00078C6319e8F748Cc4D73E297Dbd7Aeea6a8"
+    },
+    "747474": {
+        "env": {
+            "feeds": [
+                "0x7BdBDB772f4a073BadD676A567C6ED82049a8eEE",
+                "0x7BdBDB772f4a073BadD676A567C6ED82049a8eEE",
+                "0xbe5CE90e16B9d9d988D64b0E1f6ed46EbAfb9606",
+                "0xF03E1566Fc6B0eBFA3dD3aA197759C4c6617ec78",
+                "0x3A49D4e23868222785f148BA2bd0bAEc80d36a2A",
+                "0x41DdB7F8F5e1b2bD28193B84C1C36Be698dEd162"
+            ]
+        },
+        "connectors": [
+            "0x203A662b0BD271A6ed5a60EdFbd04bFce608FD36",
+            "0x2DCa96907fde857dd3D816880A0df407eeB2D2F2",
+            "0x00000000eFE302BEAA2b3e6e1b18d08D69a9012a",
+            "0x0913DA6Da4b42f538B445599b46Bb4622342Cf52"
+        ],
+        "adapters": [
+            {
+                "label": "SushiSwap V2",
+                "name": "UniswapV2LikeOracle",
+                "env": {
+                    "factory": "0x72D111b4d6f31B38919ae39779f570b747d6Acd9",
+                    "initcodehash": "0xe18a34eb0e04b04f7a0ac29a6e80748dca96319b42c54d679cb821dca90c6303"
+                }
+            },
+            {
+                "label": "SushiSwap V3",
+                "name": "UniswapV3LikeOracle",
+                "env": {
+                    "factory": "0x203e8740894c8955cB8950759876d7E7E45E04c1",
+                    "initcodehash": "0xe040f12c7cee3904b78f24f8fc395629c2e69525c2815da7a659f7483e378ecb",
+                    "fees": [
+                        100,
+                        500,
+                        3000,
+                        10000
+                    ]
+                }
+            }
+        ]
     }
 }
