@@ -1057,7 +1057,8 @@
                 "name": "UniswapV2LikeOracle",
                 "env": {
                     "factory": "0x1097053Fd2ea711dad45caCcc45EfF7548fCB362",
-                    "initcodehash": "0x57224589c67f3f30a6b0d7a1b54cf3153ab84563bc609ef41dfb34f8b2974d2d"
+                    "initcodehash": "0x57224589c67f3f30a6b0d7a1b54cf3153ab84563bc609ef41dfb34f8b2974d2d",
+                    "address": "0x194B6FeA8336Dc94083BA1b6155Dab2D80020e44"
                 }
             },
             {
@@ -1071,7 +1072,8 @@
                         500,
                         3000,
                         10000
-                    ]
+                    ],
+                    "address": "0x96d135611A2344271a268C58CF98DA39f336Ac34"
                 }
             },
             {
@@ -1093,7 +1095,8 @@
                 "name": "UniswapV2LikeOracle",
                 "env": {
                     "factory": "0xBAe5dc9B19004883d0377419FeF3c2C8832d7d7B",
-                    "initcodehash": "0xe2200989b6f9506f3beca7e9c844741b3ad1a88ad978b6b0973e96d3ca4707aa"
+                    "initcodehash": "0xe2200989b6f9506f3beca7e9c844741b3ad1a88ad978b6b0973e96d3ca4707aa",
+                    "address": "0xe9bEC04a803C58f16564b8754ADD0F2797f34382"
                 }
             },
             {
@@ -1101,9 +1104,14 @@
                 "name": "UniswapV2LikeOracle",
                 "env": {
                     "factory": "0x43eC799eAdd63848443E2347C49f5f52e8Fe0F6f",
-                    "initcodehash": "0xad51f1796a962669995519b0f93a5ccf2f9e43987d481bafcb0f417a51750049"
+                    "initcodehash": "0xad51f1796a962669995519b0f93a5ccf2f9e43987d481bafcb0f417a51750049",
+                    "address": "0xfB7e360DCcAc525cEa5BD3ea3cC9bD4D0186d825"
                 }
             }
-        ]
+        ],
+        "aggregatorSalt": "0x43cb99c41c866bc91618c9fa6bc4a05f683e4e6107ea4fdab66edbdff4348ce3",
+        "aggregator": "0x1111115425c901A4219e9d0EB59B7b02b868E08F",
+        "salt": "0x0b2ff04b8a87e16805d71a94cb0a86b49b27fb89d98be069048aa0d16ab87898",
+        "oracle": "0xCEe0001e5935598E41870B722E910E02412C19df"
     }
 }
