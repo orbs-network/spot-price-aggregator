@@ -977,5 +977,133 @@
         "aggregator": "0x1111111562Fa1cFEF39F4669B021658CE2caF26b",
         "salt": "0x9959b9e3649b5aa9056d6b5b17f44ab3cc495e85b3e561d4e6e5d8c5b56e507d",
         "oracle": "0xcee000b7d0011AD7FAF2e09F75798cF383aAA55b"
+    },
+    "1": {
+        "env": {
+            "feeds": [
+                "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419",
+                "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419",
+                "0x8fFfFfd4AfB6115b954Bd326cbe7B4BA576818f6",
+                "0xAed0c38402a5d19df6E4c03F4E2DceD6e29c1ee9",
+                "0x3E7d1eAB13ad0104d2750B8863b489D65364e32D",
+                "0xF4030086522a5beEA4988F8ca5B36dbC97BeE88c"
+            ]
+        },
+        "connectors": [
+            "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+            "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+            "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+            "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599"
+        ],
+        "adapters": [
+            {
+                "label": "UniswapV3",
+                "name": "UniswapV3LikeOracle",
+                "env": {
+                    "address": "0x008D10214049593C6e63564946FFb64A6F706732"
+                }
+            },
+            {
+                "label": "UniswapV4",
+                "name": "UniswapV4LikeOracle",
+                "env": {
+                    "address": "0xFbF54317e4820B461E7fA1B2819B6755e1cc0F62"
+                }
+            },
+            {
+                "label": "UniswapV2",
+                "name": "UniswapV2LikeOracle",
+                "env": {
+                    "address": "0xA21E47477DE9BbcDC962ee18a5E7D339c5a16D28"
+                }
+            },
+            {
+                "label": "Curve",
+                "name": "CurveOracle",
+                "env": {
+                    "address": "0x4e5Cee3B8Af0CB46EFAA94Cba5E0f25f8770BB19"
+                }
+            },
+            {
+                "label": "SushiSwap",
+                "name": "UniswapV2LikeOracle",
+                "env": {
+                    "address": "0x2A45d538f460DDBEeA3a899b0674dA3DFE318faa"
+                }
+            },
+            {
+                "label": "PancakeV3",
+                "name": "UniswapV3LikeOracle",
+                "env": {
+                    "address": "0x7e72b1e0e6DD6F71e3b98f768E814613C2097e61"
+                }
+            },
+            {
+                "label": "Dodo",
+                "name": "DodoOracle",
+                "env": {
+                    "address": "0x0A7c4d89e1629f189Eb12dd716B178d1b90D9f66"
+                }
+            },
+            {
+                "label": "DodoV2",
+                "name": "DodoV2Oracle",
+                "env": {
+                    "address": "0x03aA019F3B78110e030c34e9fA98047A1f62859A"
+                }
+            },
+            {
+                "label": "PancakeSwap",
+                "name": "UniswapV2LikeOracle",
+                "env": {
+                    "factory": "0x1097053Fd2ea711dad45caCcc45EfF7548fCB362",
+                    "initcodehash": "0x57224589c67f3f30a6b0d7a1b54cf3153ab84563bc609ef41dfb34f8b2974d2d"
+                }
+            },
+            {
+                "label": "SushiSwap V3",
+                "name": "UniswapV3LikeOracle",
+                "env": {
+                    "factory": "0xbACEB8eC6b9355Dfc0269C18bac9d6E2Bdc29C4F",
+                    "initcodehash": "0x6a8bdcb32a3bbb4f0957245e1b2f7afbe21296c833d5c0d517a12e018f3c33d8",
+                    "fees": [
+                        100,
+                        500,
+                        3000,
+                        10000
+                    ]
+                }
+            },
+            {
+                "label": "Uniswap V1",
+                "name": "UniswapOracle",
+                "env": {
+                    "address": "0xAdF7CC69626eB6F03F4F613832C84Cf62586A6Bb"
+                }
+            },
+            {
+                "label": "ShibaSwap V1",
+                "name": "UniswapV2LikeOracle",
+                "env": {
+                    "address": "0x0fE8bD9CB73ADC66561330B648a8fC62b4F58943"
+                }
+            },
+            {
+                "label": "ApeSwap AMM",
+                "name": "UniswapV2LikeOracle",
+                "env": {
+                    "factory": "0xBAe5dc9B19004883d0377419FeF3c2C8832d7d7B",
+                    "initcodehash": "0xe2200989b6f9506f3beca7e9c844741b3ad1a88ad978b6b0973e96d3ca4707aa"
+                }
+            },
+            {
+                "label": "Frax Swap",
+                "name": "UniswapV2LikeOracle",
+                "env": {
+                    "factory": "0x43eC799eAdd63848443E2347C49f5f52e8Fe0F6f",
+                    "initcodehash": "0xad51f1796a962669995519b0f93a5ccf2f9e43987d481bafcb0f417a51750049"
+                }
+            }
+        ]
     }
 }
