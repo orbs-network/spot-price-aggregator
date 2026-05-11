@@ -8,6 +8,14 @@ This is a fork of the upstream 1inch Spot Price Aggregator. The original README 
 
 - [`config.json`](./config.json)
 
+### Deployment status
+
+The current `config.json` entries for chains `10` and `5000` are config-only and are not yet recorded as deployed by this fork's deploy flow.
+
+- Chain `10` references adapter addresses that already have Optimism bytecode, but the entry has no recorded `aggregator`, `oracle`, `salt`, or `aggregatorSalt`.
+- Chain `5000` has connector and adapter factory config only, with no recorded adapter, `aggregator`, `oracle`, `salt`, or `aggregatorSalt` addresses.
+- A completed broadcast deployment should leave `aggregator`, `oracle`, `salt`, and `aggregatorSalt` in the chain entry and Foundry broadcast records for that chain id.
+
 ### Automatic base tokens
 
 When deploying view USD oracles and aggregators, the scripts automatically prepend the native token and WETH:
