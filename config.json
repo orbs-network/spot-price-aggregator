@@ -64,7 +64,11 @@
                     "address": "0x4C5B9573dE7660c097F1a21050038378CD691066"
                 }
             }
-        ]
+        ],
+        "aggregatorSalt": "0xe639e720b434a356db9ffb1a9b8cadfd3fe8f611b92ff31a435b91592f2a9bb6",
+        "aggregator": "0x111111C42Edeab7B4EC33909EfF47823fA46712E",
+        "salt": "0xf9fbd5f8d71837f71659c336c6256410e98f87174719f417bbdf6e6c6e90cb26",
+        "oracle": "0xcee0005A8dCFB3c33AB5D99fe5640Fe5667F37Dd"
     },
     "5000": {
         "env": {
@@ -94,7 +98,8 @@
                         500,
                         2500,
                         10000
-                    ]
+                    ],
+                    "address": "0x1c4b5371dfDF424a162974C2361a6405b1F772cf"
                 }
             },
             {
@@ -108,7 +113,8 @@
                         500,
                         3000,
                         10000
-                    ]
+                    ],
+                    "address": "0x388FED743FaAed1556C59ec5A75539364Ac61d41"
                 }
             },
             {
@@ -122,10 +128,15 @@
                         500,
                         2500,
                         10000
-                    ]
+                    ],
+                    "address": "0xEAFBa6bac00273Ab896e297f25D25897801D5ebA"
                 }
             }
-        ]
+        ],
+        "aggregatorSalt": "0xfe427a0850ea44bd560f28312dde521baab08b183a41df2fec104d43755da263",
+        "aggregator": "0x111111d58d588056D4d8155755b89075A8458C92",
+        "salt": "0x2c407667a6ea6ee92df3c4b37943e90f37b5efcb8cbc9951c847c1c67823bb41",
+        "oracle": "0xCeE000a5aE62E527A0FA1Beb58c53F29Da2E5E7C"
     },
     "143": {
         "oracle": "0xCEE000dcdb7C2F0122c4b80731AD451Ef4E64439",
