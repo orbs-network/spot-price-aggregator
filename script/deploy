@@ -128,12 +128,12 @@ resolve_adapter_script() {
 }
 
 resolve_usd_oracle_script() {
-  if echo "$CHAIN_CFG" | jq -e '.env.denoms? // empty | length > 0' >/dev/null; then
-    echo "DeployUsdOracleSei"
-  elif echo "$CHAIN_CFG" | jq -e '.env.pyths? // empty | length > 0' >/dev/null; then
+  if echo "$CHAIN_CFG" | jq -e '.env.pyths? // empty | length > 0' >/dev/null; then
     echo "DeployUsdOraclePyth"
   elif echo "$CHAIN_CFG" | jq -e '.env.ftso? // empty | length > 0' >/dev/null; then
     echo "DeployUsdOracleFlare"
+  elif echo "$CHAIN_CFG" | jq -e '.env.api3s? // empty | length > 0' >/dev/null; then
+    echo "DeployUsdOracleApi3"
   elif echo "$CHAIN_CFG" | jq -e '.env.feeds? // empty | length > 0' >/dev/null; then
     echo "DeployUsdOracle"
   else

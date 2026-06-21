@@ -9,7 +9,7 @@ contract E2ETest is Test {
         cmd[0] = "test/e2e";
 
         bytes memory output = vm.ffi(cmd);
-        if (keccak256(output) != keccak256(bytes("OK\n"))) {
+        if (keccak256(output) != keccak256(bytes("OK")) && keccak256(output) != keccak256(bytes("OK\n"))) {
             fail(string(output));
         }
     }

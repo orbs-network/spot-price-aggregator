@@ -104,11 +104,6 @@ abstract contract ConfigDeploy is Script {
         return vm.keyExistsJson(_json, path) ? vm.parseJsonBytes32Array(_json, path) : new bytes32[](0);
     }
 
-    function _envStringArray(string memory key) internal view returns (string[] memory arr) {
-        string memory path = _envPath(key);
-        return vm.keyExistsJson(_json, path) ? vm.parseJsonStringArray(_json, path) : new string[](0);
-    }
-
     function _envUintArray(string memory key) internal view returns (uint256[] memory arr) {
         string memory path = _envPath(key);
         return vm.keyExistsJson(_json, path) ? vm.parseJsonUintArray(_json, path) : new uint256[](0);

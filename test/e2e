@@ -19,6 +19,56 @@ price() {
   cast call --json "$oracle" 'usd(address)(uint256,uint8)' "$token" --rpc-url "$rpc_url"
 }
 
+extract_revert_data() {
+  local raw=$1
+  print -r -- "$raw" | rg -o '0x[0-9a-fA-F]{8,}' | tail -n 1 || true
+}
+
+decode_address_arg() {
+  local data=$1 hex
+  hex=${data#0x}
+  [[ ${#hex} -ge 72 ]] || return
+  print -- "0x${hex[-40,-1]}"
+}
+
+describe_revert() {
+  local raw=$1 data selector token
+  data=$(extract_revert_data "$raw")
+  [[ -n "$data" ]] || {
+    print -- "decoded: no ABI revert data found"
+    return
+  }
+
+  selector=${data[1,10]:l}
+  case "$selector" in
+    0x00d175bb)
+      token=$(decode_address_arg "$data")
+      print -- "decoded: StaleAnswer($token)"
+      ;;
+    0x4a6f5ccb)
+      token=$(decode_address_arg "$data")
+      print -- "decoded: ZeroPrice($token)"
+      ;;
+    0xb732fc2f)
+      token=$(decode_address_arg "$data")
+      print -- "decoded: MissingFeed($token)"
+      ;;
+    0xfc235960)
+      print -- "decoded: ArraysLengthMismatch()"
+      ;;
+    0x1510b77f)
+      print -- "decoded: InvalidConstructorParams()"
+      ;;
+    0x08c379a0)
+      print -- "decoded: Error(string)"
+      ;;
+    *)
+      print -- "decoded: unknown selector $selector"
+      ;;
+  esac
+  print -- "revert_data: $data"
+}
+
 decimal_less_than() {
   local left=$1 right=$2
 
@@ -94,13 +144,15 @@ assert_non_base_tokens() {
 }
 
 check_price() {
-  local kind=$1 chain_id=$2 oracle=$3 token=$4 raw
+  local kind=$1 chain_id=$2 oracle=$3 token=$4 raw diagnostics
 
   chain "$chain_id" >/dev/null
   [[ -n "${ETH_RPC_URL:-}" ]] || fail "$chain_id missing ETH_RPC_URL after chain"
 
-  raw=$(price "$oracle" "$token" "$ETH_RPC_URL" 2>&1) \
-    || fail "$chain_id $kind $token reverted:\n$raw"
+  raw=$(price "$oracle" "$token" "$ETH_RPC_URL" 2>&1) || {
+    diagnostics=$(describe_revert "$raw")
+    fail "$chain_id $kind $token reverted\noracle: $oracle\nrpc: $ETH_RPC_URL\n$diagnostics\nraw:\n$raw"
+  }
   assert_price "$chain_id $kind $token" "$raw"
   print -- "ok\t$kind\t$chain_id\t$token\t$(jq -r '.[0] | tostring' <<<"$raw")\t$(jq -r '.[1] | tostring' <<<"$raw")"
 }
@@ -138,7 +190,8 @@ case "${1:-}" in
       print -- "OK"
     else
       print -- "e2e failed with exit $code"
-      print -r -- "$output" | awk '/^[0-9]+ (base|token) / { print }'
+      print -r -- "$output"
+      exit "$code"
     fi
     ;;
 esac
