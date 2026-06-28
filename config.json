@@ -65,7 +65,9 @@
             }
         ],
         "aggregatorSalt": "0xe639e720b434a356db9ffb1a9b8cadfd3fe8f611b92ff31a435b91592f2a9bb6",
-        "aggregator": "0x111111C42Edeab7B4EC33909EfF47823fA46712E"
+        "aggregator": "0x111111C42Edeab7B4EC33909EfF47823fA46712E",
+        "salt": "0x54a67f4ce766fa5a38360f92ea30507810bb3eb93d72a026495ff83abcedd287",
+        "oracle": "0xCeE00020F6154013DCac10C71f068501A2E5E8CE"
     },
     "5000": {
         "env": {
@@ -130,7 +132,9 @@
             }
         ],
         "aggregatorSalt": "0xfe427a0850ea44bd560f28312dde521baab08b183a41df2fec104d43755da263",
-        "aggregator": "0x111111d58d588056D4d8155755b89075A8458C92"
+        "aggregator": "0x111111d58d588056D4d8155755b89075A8458C92",
+        "salt": "0x0fdc9fc2f323f6e87661aa1dedade98eedcb0140ad70ca0ba4cbc4a6314db30c",
+        "oracle": "0xCEe000F438DabE2DB468F01e15C6FB55924bfC82"
     },
     "143": {
         "oracle": "0xCEE000dcdb7C2F0122c4b80731AD451Ef4E64439",
@@ -256,16 +260,29 @@
                     "address": "0x5C9CD8294F6079698df4C333dF6b38Aa23D8e04a"
                 }
             }
-        ]
+        ],
+        "salt": "0x55b3417ab968f0f1b4efdaae46342a56aaf3cc4caaca4f7230dabb8ae44fbf2d",
+        "oracle": "0xcEE00030c34431875DC0b2b60C501D71e46Ee8b4"
     },
     "999": {
         "connectors": [
             "0xb88339CB7199b77E23DB6E890353E22632Ba630f",
             "0xB8CE59FC3717ada4C02eaDF9682A9e934F625ebb",
-            "0x111111a1a0667d36bd57c0a9f569b98057111111",
             "0x9fdbda0a5e284c32744d2f17ee5c74b284993463",
             "0xbe6727b535545c67d5caa73dea54865b92cf7907"
         ],
+        "env": {
+            "feeds": [
+                "0xa5a72eF19F82A579431186402425593a559ed352",
+                "0xa5a72eF19F82A579431186402425593a559ed352",
+                "0xA0Adc43ce7AfE3EE7d7eac3C994E178D0620223B",
+                "0x9114446540B4f8E0E310041981f7c1Be6181Ed07",
+                "0xd7752D8831a209F5177de52b3b32b5098A7B56b8",
+                "0x017151e74fB3a393673B5B5149F53578c0Fa55B0"
+            ]
+        },
+        "aggregatorSalt": "0x10355b52142ddbb77ec12ecc52b8a0d3c9b532486d8c8c8f84d1b52427715634",
+        "salt": "0x7df7f9e972983e909386aaefb782288ef0156b41f34b0fce46af33fd610f27a1",
         "adapters": [
             {
                 "label": "Project X",
@@ -294,7 +311,9 @@
                     "address": "0xc7B5F5bF8659c745b107334A4eaaca531bA3edCe"
                 }
             }
-        ]
+        ],
+        "aggregator": "0x111111efFe35447ce72C0A4b3788dE16C885B9D0",
+        "oracle": "0xCEe000ddD8cb4B40F82f58eda6800640DDb225e1"
     },
     "43114": {
         "oracle": "0xCEe0009dE799996Deae4eF1c198D2F61dd5CfD63",
@@ -544,7 +563,9 @@
             }
         ],
         "aggregatorSalt": "0xfe7487b4a52190a76a88ecab7c6d66fc62f1a3f7c43c1bd3baafa19da188714f",
-        "aggregator": "0x11111150b59F2753F21ac86A75766a07F638B33f"
+        "aggregator": "0x11111150b59F2753F21ac86A75766a07F638B33f",
+        "salt": "0xd2df873a472da21846de05ffccde06f8eecd96c4bdd2c8b518240c20ea49f502",
+        "oracle": "0xcEe00040DCA089e74689d25Db2c02bc1c87Fa532"
     },
     "146": {
         "env": {

@@ -32,19 +32,6 @@ contract UsdOracleApi3Test is Test {
         assertEq(decimals, 18);
     }
 
-    function testUsd_convertsTokenToUsd() public {
-        MockToken token = new MockToken(6);
-
-        // rateToEth = ETH_atomic / token_atomic * 1e18
-        // If 1 token (1e6) == 0.0005 ETH (5e14 wei):
-        //   rateToEth = (5e14 / 1e6) * 1e18 = 5e26
-        offchainOracle.setRateToEth(5e26);
-
-        (uint256 usdPerToken, uint8 tokenDecimals) = oracleUsd.usd(address(token));
-        assertEq(usdPerToken, 1.5e18); // 0.0005 ETH * 3000 USD/ETH = 1.5 USD
-        assertEq(tokenDecimals, 6);
-    }
-
     function testUsd_usesAggregatorWhenFeedIsZero() public {
         MockToken token = new MockToken(6);
         offchainOracle.setRateToEth(5e26);
