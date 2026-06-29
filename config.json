@@ -1273,5 +1273,150 @@
         "aggregator": "0x1111115425c901A4219e9d0EB59B7b02b868E08F",
         "salt": "0x0b2ff04b8a87e16805d71a94cb0a86b49b27fb89d98be069048aa0d16ab87898",
         "oracle": "0xCEe0001e5935598E41870B722E910E02412C19df"
+    },
+    "130": {
+        "env": {
+            "feeds": [
+                "0xBcE70e194940a157f3A80566505a7E96f5238CCa",
+                "0xBcE70e194940a157f3A80566505a7E96f5238CCa",
+                "0xbd1cD1518eFB92a92100da62D4C488c810dFd75b",
+                "0xC13f3E310Dd7436FA24338174acB64254b9A8039"
+            ]
+        },
+        "connectors": [
+            "0x078D782b760474a361dDA0AF3839290b0EF57AD6",
+            "0x0555E30da8f98308EdB960aa94C0Db47230d2B9c"
+        ],
+        "adapters": [
+            {
+                "label": "UniswapV3",
+                "name": "UniswapV3LikeOracle",
+                "env": {
+                    "factory": "0x1F98400000000000000000000000000000000003",
+                    "initcodehash": "0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54",
+                    "fees": [
+                        100,
+                        500,
+                        3000,
+                        10000
+                    ],
+                    "address": "0x008D10214049593C6e63564946FFb64A6F706732"
+                }
+            },
+            {
+                "label": "UniswapV4",
+                "name": "UniswapV4LikeOracle",
+                "env": {
+                    "stateview": "0x86e8631A016F9068C3f085fAF484Ee3F5fDee8f2",
+                    "fees": [
+                        100,
+                        500,
+                        3000,
+                        10000
+                    ],
+                    "spacings": [
+                        1,
+                        10,
+                        60,
+                        200
+                    ],
+                    "address": "0xFbF54317e4820B461E7fA1B2819B6755e1cc0F62"
+                }
+            }
+        ],
+        "aggregatorSalt": "0xc1e5ec6dfdd91c7426620783a0d287fc21fcc38496a4fd8bc8a24e50139df524",
+        "aggregator": "0x111111DD7aad96406f00eFC1058F95740cdfEb26",
+        "salt": "0x6e63128d89dc7a5786ff5d0001f8a428840241093fbd77e1e2efadabb1922e85",
+        "oracle": "0xCeE0007635b566AF10219e7383bf0Ff2cb24Eb51"
+    },
+    "196": {
+        "env": {
+            "feeds": [
+                "0x4Ff345b18a2bF894F8627F41501FBf30d5C5e7BE",
+                "0x4Ff345b18a2bF894F8627F41501FBf30d5C5e7BE",
+                "0x8b85b50535551F8E8cDAF78dA235b5Cf1005907b",
+                "0xB8a08c178D96C315FbFB5661ABD208477391BC40",
+                "0xb928a0678352005a2e51F614efD0b54C9830dB80"
+            ]
+        },
+        "connectors": [
+            "0xE7B000003A45145decf8a28FC755aD5eC5EA025A",
+            "0x74b7F16337b8972027F6196A17a631aC6dE26d22",
+            "0x779Ded0c9e1022225f8E0630b35a9b54bE713736"
+        ],
+        "adapters": [
+            {
+                "label": "UniswapV3",
+                "name": "UniswapV3LikeOracle",
+                "env": {
+                    "factory": "0x4B2ab38DBF28D31D467aA8993f6c2585981D6804",
+                    "initcodehash": "0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54",
+                    "fees": [
+                        100,
+                        500,
+                        3000,
+                        10000
+                    ],
+                    "address": "0xc2aBC02acd77Bb2407efA22348dA9afC8B375290"
+                }
+            },
+            {
+                "label": "UniswapV4",
+                "name": "UniswapV4LikeOracle",
+                "env": {
+                    "stateview": "0x76fd297E2D437cd7f76d50F01AFE6160f86E9990",
+                    "fees": [
+                        100,
+                        500,
+                        3000,
+                        10000
+                    ],
+                    "spacings": [
+                        1,
+                        10,
+                        60,
+                        200
+                    ],
+                    "address": "0x1c4b5371dfDF424a162974C2361a6405b1F772cf"
+                }
+            }
+        ],
+        "aggregatorSalt": "0xfb50e75916c64e4c3ffc06fadaaccfe543b5a2e301a9ea97864979d7aac3e200",
+        "aggregator": "0x111111aba047B0f354A8De82F37A0E7c6fB9597E",
+        "salt": "0x30cc6131f87925f86fe53b6e70ea0c6cb18bf301b54724d36b2f6e346f0a45cf",
+        "oracle": "0xCee000faF68884d540d640a886BB23A9a7ea8352"
+    },
+    "4326": {
+        "env": {
+            "feeds": [
+                "0xcA4e254D95637DE95E2a2F79244b03380d697feD",
+                "0xcA4e254D95637DE95E2a2F79244b03380d697feD",
+                "0xdFe0063491d9DeD8F8abCdd7AE04238A1e70D270"
+            ]
+        },
+        "connectors": [
+            "0xFAfDdbb3FC7688494971a79cc65DCa3EF82079E7"
+        ],
+        "adapters": [
+            {
+                "label": "Prism",
+                "name": "UniswapV3LikeOracle",
+                "env": {
+                    "factory": "0x1adb8f973373505bb206e0e5d87af8fb1f5514ef",
+                    "initcodehash": "0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54",
+                    "fees": [
+                        100,
+                        500,
+                        3000,
+                        10000
+                    ],
+                    "address": "0xc2aBC02acd77Bb2407efA22348dA9afC8B375290"
+                }
+            }
+        ],
+        "aggregatorSalt": "0xe00d3e45460aeb2156f902abfc63ed1e731aa6ebe84483b13cbea5103b519eae",
+        "aggregator": "0x111111D06455A19a9d82FF8980218b6B6e6A1Bc2",
+        "salt": "0x60a8460536b79cfe58ea174fcd8eec386624c412c5303446a15331a143cfcb2c",
+        "oracle": "0xCEE000D5ADd559f7910c496369085dBc220acEb3"
     }
 }
