@@ -198,6 +198,8 @@ assert_config_rules() {
 }
 
 active_config_rows() {
+  local tab=$'\t' chain_id feed feed_count adapters
+
   jq -r '
     def feed_type:
       if ((.env.pyths // []) | length) > 0 then "pyth"
@@ -228,7 +230,17 @@ active_config_rows() {
         (.value | adapter_labels)
       ]
     | @tsv
-  ' "$config_file"
+  ' "$config_file" |
+    while IFS=$'\t' read -r chain_id feed feed_count adapters; do
+      print -r -- "$(chain_name "$chain_id")${tab}${feed}${tab}${feed_count}${tab}${adapters}"
+    done
+}
+
+chain_name() {
+  local chain_id=$1 name
+
+  name=$(getchain "$chain_id" 2>/dev/null | jq -r '.name // empty' 2>/dev/null) || name=
+  print -r -- "${name:-$chain_id}"
 }
 
 print_config_status_table() {
