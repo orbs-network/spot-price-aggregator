@@ -1476,10 +1476,15 @@
                 "name": "UniswapV2LikeOracle",
                 "env": {
                     "factory": "0x0000000000000000000000000000000000103780",
-                    "initcodehash": "0x407b3b02625070246aa1a1a346747a190d54149fc468122d6934af99b6ad0e6a"
+                    "initcodehash": "0x407b3b02625070246aa1a1a346747a190d54149fc468122d6934af99b6ad0e6a",
+                    "address": "0xeFE1B6096838949156e5130604434A2a13c68C68"
                 }
             }
-        ]
+        ],
+        "aggregatorSalt": "0xc4a857472d0a0fad3b35f6b7764b0ce317f7a9834c8e5468b667020ed881ac16",
+        "aggregator": "0x1111119F134a642237f4B7e990B0BAf4493680cc",
+        "salt": "0xb5a7f46866738474ef330b3d3c611bae207525709333a39675d9d45ab2892e60",
+        "oracle": "0xceE0000aC59551F55d8d8927CE062ad5D7397abD"
     },
     "9745": {
         "env": {
@@ -1504,10 +1509,15 @@
                         500,
                         3000,
                         10000
-                    ]
+                    ],
+                    "address": "0xD13609A8ace04D11Ea2FFE176B69dF77C6d9375E"
                 }
             }
-        ]
+        ],
+        "aggregatorSalt": "0xfcbf10fc8c19408f58fcce26301c819652aa2c14ace40506e0102d2906624752",
+        "aggregator": "0x111111487C56e9b785F780729bb3B2dC0a43cd87",
+        "salt": "0x8656611b3c861ab20177b97009a4709b7c48eb513ee16320d9f4546aa8e07133",
+        "oracle": "0xCEE0006da7A425b98a1a6B5a9ECa533f7336B96D"
     },
     "81457": {
         "env": {
@@ -1533,7 +1543,8 @@
                         500,
                         3000,
                         10000
-                    ]
+                    ],
+                    "address": "0xa1376f2Bb80D3cF6c2D8ebEf34b3d122e9af4020"
                 }
             },
             {
@@ -1552,9 +1563,14 @@
                         10,
                         60,
                         200
-                    ]
+                    ],
+                    "address": "0x44D38A6930FBC50f3E90F8249CA602781b2995b6"
                 }
             }
-        ]
+        ],
+        "aggregatorSalt": "0xf54bbe184fec3174b5f35589f0712f4819de473e30455ee8f0efd194e8c09f8b",
+        "aggregator": "0x111111Fe08B676f1b1d062c3431E23ba6F077ce8",
+        "salt": "0x0b78e1330fbf18312a7d10196b182e3e134f7dadd9d604324967c1b4ce907cf2",
+        "oracle": "0xcEe00081093518F05815E7DCe65b0dDfbf69e69e"
     }
 }
